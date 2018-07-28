@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.sig.lianjiang.view.SlideView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/user_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:src="@mipmap/android" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dip"
+                android:text="SIG"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/main_mean"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dip"
+                android:text="最近怎么样？" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dip"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/message_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="21:39"
+                android:textColor="#cccccc" />
+
+            <com.example.sig.lianjiang.view.DragDeleteTextView
+                android:id="@+id/message_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bg"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="9"
+                android:textColor="@color/tip_num_color" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/first_text"
+        android:layout_width="65dp"
+        android:layout_height="match_parent"
+        android:background="@color/first"
+        android:gravity="center"
+        android:text="置顶"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+    <TextView
+        android:id="@+id/noread_text"
+        android:layout_width="85dp"
+        android:layout_height="match_parent"
+        android:background="@color/no_read"
+        android:gravity="center"
+        android:text="标为未读"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+    <TextView
+        android:id="@+id/delete_text"
+        android:layout_width="65dp"
+        android:layout_height="match_parent"
+        android:background="@color/delete"
+        android:gravity="center"
+        android:text="删除"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+
+</com.example.sig.lianjiang.view.SlideView>

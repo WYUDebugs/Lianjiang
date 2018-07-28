@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mytopbar_color"
+    android:minHeight="?attr/actionBarSize"
+    android:gravity="center"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/top_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_centerInParent="true"
+            android:text="@string/mytopbar_message"
+            android:textColor="@color/mytopbar_textcolor"
+            android:textSize="@dimen/mytopbar_textsize" />
+
+        <com.example.sig.lianjiang.view.CircleImageView
+            android:id="@+id/top_head"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:src="@mipmap/icon_head"/>
+        <ImageView
+            android:id="@+id/top_right"
+            android:layout_alignParentRight="true"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/more" />
+    </RelativeLayout>
+</LinearLayout>

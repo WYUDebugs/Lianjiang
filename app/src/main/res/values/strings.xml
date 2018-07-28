@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Lianjiang</string>
+    <string name="mytopbar_message">消息</string>
+    <string name="mytopbar_friend">联系人</string>
+    <string name="mytopbar_dynamic">广场</string>
+    <string name="mytopbar_star">星球</string>
+</resources>

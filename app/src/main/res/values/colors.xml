@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="tab_text_normal">#212121</color>
+    <color name="comui_tab_text_color">#ff333333</color>
+    <color name="comui_tab_text_selectcolor">#d81e06</color>
+    <color name="mytopbar_color">#393A3E</color>
+    <color name="mytopbar_textcolor">#FFFFFF</color>
+    <color name="tip_num_color">#FFFFFF</color>
+    <color name="delete">@android:color/holo_red_dark</color>
+    <color name="first">@android:color/darker_gray</color>
+    <color name="no_read">#FF8C00</color>
+    <color name="paint_color">#393A3E</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

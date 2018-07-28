@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mytopbar_color"
+    android:minHeight="?attr/actionBarSize"
+    android:gravity="center"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/top_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            android:text="测试"
+            android:textColor="@color/mytopbar_textcolor"
+            android:textSize="@dimen/mytopbar_textsize" />
+        <TextView
+            android:id="@+id/top_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:text="@string/mytopbar_star"
+            android:textColor="@color/mytopbar_textcolor"
+            android:textSize="@dimen/mytopbar_textsize" />
+        <TextView
+            android:id="@+id/top_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:text="筛选"
+            android:textColor="@color/mytopbar_textcolor"
+            android:textSize="@dimen/mytopbar_textsize" />
+    </RelativeLayout>
+</LinearLayout>
