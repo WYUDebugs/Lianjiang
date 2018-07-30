@@ -20,6 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".SquareActivity"></activity>
+        <activity android:name=".MemoryBookListActivity"/>
+        <activity android:name=".MemoryBookSearchListActivity"/>
+        <activity android:name=".MemoryBookStarListActivity"/>
+        <activity android:name=".MemoryBookActivity"/>
     </application>
 
 </manifest>

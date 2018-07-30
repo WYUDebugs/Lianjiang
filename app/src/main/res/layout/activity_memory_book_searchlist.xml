@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_height="45dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/top_left"
+            android:layout_gravity="center_vertical"
+            android:layout_height="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="28dp"
+            android:src="@drawable/memoryback" />
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center"
+                android:id="@+id/ll_search_memory"
+                android:layout_gravity="center"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:layout_width="match_parent">
+                <EditText
+                    android:background="@drawable/shape_memory_search_back"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:hint="输入纪念册名搜索"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="match_parent"
+                    android:textSize="15sp" />
+            </LinearLayout>
+            <ImageView
+                android:src="@drawable/memory_search"
+                android:layout_gravity="center_vertical"
+                android:layout_height="30dp"
+                android:layout_marginRight="5dp"
+                android:layout_width="28dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.example.sig.lianjiang.view.ObservableListView
+        android:id="@+id/lv_bbs"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+    </com.example.sig.lianjiang.view.ObservableListView>
+
+</LinearLayout>
