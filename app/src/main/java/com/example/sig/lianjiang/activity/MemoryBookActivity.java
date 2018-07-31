@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -30,10 +32,12 @@ import java.util.List;
 public class MemoryBookActivity extends AppCompatActivity implements ObservableListView.OnMeiTuanRefreshListener,View.OnClickListener,ObservableListView.ScrollViewListener{
     private TextView title;
     private ImageView back;
+    private ImageView bgTop;
     private ImageView imgAddFriend;
     private ImageView imgAddSetting;
 
     private TextView tv_pull_to_refresh;
+    private TextView topTitle;
     private int imageHeight=800;
     private LinearLayout textView;
     private FloatingActionButton fabAddMoment;
@@ -61,16 +65,18 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            Window window = getWindow();
-//            // Translucent status bar
-//            window.setFlags(
-//                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-//                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         setContentView(R.layout.activity_menory_book);
         tv_pull_to_refresh=(TextView) findViewById(R.id.tv_pull_to_refresh);
+        topTitle=(TextView) findViewById(R.id.top_title);
         title=(TextView)findViewById(R.id.top_center);
+        bgTop=(ImageView)findViewById(R.id.img_memory_cover_update);
         back=(ImageView)findViewById(R.id.top_left);
         back.setOnClickListener(this);
         imgAddFriend = (ImageView) findViewById(R.id.img_add_friend);
@@ -81,6 +87,16 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
         textView = (LinearLayout) findViewById(R.id.mytopbar_square);
         fabAddMoment = (FloatingActionButton) findViewById(R.id.fab_add_moment);
         fabAddMoment.setOnClickListener(this);
+        //获得头部背景图的高度
+//        int w1 = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+//        int h1 = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+//        bgTop.measure(w1, h1);
+//        imageHeight =bgTop.getMeasuredHeight();
+        //获得头部背景图的高度
+        ViewGroup.LayoutParams para = bgTop.getLayoutParams();
+        imageHeight = para.height;
+
+        Log.d("wnf", "imageHeigt=========" + imageHeight);
         initImageLoader();
         initListData();
         initView();
@@ -243,14 +259,18 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
 
     @Override
     public void onScroll(int h){
-//        if (h <= 0) {
-//            textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));//AGB由相关工具获得，或者美工提供
-//        } else if (h > 0 && h <= imageHeight-textView.getHeight()) {
-//            // 只是layout背景透明(仿知乎滑动效果)
-//            textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
-//        } else {
-//            textView.setBackgroundColor(Color.argb((int) 255, 57, 58, 62));
-//        }
+        if (h <= 0) {
+            textView.setBackgroundColor(getResources().getColor(R.color.transparent));//AGB由相关工具获得，或者美工提供
+            topTitle.setText("");
+        } else if (h > 0 && h <= imageHeight-textView.getHeight()) {
+            // 只是layout背景透明(仿知乎滑动效果)
+            //textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
+            textView.setBackgroundColor(getResources().getColor(R.color.transparent));
+            topTitle.setText("");
+        } else {
+            textView.setBackgroundColor(getResources().getColor(R.color.white));
+            topTitle.setText("福群相册2");
+        }
     }
 
     private  class InterHandler extends Handler {

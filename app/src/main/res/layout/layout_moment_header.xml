@@ -5,60 +5,79 @@
     android:clickable="false"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/img_memory_cover_update"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@mipmap/icon_head_bg" />
-    <LinearLayout
-        android:layout_margin="15dp"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:text="福哥的朋友群相册"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:id="@+id/img_memory_name_update"
-            android:layout_marginLeft="6dp"
-            android:layout_gravity="center"
-            android:src="@drawable/name_edit"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="15dp"
-        android:layout_gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/tv_memory_persion_num"
-            android:layout_marginLeft="5dp"
-            android:layout_gravity="center_vertical"
-            android:text="0人"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:src="@drawable/memory_num"
-            android:layout_marginLeft="15dp"
-            android:layout_gravity="center_vertical"
-            android:layout_width="20dp"
-            android:layout_height="18dp" />
-        <TextView
-            android:id="@+id/tv_memory_moment_num"
-            android:layout_marginLeft="5dp"
-            android:layout_gravity="center_vertical"
-            android:text="0条记录"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_memory_cover_update"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@mipmap/icon_head_bg" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="福哥的朋友群相册"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
+
+                <ImageView
+                    android:id="@+id/img_memory_name_update"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="6dp"
+                    android:src="@drawable/name_edit" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/tv_memory_persion_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="0人" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/memory_num" />
+
+                <TextView
+                    android:id="@+id/tv_memory_moment_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="0条记录" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
     <View
-        android:background="@color/bgcolor"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
+        android:layout_height="0.5dp"
+        android:background="@color/bgcolor" />
 </LinearLayout>
 
