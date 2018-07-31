@@ -39,7 +39,7 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
     private TextView tv_pull_to_refresh;
     private TextView topTitle;
     private int imageHeight=800;
-    private LinearLayout textView;
+    private LinearLayout llTop;
     private FloatingActionButton fabAddMoment;
     private ObservableListView mListView;
     private MemoryNineGridAdapter mAdapter;
@@ -84,7 +84,8 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
         imgAddSetting = (ImageView) findViewById(R.id.img_add_setting);
         imgAddSetting.setOnClickListener(this);
 
-        textView = (LinearLayout) findViewById(R.id.mytopbar_square);
+        llTop = (LinearLayout) findViewById(R.id.mytopbar_square);
+        llTop.setOnClickListener(this);
         fabAddMoment = (FloatingActionButton) findViewById(R.id.fab_add_moment);
         fabAddMoment.setOnClickListener(this);
         //获得头部背景图的高度
@@ -260,15 +261,15 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
     @Override
     public void onScroll(int h){
         if (h <= 0) {
-            textView.setBackgroundColor(getResources().getColor(R.color.transparent));//AGB由相关工具获得，或者美工提供
+            llTop.setBackgroundColor(getResources().getColor(R.color.transparent));//AGB由相关工具获得，或者美工提供
             topTitle.setText("");
-        } else if (h > 0 && h <= imageHeight-textView.getHeight()) {
+        } else if (h > 0 && h <= imageHeight-llTop.getHeight()) {
             // 只是layout背景透明(仿知乎滑动效果)
             //textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
-            textView.setBackgroundColor(getResources().getColor(R.color.transparent));
+            llTop.setBackgroundColor(getResources().getColor(R.color.transparent));
             topTitle.setText("");
         } else {
-            textView.setBackgroundColor(getResources().getColor(R.color.white));
+            llTop.setBackgroundColor(getResources().getColor(R.color.white));
             topTitle.setText("福群相册2");
         }
     }

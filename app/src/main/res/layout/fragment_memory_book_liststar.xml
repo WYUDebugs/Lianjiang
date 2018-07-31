@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+    <LinearLayout
+        android:layout_marginTop="80dp"
+        android:padding="5dp"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.moxun.tagcloudlib.view.TagCloudView
+            android:gravity="center"
+            android:id="@+id/tcv_tags"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:autoScrollMode="uniform"
+            app:scrollSpeed="1"
+            app:radiusPercent="0.75" />
+    </LinearLayout>
+
+
+</LinearLayout>

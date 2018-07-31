@@ -17,6 +17,7 @@ import com.example.sig.lianjiang.activity.SquareActivity;
 public class DynamicFragment extends Fragment implements View.OnClickListener{
     private LinearLayout toSquare;
     private LinearLayout llMemoryBook;
+    private LinearLayout llMemoryBook1;
 
     @Nullable
     @Override
@@ -24,8 +25,10 @@ public class DynamicFragment extends Fragment implements View.OnClickListener{
         View view= inflater.inflate(R.layout.fragment_dynamic, container, false);
         toSquare=view.findViewById(R.id.toSquare);
         llMemoryBook=view.findViewById(R.id.ll_memory_book);
+        llMemoryBook1=view.findViewById(R.id.ll_memory_book1);
         toSquare.setOnClickListener(this);
         llMemoryBook.setOnClickListener(this);
+        llMemoryBook1.setOnClickListener(this);
         return view;
     }
     @Override
@@ -38,6 +41,10 @@ public class DynamicFragment extends Fragment implements View.OnClickListener{
             case R.id.ll_memory_book:
                 Intent intentM=new Intent(getActivity(), MemoryBookListActivity.class);
                 startActivity(intentM);
+                break;
+            case R.id.ll_memory_book1:
+//                Intent intentM1=new Intent(getActivity(), MemoryBookList1Activity.class);
+//                startActivity(intentM1);
                 break;
         }
     }

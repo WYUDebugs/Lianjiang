@@ -58,6 +58,7 @@
                         android:text="纪念册"/>
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/ll_memory_book1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
