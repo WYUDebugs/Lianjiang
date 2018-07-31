@@ -3,24 +3,15 @@ package com.example.sig.lianjiang.adapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sig.lianjiang.activity.MemoryBookActivity;
-import com.example.sig.lianjiang.activity.MemoryBookListActivity;
 import com.example.sig.lianjiang.activity.R;
 
 import java.util.List;
@@ -64,7 +55,7 @@ public class MemoryBookListAdapter extends BaseAdapter {
 
         ViewHolder holder = null;
         if (position == 0) {
-            convertView = inflater.inflate(R.layout.layout_memory_book_tv, parent, false);
+            convertView = inflater.inflate(R.layout.layout_memory_book_list_header, parent, false);
             convertView.findViewById(R.id.bt_add).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

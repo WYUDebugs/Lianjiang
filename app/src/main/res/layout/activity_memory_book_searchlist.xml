@@ -32,13 +32,14 @@
                 android:id="@+id/ll_search_memory"
                 android:layout_gravity="center"
                 android:layout_height="match_parent"
-                android:layout_margin="7dp"
+                android:layout_margin="4dp"
                 android:layout_width="match_parent">
                 <EditText
                     android:background="@drawable/shape_memory_search_back"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:singleLine="true"
                     android:hint="输入纪念册名搜索"
                     android:layout_gravity="center_vertical"
                     android:layout_height="match_parent"

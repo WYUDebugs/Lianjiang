@@ -73,18 +73,18 @@
 
                     <ImageView
                         android:id="@+id/img_add_friend"
-                        android:layout_width="28dp"
-                        android:layout_height="30dp"
+                        android:layout_width="26dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="15dp"
                         android:src="@drawable/add_friend" />
 
                     <ImageView
                         android:id="@+id/img_add_setting"
-                        android:layout_width="28dp"
-                        android:layout_height="30dp"
+                        android:layout_width="26dp"
+                        android:layout_height="28dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="5dp"
                         android:src="@drawable/setting" />
                 </LinearLayout>
             </LinearLayout>

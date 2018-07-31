@@ -15,6 +15,7 @@
     <color name="paint_color">#393A3E</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="grey">#696969</color>
     <color name="red">#ff0000</color>
     <color name="bgcolor">#d6d6d6</color>
     <color name="transparent">#00000000</color>
@@ -22,5 +23,6 @@
     <color name="mycolor">#ffd500</color>
     <color name="bt_unselect_color">#ffd500</color>
     <color name="bt_select_color">#ff9500</color>
+    <color name="link_color">#0099CC</color>
 
 </resources>

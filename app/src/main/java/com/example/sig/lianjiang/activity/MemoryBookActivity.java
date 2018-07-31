@@ -1,5 +1,6 @@
 package com.example.sig.lianjiang.activity;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -7,11 +8,13 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -230,7 +233,8 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
                 Toast.makeText(MemoryBookActivity.this, "添加编辑好友", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.img_add_setting:
-                Toast.makeText(MemoryBookActivity.this, "设置", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MemoryBookActivity.this, "设置", Toast.LENGTH_SHORT).show();
+                clickSetting();
                 break;
             case R.id.fab_add_moment:
                 Toast.makeText(MemoryBookActivity.this, "添加片段", Toast.LENGTH_SHORT).show();
@@ -238,6 +242,110 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
 
         }
     }
+
+    public void clickSetting() {
+        View diaView= View.inflate(MemoryBookActivity.this, R.layout.dialogui_footer_setting, null);
+        final Dialog dialog=new Dialog(MemoryBookActivity.this,R.style.dialogfooter);
+        diaView.setMinimumWidth(R.dimen.width);
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        dialog.setContentView(diaView);
+        dialog.show();
+        ImageView imgCancel;
+        LinearLayout llMemorySettingPeople;
+        LinearLayout llMemorySettingName;
+        LinearLayout llMemorySettingCover;
+        LinearLayout llMemorySettingDel;
+
+        imgCancel = (ImageView) diaView.findViewById(R.id.img_cancel);
+        llMemorySettingPeople = (LinearLayout) diaView.findViewById(R.id.ll_memory_setting_people);
+        llMemorySettingName = (LinearLayout) diaView.findViewById(R.id.ll_memory_setting_name);
+        llMemorySettingCover = (LinearLayout) diaView.findViewById(R.id.ll_memory_setting_cover);
+        llMemorySettingDel = (LinearLayout) diaView.findViewById(R.id.ll_memory_setting_del);
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        llMemorySettingPeople.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        llMemorySettingName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                updateMemoryName();
+            }
+        });
+        llMemorySettingCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        llMemorySettingDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                clickDelMemory();
+            }
+        });
+    }
+
+    public void clickDelMemory() {
+        View diaView1= View.inflate(MemoryBookActivity.this, R.layout.dialogui_center_sure_or_cancel, null);
+        final Dialog dialog1=new Dialog(MemoryBookActivity.this,R.style.dialog);
+        dialog1.setContentView(diaView1);
+        dialog1.show();
+        TextView textInfo1 = (TextView) diaView1.findViewById(R.id.tv_info);
+        TextView btSure1 = (TextView) diaView1.findViewById(R.id.tv_sure);
+        TextView btCancel1 = (TextView) diaView1.findViewById(R.id.tv_cancel);
+        textInfo1.setText("是否解散该纪念册？");
+        btSure1.setTextColor(this.getResources().getColor(R.color.grey));
+        btCancel1.setTextColor(this.getResources().getColor(R.color.red));
+        btSure1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(MemoryBookActivity.this, "退出", Toast.LENGTH_SHORT).show();
+                dialog1.cancel();
+            }
+        });
+        btCancel1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.cancel();
+            }
+        });
+    }
+
+    public void updateMemoryName() {
+        final Dialog dialog1;
+        View diaView = View.inflate(MemoryBookActivity.this, R.layout.dialogui_center_add, null);
+        dialog1 = new Dialog(MemoryBookActivity.this, R.style.dialog);
+        dialog1.setContentView(diaView);
+        dialog1.show();
+        TextView tvInfo = (TextView) diaView.findViewById(R.id.tv_info);
+        TextView tvSure = (TextView) diaView.findViewById(R.id.tv_sure);
+        TextView tvCancel = (TextView) diaView.findViewById(R.id.tv_cancel);
+        tvInfo.setText("请输入更改后的纪念册名称");
+        final EditText etInput = (EditText) diaView.findViewById(R.id.et_input);
+        tvSure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.cancel();
+            }
+        });
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.cancel();
+            }
+        });
+    }
+
     @Override
     public void onRefresh() {
         new Thread(new Runnable() {

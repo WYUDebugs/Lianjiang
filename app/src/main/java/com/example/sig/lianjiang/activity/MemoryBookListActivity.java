@@ -91,6 +91,7 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
                     } else {
                         fTransaction.show(fg1);
                     }
+                    imgToStar.setImageResource(R.mipmap.star);
                     showWhichFrag = false;
                 } else {
                     if(fg2 == null){
@@ -99,6 +100,7 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
                     }else{
                         fTransaction.show(fg2);
                     }
+                    imgToStar.setImageResource(R.drawable.rectangles);
                     showWhichFrag = true;
                 }
                 fTransaction.commit();

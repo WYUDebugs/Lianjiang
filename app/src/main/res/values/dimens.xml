@@ -6,4 +6,6 @@
     <dimen name="comui_tab_text_marginBottom">4.0dip</dimen>
 
     <dimen name="mytopbar_textsize">18sp</dimen>
+    <dimen name="ts_20sp">20sp</dimen>
+    <dimen name="width">700dp</dimen>
 </resources>
