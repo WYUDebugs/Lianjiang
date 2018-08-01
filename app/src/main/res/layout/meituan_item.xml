@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="horizontal"
-    
+    android:clickable="false"
      >
     <com.example.sig.lianjiang.view.MeiTuanRefreshFirstStepView
         android:id="@+id/first_view"
