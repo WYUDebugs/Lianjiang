@@ -93,12 +93,7 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.top_left:
-                Runtime runtime = Runtime.getRuntime();
-                try {
-                    runtime.exec("input keyevent " + KeyEvent.KEYCODE_BACK);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                finish();
                 break;
 
         }

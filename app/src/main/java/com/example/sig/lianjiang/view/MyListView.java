@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sig.lianjiang.activity.R;
 
@@ -133,17 +134,23 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (MotionEventCompat.getActionMasked(ev)){
             case MotionEvent.ACTION_DOWN:
-                if(itemView != null){                                          //关闭之前的ItemView删除按钮的显示状态
-                    itemView.close();
+                if(state == DONE){
+                    if(itemView != null){                                          //关闭之前的ItemView删除按钮的显示状态
+                        itemView.close();
+                    }
+                    int dowX = (int) ev.getX();
+                    int dowY = (int) ev.getY();
+                    int itemPosition = pointToPosition(dowX,dowY);
+                    if(itemPosition == AbsListView.INVALID_POSITION){
+                        return  super.dispatchTouchEvent(ev);
+                    }
+                    itemView = (SlideView) getChildAt(itemPosition - getFirstVisiblePosition());                  //记录当前ItemVIew
+                }else{
+                    //bug在这里
+
                 }
-                int dowX = (int) ev.getX();
-                int dowY = (int) ev.getY();
-                int itemPosition = pointToPosition(dowX,dowY);
-                if(itemPosition == AbsListView.INVALID_POSITION){
-                    return  super.dispatchTouchEvent(ev);
-                }
-                itemView = (SlideView) getChildAt(itemPosition - getFirstVisiblePosition());                  //记录当前ItemVIew
                 break;
+
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -162,6 +169,7 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
                             //将当前y坐标赋值给startY起始y坐标
                             startY = ev.getY();
                         }
+
                         break;
                     //用户滑动
                     case MotionEvent.ACTION_MOVE:
@@ -245,11 +253,14 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
                                 mFirstView.postInvalidate();
                             }
                         }
+
                         break;
                     //当用户手指抬起时
                     case MotionEvent.ACTION_UP:
+
                         //如果当前状态为下拉刷新状态
                         if (state == PULL_TO_REFRESH) {
+                            setOnRefreshComplete();
                             //平滑的隐藏headerView
                             this.smoothScrollBy((int)(-headerViewHeight+offsetY/RATIO)+headerViewHeight, 500);
                             //根据状态改变headerView
@@ -268,11 +279,15 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
                         }
                         //这一套手势执行完，一定别忘了将记录y坐标的isRecord改为false，以便于下一次手势的执行
                         isRecord = false;
+
+
                         break;
                 }
 
             }
         }
+
+
         return super.onTouchEvent(ev);
     }
 

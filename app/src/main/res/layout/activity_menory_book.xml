@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/layout_memory_book" />
+    <include layout="@layout/layout_memory_book"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_moment"

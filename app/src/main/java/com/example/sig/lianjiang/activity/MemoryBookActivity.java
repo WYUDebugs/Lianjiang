@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +46,7 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
     private TextView tv_pull_to_refresh;
     private TextView topTitle;
     private int imageHeight=800;
-    private LinearLayout llTop;
+    private RelativeLayout llTop;
     private FloatingActionButton fabAddMoment;
     private ObservableListView mListView;
     private MemoryNineGridAdapter mAdapter;
@@ -89,7 +91,7 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
         imgAddSetting = (ImageView) findViewById(R.id.img_add_setting);
         imgAddSetting.setOnClickListener(this);
 
-        llTop = (LinearLayout) findViewById(R.id.mytopbar_square);
+        llTop = (RelativeLayout) findViewById(R.id.mytopbar_square);
         llTop.setOnClickListener(this);
         fabAddMoment = (FloatingActionButton) findViewById(R.id.fab_add_moment);
         fabAddMoment.setOnClickListener(this);
@@ -324,6 +326,7 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
             @Override
             public void run() {
                 try {
+
                     Thread.sleep(2000);
                     mInterHandler.sendEmptyMessage(UPDATE_TEXT_DONE);
                     Thread.sleep(1000);

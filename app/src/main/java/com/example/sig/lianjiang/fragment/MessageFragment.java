@@ -110,11 +110,12 @@ public class MessageFragment extends Fragment implements MyListView.OnMeiTuanRef
             @Override
             public void run() {
                 try {
+
                     Thread.sleep(2000);
                     mInterHandler.sendEmptyMessage(UPDATE_TEXT_DONE);
                     Thread.sleep(1000);
-                    mInterHandler.sendEmptyMessage(REFRESH_COMPLETE);
                     mInterHandler.sendEmptyMessage(UPDATE_TEXT_STAR);
+                    mInterHandler.sendEmptyMessage(REFRESH_COMPLETE);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
