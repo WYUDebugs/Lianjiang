@@ -21,6 +21,7 @@
     <color name="transparent">#00000000</color>
 
     <color name="mycolor">#ffd500</color>
+    <color name="mycolor_transparent">#a9ffd500</color>
     <color name="bt_unselect_color">#ffd500</color>
     <color name="bt_select_color">#ff9500</color>
     <color name="link_color">#0099CC</color>

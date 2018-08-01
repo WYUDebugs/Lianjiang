@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/ll_one"
+            android:layout_margin="8dp"
+            android:background="@drawable/shape_bg_transparent"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_headicon1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:background="@mipmap/icon_head" />
+                <TextView
+                    android:padding="3dp"
+                    android:id="@+id/tv_comment1"
+                    android:textSize="10sp"
+                    android:text="哈哈哈哈哈哈哈哈哈哈"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_two"
+            android:layout_margin="8dp"
+            android:background="@drawable/shape_bg_transparent"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_headicon2"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:background="@mipmap/icon_head" />
+                <TextView
+                    android:padding="3dp"
+                    android:id="@+id/tv_comment2"
+                    android:textSize="10sp"
+                    android:text="哈哈哈哈哈哈哈哈哈哈"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_three"
+            android:layout_margin="8dp"
+            android:background="@drawable/shape_bg_transparent"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_headicon3"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:background="@mipmap/icon_head" />
+                <TextView
+                    android:padding="3dp"
+                    android:id="@+id/tv_comment3"
+                    android:textSize="10sp"
+                    android:text="哈哈哈哈哈哈哈哈哈哈"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+        </LinearLayout>
+
+</LinearLayout>

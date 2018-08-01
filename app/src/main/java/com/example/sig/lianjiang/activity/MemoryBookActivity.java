@@ -1,6 +1,7 @@
 package com.example.sig.lianjiang.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -165,62 +167,31 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
         mAdapter.setList(mList);
         mListView.setAdapter(mAdapter);
         mListView.setScrollViewListener(this);
-//        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            private SparseArray recordSp = new SparseArray(0);
-//            private int mCurrentfirstVisibleItem = 0;
-//
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                mCurrentfirstVisibleItem = firstVisibleItem;
-//                View firstView = view.getChildAt(0);
-//                if (null != firstView) {
-//                    ItemRecod itemRecord = (ItemRecod) recordSp.get(firstVisibleItem);
-//                    if (null == itemRecord) {
-//                        itemRecord = new ItemRecod();
-//                    }
-//                    itemRecord.height = firstView.getHeight();
-//                    itemRecord.top = firstView.getTop();
-//                    recordSp.append(firstVisibleItem, itemRecord);
-//                    int h = getScrollY();//滚动距离
-//                    //在此进行你需要的操作//TODO
-//                    Log.e("123",Integer.toString(h));
-//                    if (h <= 0) {
-//                        textView.setBackgroundColor(Color.argb((int) 0, 227, 29, 26));//AGB由相关工具获得，或者美工提供
-//                    } else if (h > 0 && h <= imageHeight-textView.getHeight()) {
-//                        // 只是layout背景透明(仿知乎滑动效果)
-//                        textView.setBackgroundColor(Color.argb((int) 0, 227, 29, 26));
-//                        title.setText("");
-//                    } else {
-//                        textView.setBackgroundColor(Color.argb((int) 255, 227, 29, 26));
-//                        title.setText("广场");
-//                    }
-//
-//                }
-//            }
-//
-//            private int getScrollY() {
-//                int height = 0;
-//                for (int i = 0; i < mCurrentfirstVisibleItem; i++) {
-//                    ItemRecod itemRecod = (ItemRecod) recordSp.get(i);
-//                    height += itemRecod.height;
-//                }
-//                ItemRecod itemRecod = (ItemRecod) recordSp.get(mCurrentfirstVisibleItem);
-//                if (null == itemRecod) {
-//                    itemRecod = new ItemRecod();
-//                }
-//                return height - itemRecod.top;
-//            }
-//
-//            class ItemRecod {
-//                int height = 0;
-//                int top = 0;
-//            }
-//        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("wnf", "position=========================="+position);
+                if (position == 1) {
+
+                } else {
+                    Intent intent = new Intent(MemoryBookActivity.this, MomentInfoActivity.class);
+                    startActivity(intent);
+                    //Toast.makeText(MemoryBookListActivity.this, "点击" + mList.get(position-1), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("wnf", "position=========================="+position);
+                if (position == 1) {
+
+                } else {
+                    Toast.makeText(MemoryBookActivity.this, "长按" + position, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
     }
 
     @Override
