@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.sig.lianjiang.adapter.MemoryNineGridAdapter;
 import com.example.sig.lianjiang.adapter.NineGridAdapter;
 import com.example.sig.lianjiang.model.NineGridTestModel;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.view.ObservableListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -79,6 +80,7 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
         setContentView(R.layout.activity_menory_book);
         tv_pull_to_refresh=(TextView) findViewById(R.id.tv_pull_to_refresh);
         topTitle=(TextView) findViewById(R.id.top_title);

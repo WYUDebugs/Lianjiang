@@ -12,16 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <!-- 适配Android 7.0, 需要将下方的com.hyphenate.chatuidemo替换为你的app包名 -->
         <provider
-        android:name="android.support.v4.content.FileProvider"
-        android:authorities="com.example.sig.lianjiang.fileProvider"
-        android:grantUriPermissions="true"
-        android:exported="false">
-        <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/file_paths" />
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.sig.lianjiang.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,14 +31,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SquareActivity"></activity>
-        <activity android:name=".MemoryBookListActivity"/>
-        <activity android:name=".MemoryBookSearchListActivity"/>
-        <activity android:name=".MemoryBookActivity"/>
-        <activity android:name=".MomentInfoActivity"/>
-        <activity android:name=".PictureDetailActivity"/>
-        <activity android:name=".MemoryCoverUpdateActivity"/>
-        <activity android:name=".MomentAddActivity"/>
+        <activity android:name=".SquareActivity" />
+        <activity android:name=".MemoryBookListActivity" />
+        <activity android:name=".MemoryBookSearchListActivity" />
+        <activity android:name=".MemoryBookActivity" />
+        <activity android:name=".MomentInfoActivity" />
+        <activity android:name=".PictureDetailActivity" />
+        <activity android:name=".MemoryCoverUpdateActivity" />
+        <activity android:name=".MomentAddActivity" />
+        <activity android:name=".LoginActivitysteup1" />
+        <activity android:name=".LoginActivitysteup2"></activity>
     </application>
 
 </manifest>

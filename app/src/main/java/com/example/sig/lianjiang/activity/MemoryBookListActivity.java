@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.sig.lianjiang.fragment.MemoryBookListFragment;
 import com.example.sig.lianjiang.fragment.MemoryBookListStarFragment;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 
 
 public class MemoryBookListActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,6 +49,7 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
         setContentView(R.layout.activity_memory_book_list);
         fManager=getSupportFragmentManager();
         initView();

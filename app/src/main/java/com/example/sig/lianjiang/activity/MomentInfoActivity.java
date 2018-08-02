@@ -29,6 +29,7 @@ import com.example.sig.lianjiang.adapter.Message;
 import com.example.sig.lianjiang.adapter.MessageAdapter;
 import com.example.sig.lianjiang.fragment.MessageFragment;
 import com.example.sig.lianjiang.model.NineGridTestModel;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.view.CircleImageView;
 import com.example.sig.lianjiang.view.MyListView;
 import com.example.sig.lianjiang.view.ObservableListView;
@@ -64,6 +65,7 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
         setContentView(R.layout.activity_moment_info);
         initData();
         initView();

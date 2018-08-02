@@ -4,4 +4,6 @@
     <string name="mytopbar_friend">联系人</string>
     <string name="mytopbar_dynamic">广场</string>
     <string name="mytopbar_star">星球</string>
+    <string name="inputnumber">请输入手机号码</string>
+    <string name="signin_with_problem">登录遇到问题？</string>
 </resources>

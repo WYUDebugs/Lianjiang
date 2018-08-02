@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.sig.lianjiang.adapter.MemoryBookListAdapter;
 import com.example.sig.lianjiang.adapter.MemoryBookSearchListAdapter;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.view.ObservableListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -48,6 +49,7 @@ public class MemoryBookSearchListActivity extends AppCompatActivity implements O
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
         setContentView(R.layout.activity_memory_book_searchlist);
 
         tv_pull_to_refresh = (TextView) findViewById(R.id.tv_pull_to_refresh);

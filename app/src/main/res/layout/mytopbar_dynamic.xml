@@ -6,6 +6,7 @@
     android:background="@color/mytopbar_color"
     android:gravity="center"
     android:clipToPadding="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <RelativeLayout

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.sig.lianjiang.activity.LoginActivitysteup1;
 import com.example.sig.lianjiang.activity.MemoryBookListActivity;
 import com.example.sig.lianjiang.activity.R;
 import com.example.sig.lianjiang.activity.SquareActivity;
@@ -45,6 +46,8 @@ public class DynamicFragment extends Fragment implements View.OnClickListener{
             case R.id.ll_memory_book1:
 //                Intent intentM1=new Intent(getActivity(), MemoryBookList1Activity.class);
 //                startActivity(intentM1);
+                Intent intentM1=new Intent(getActivity(), LoginActivitysteup1.class);
+                startActivity(intentM1);
                 break;
         }
     }

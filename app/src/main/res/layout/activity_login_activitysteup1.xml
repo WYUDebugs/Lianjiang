@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:fillViewport="true">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp">
+            <ImageView
+                android:layout_gravity="bottom"
+                android:id="@+id/img_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/star" />
+        </FrameLayout>
+        <LinearLayout
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="77dp">
+            <TextView
+                android:textSize="13sp"
+                android:textColor="#FF282828"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机"
+                android:drawableLeft="@mipmap/login_phone"
+                android:drawablePadding="10dp" />
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+                <TextView
+                    android:textSize="17sp"
+                    android:textColor="#FF282828"
+                    android:gravity="bottom|center"
+                    android:id="@+id/tvCountryCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="+86" />
+                <RelativeLayout
+                    android:id="@+id/rlDown"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:background="@mipmap/ic_login_arrow_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+                <EditText
+                    android:textSize="17sp"
+                    android:textColor="#FF282828"
+                    android:textColorHint="#FFDBDBDB"
+                    android:gravity="bottom"
+                    android:id="@+id/etPhone"
+                    android:background="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/inputnumber"
+                    android:maxLength="11"
+                    android:inputType="number" />
+            </LinearLayout>
+            <View
+                android:background="#FFDBDBDB"
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginTop="11dp" />
+        </LinearLayout>
+        <ImageView
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/ivSubmit"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="43dp"
+            android:src="@mipmap/ic_confirm_disable" />
+        <LinearLayout
+            android:gravity="bottom"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:minHeight="80dp"
+            android:layout_weight="3">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/ic_login_select"
+                android:drawablePadding="10dp"
+                android:text="我已阅读并同意 "
+                android:gravity="bottom"
+                android:textColor="#FFBABABA"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp">
+                <TextView
+                    android:textSize="13sp"
+                    android:textColor="#FF02BFA6"
+                    android:id="@+id/login_new_agreement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Starry用户协议" />
+                <View
+                    android:background="#FF02BFA6"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+
+

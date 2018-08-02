@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.sig.lianjiang.adapter.MemoryCoverListAdapter;
 import com.example.sig.lianjiang.bean.CoverPictureBean;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.view.ObservableListView;
 
 import java.util.ArrayList;

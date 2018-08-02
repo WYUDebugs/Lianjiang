@@ -33,6 +33,7 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_moment_add);
 
         initData();
