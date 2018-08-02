@@ -5,4 +5,6 @@
     <external-path name="cache" path="Android/data/com.xuezj.fileproviderdemo/cache" />
     <external-path name="images" path="Pictures/" />
     <external-path name="dcim" path="DCIM/" />
+    <external-path path="Android/data/com/example/sig/lianjiang/" name="files_root" />
+    <external-path path="." name="external_storage_root" />
 </paths>
