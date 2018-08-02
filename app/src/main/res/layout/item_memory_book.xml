@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="18dp">
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="15dp">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -71,6 +73,13 @@
                         android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
+                    <ImageView
+                        android:id="@+id/img_memory_share"
+                        android:src="@drawable/share"
+                        android:layout_marginLeft="15dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="20dp"
+                        android:layout_height="18dp" />
                 </LinearLayout>
 
             </LinearLayout>

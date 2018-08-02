@@ -24,6 +24,9 @@
         <activity android:name=".MemoryBookSearchListActivity"/>
         <activity android:name=".MemoryBookActivity"/>
         <activity android:name=".MomentInfoActivity"/>
+        <activity android:name=".PictureDetailActivity"/>
+        <activity android:name=".MemoryCoverUpdateActivity"/>
+        <activity android:name=".MomentAddActivity"/>
     </application>
 
 </manifest>

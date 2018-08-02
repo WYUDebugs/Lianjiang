@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.sig.lianjiang.activity.MemoryBookActivity;
 import com.example.sig.lianjiang.activity.MemoryBookListActivity;
+import com.example.sig.lianjiang.activity.MemoryCoverUpdateActivity;
 import com.example.sig.lianjiang.activity.R;
 import com.example.sig.lianjiang.model.NineGridTestModel;
 import com.example.sig.lianjiang.view.NineGridTestLayout;
@@ -61,7 +62,9 @@ public class MemoryNineGridAdapter extends BaseAdapter {
             convertView.findViewById(R.id.img_memory_cover_update).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "更新封面", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, MemoryCoverUpdateActivity.class);
+                    mContext.startActivity(intent);
+                    //Toast.makeText(mContext, "更新封面", Toast.LENGTH_SHORT).show();
                 }
             });
             convertView.findViewById(R.id.img_memory_name_update).setOnClickListener(new View.OnClickListener() {

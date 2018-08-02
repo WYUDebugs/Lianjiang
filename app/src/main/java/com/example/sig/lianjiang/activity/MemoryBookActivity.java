@@ -210,7 +210,9 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
                 clickSetting();
                 break;
             case R.id.fab_add_moment:
-                Toast.makeText(MemoryBookActivity.this, "添加片段", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MemoryBookActivity.this, "添加片段", Toast.LENGTH_SHORT).show();
+                Intent intentAddM = new Intent(MemoryBookActivity.this, MomentAddActivity.class);
+                startActivity(intentAddM);
                 break;
 
         }
@@ -257,6 +259,8 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
             @Override
             public void onClick(View v) {
                 dialog.cancel();
+                Intent intent = new Intent(MemoryBookActivity.this, MemoryCoverUpdateActivity.class);
+                startActivity(intent);
             }
         });
         llMemorySettingDel.setOnClickListener(new View.OnClickListener() {
@@ -352,7 +356,7 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
             topTitle.setText("");
         } else {
             llTop.setBackgroundColor(getResources().getColor(R.color.white));
-            topTitle.setText("福群相册2");
+            topTitle.setText("福的群纪念册");
         }
     }
 

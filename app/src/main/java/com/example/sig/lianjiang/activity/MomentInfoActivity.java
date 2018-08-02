@@ -49,6 +49,8 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
 
     private ViewFlipper viewFlipper;
     private List<String> mListData = new ArrayList<>();
+    private ImageView imgPictureOne;
+    private ImageView imgPictureTwo;
 
     //private View convertView;
     @Override
@@ -77,6 +79,10 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
 
     public void initView() {
 
+        imgPictureOne = (ImageView) findViewById(R.id.img_picture_one);
+        imgPictureOne.setOnClickListener(this);
+        imgPictureTwo = (ImageView) findViewById(R.id.img_picture_two);
+        imgPictureTwo.setOnClickListener(this);
         topTitle = (TextView) findViewById(R.id.top_title);
         imgInfoSetting = (ImageView) findViewById(R.id.img_info_setting);
 
@@ -169,8 +175,8 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
                     llThree.setVisibility(View.GONE);
                 }
             }
-            viewFlipper.removeViewAt(listSize / 3);
             viewFlipper.addView(convertView);
+            viewFlipper.removeViewAt(listSize / 3);
         }
     }
 
@@ -179,6 +185,11 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.top_left:
                 finish();
+                break;
+            case R.id.img_picture_one:
+            case R.id.img_picture_two:
+                Intent intent = new Intent(MomentInfoActivity.this, PictureDetailActivity.class);
+                startActivity(intent);
                 break;
             case R.id.bt_send_comment:
                 //Toast.makeText(MomentInfoActivity.this, "添加编辑好友", Toast.LENGTH_SHORT).show();
@@ -189,6 +200,7 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
                     int listSize = mListData.size();
                     mListData.add(str);
                     updateConvertView(listSize);
+                    etMomentComment.setText("");
                 }
                 break;
             case R.id.img_info_setting:

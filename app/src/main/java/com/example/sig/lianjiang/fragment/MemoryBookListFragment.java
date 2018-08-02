@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sig.lianjiang.activity.MemoryBookActivity;
+import com.example.sig.lianjiang.activity.MemoryCoverUpdateActivity;
 import com.example.sig.lianjiang.activity.R;
 import com.example.sig.lianjiang.adapter.MemoryBookListAdapter;
 import com.example.sig.lianjiang.view.ObservableListView;
@@ -199,6 +200,8 @@ public class MemoryBookListFragment extends Fragment implements ObservableListVi
             @Override
             public void onClick(View v) {
                 dialog.cancel();
+                Intent intent = new Intent(getActivity(), MemoryCoverUpdateActivity.class);
+                startActivity(intent);
             }
         });
         llMemorySettingDel.setOnClickListener(new View.OnClickListener() {

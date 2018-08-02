@@ -26,4 +26,6 @@
     <color name="bt_select_color">#ff9500</color>
     <color name="link_color">#0099CC</color>
 
+    <color name="text1">#05bffd</color>
+    <color name="text2">#696969</color>
 </resources>
