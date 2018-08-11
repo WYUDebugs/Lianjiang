@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryNineGridAdapter;
 import com.example.sig.lianjiang.adapter.Message;
 import com.example.sig.lianjiang.adapter.MessageAdapter;

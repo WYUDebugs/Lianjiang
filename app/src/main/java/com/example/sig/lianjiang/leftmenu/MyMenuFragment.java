@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 
 
 public class MyMenuFragment extends MenuFragment {

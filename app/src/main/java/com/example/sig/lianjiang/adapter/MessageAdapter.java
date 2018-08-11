@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.view.DragDeleteTextView;
 
 import java.util.List;

@@ -1,9 +1,11 @@
 package com.example.sig.lianjiang.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+//import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.sig.lianjiang.activity.MainActivity;
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.Message;
 import com.example.sig.lianjiang.adapter.MessageAdapter;
 import com.example.sig.lianjiang.utils.ListviewUtils;
@@ -29,7 +31,7 @@ import java.util.List;
 /**
  * Created by sig on 2018/7/9.
  */
-
+@SuppressLint("NewApi")
 public class MessageFragment extends Fragment implements MyListView.OnMeiTuanRefreshListener,View.OnClickListener{
     private List<Message> lists = new ArrayList<>();
     private MyListView listView;

@@ -1,155 +1,321 @@
 package com.example.sig.lianjiang.fragment;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
-import com.example.sig.lianjiang.activity.R;
-import com.example.sig.lianjiang.adapter.FriendAdapter;
-import com.example.sig.lianjiang.bean.ContactPerson;
-import com.example.sig.lianjiang.utils.Utils;
-import com.example.sig.lianjiang.view.MyExpandableListView;
-import com.example.sig.lianjiang.view.QuickIndexBar;
+import com.example.sig.lianjiang.activity.AddContactActivity;
+import com.example.sig.lianjiang.activity.ChatActivity;
+import com.example.sig.lianjiang.activity.GroupsActivity;
+import com.example.sig.lianjiang.activity.NewFriendsMsgActivity;
+import com.hyphenate.chat.EMClient;
+import com.example.sig.lianjiang.Constant;
+import com.example.sig.lianjiang.StarryHelper;
+import com.example.sig.lianjiang.StarryHelper.DataSyncListener;
+import com.example.sig.lianjiang.R;
+//import com.example.sig.lianjiang.conference.ConferenceActivity;
+import com.example.sig.lianjiang.db.InviteMessgeDao;
+import com.example.sig.lianjiang.db.UserDao;
+import com.example.sig.lianjiang.view.ContactItemView;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.ui.EaseContactListFragment;
+import com.hyphenate.util.EMLog;
+import com.hyphenate.util.NetUtils;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
+
 
 /**
  * Created by sig on 2018/7/9.
  */
 
-public class FriendFragment extends Fragment implements MyExpandableListView.OnMeiTuanRefreshListener{
-    private MyExpandableListView mExpandableListView;
-    ArrayList<ArrayList<ContactPerson>> contactPersonsList;
-    private QuickIndexBar mQuickIndexBar;
-    private TextView mTextDialog;
-    private FriendAdapter friendAdapter;
-    private TextView tv_pull_to_refresh;
-    private final static int REFRESH_COMPLETE = 0;
-    private static final int UPDATE_TEXT_DONE=1;
-    private static final int UPDATE_TEXT_STAR=2;
+public class FriendFragment extends EaseContactListFragment {
 
-    private FriendFragment.InterHandler mInterHandler = new FriendFragment.InterHandler(this);
+    private static final String TAG = FriendFragment.class.getSimpleName();
+    private ContactSyncListener contactSyncListener;
+    private BlackListSyncListener blackListSyncListener;
+    private ContactInfoSyncListener contactInfoSyncListener;
+    private View loadingView;
+    private ContactItemView applicationItem;
+    private InviteMessgeDao inviteMessgeDao;
 
-    private  class InterHandler extends Handler {
-        private WeakReference<FriendFragment> mActivity;
-        public InterHandler(FriendFragment activity){
-            mActivity = new WeakReference<FriendFragment>(activity);
+    @SuppressLint("InflateParams")
+    @Override
+    protected void initView() {
+        super.initView();
+        @SuppressLint("InflateParams") View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_friend, null);
+        HeaderItemClickListener clickListener = new HeaderItemClickListener();
+        applicationItem = (ContactItemView) headerView.findViewById(R.id.application_item);
+        applicationItem.setOnClickListener(clickListener);
+        headerView.findViewById(R.id.group_item).setOnClickListener(clickListener);
+        listView.addHeaderView(headerView);
+        //add loading view
+        loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_friend, null);
+        contentContainer.addView(loadingView);
+
+        registerForContextMenu(listView);
+    }
+
+    @Override
+    public void refresh() {
+        Map<String, EaseUser> m = StarryHelper.getInstance().getContactList();
+        if (m instanceof Hashtable<?, ?>) {
+            //noinspection unchecked
+            m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
         }
-        @Override
-        public void handleMessage(android.os.Message msg) {
-            FriendFragment activity = mActivity.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    case REFRESH_COMPLETE:
-                        activity.mExpandableListView.setOnRefreshComplete();
-                        activity.friendAdapter.notifyDataSetChanged();
-                        activity.mExpandableListView.setSelection(0);
-                        break;
-                    case UPDATE_TEXT_DONE:
-                        tv_pull_to_refresh.setText("刷新完成");
-                        mExpandableListView.fin();
-                        break;
-                    case UPDATE_TEXT_STAR:
-                        tv_pull_to_refresh.setText("下拉刷新");
-                        break;
-                }
-            }else{
-                super.handleMessage(msg);
-            }
+        setContactsMap(m);
+        super.refresh();
+        if(inviteMessgeDao == null){
+            inviteMessgeDao = new InviteMessgeDao(getActivity());
+        }
+        if(inviteMessgeDao.getUnreadMessagesCount() > 0){
+            applicationItem.showUnreadMsgView();
+        }else{
+            applicationItem.hideUnreadMsgView();
         }
     }
+
+
+    @SuppressWarnings("unchecked")
     @Override
-    public void onRefresh() {
-        new Thread(new Runnable() {
+    protected void setUpView() {
+        titleBar.setRightImageResource(R.drawable.em_add);
+        titleBar.setRightLayoutClickListener(new OnClickListener() {
 
             @Override
+            public void onClick(View v) {
+//                startActivity(new Intent(getActivity(), AddContactActivity.class));
+                NetUtils.hasDataConnection(getActivity());
+            }
+        });
+        //设置联系人数据
+        Map<String, EaseUser> m = StarryHelper.getInstance().getContactList();
+        if (m instanceof Hashtable<?, ?>) {
+            m = (Map<String, EaseUser>) ((Hashtable<String, EaseUser>)m).clone();
+        }
+        setContactsMap(m);
+        super.setUpView();
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EaseUser user = (EaseUser)listView.getItemAtPosition(position);
+                if (user != null) {
+                    String username = user.getUsername();
+                    // demo中直接进入聊天页面，实际一般是进入用户详情页
+                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
+                }
+            }
+        });
+
+
+        // 进入添加好友页
+        titleBar.getRightLayout().setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AddContactActivity.class));
+            }
+        });
+
+
+        contactSyncListener = new ContactSyncListener();
+        StarryHelper.getInstance().addSyncContactListener(contactSyncListener);
+
+        blackListSyncListener = new BlackListSyncListener();
+        StarryHelper.getInstance().addSyncBlackListListener(blackListSyncListener);
+
+        contactInfoSyncListener = new ContactInfoSyncListener();
+        StarryHelper.getInstance().getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
+
+        if (StarryHelper.getInstance().isContactsSyncedWithServer()) {
+            loadingView.setVisibility(View.GONE);
+        } else if (StarryHelper.getInstance().isSyncingContactsWithServer()) {
+            loadingView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (contactSyncListener != null) {
+            StarryHelper.getInstance().removeSyncContactListener(contactSyncListener);
+            contactSyncListener = null;
+        }
+
+        if(blackListSyncListener != null){
+            StarryHelper.getInstance().removeSyncBlackListListener(blackListSyncListener);
+        }
+
+        if(contactInfoSyncListener != null){
+            StarryHelper.getInstance().getUserProfileManager().removeSyncContactInfoListener(contactInfoSyncListener);
+        }
+    }
+
+
+    protected class HeaderItemClickListener implements OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.application_item:
+                    // 进入申请与通知页面
+                    startActivity(new Intent(getActivity(), NewFriendsMsgActivity.class));
+                    break;
+                case R.id.group_item:
+                    // 进入群聊列表页面
+                    startActivity(new Intent(getActivity(), GroupsActivity.class));
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+    }
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        toBeProcessUser = (EaseUser) listView.getItemAtPosition(((AdapterContextMenuInfo) menuInfo).position);
+        toBeProcessUsername = toBeProcessUser.getUsername();
+        getActivity().getMenuInflater().inflate(R.menu.em_context_contact_list, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.delete_contact) {
+            try {
+                // delete contact
+                deleteContact(toBeProcessUser);
+                // remove invitation message
+                InviteMessgeDao dao = new InviteMessgeDao(getActivity());
+                dao.deleteMessage(toBeProcessUser.getUsername());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return true;
+        }else if(item.getItemId() == R.id.add_to_blacklist){
+            moveToBlacklist(toBeProcessUsername);
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
+    /**
+     * delete contact
+     *
+     * @param tobeDeleteUser
+     */
+    public void deleteContact(final EaseUser tobeDeleteUser) {
+        String st1 = getResources().getString(R.string.deleting);
+        final String st2 = getResources().getString(R.string.Delete_failed);
+        final ProgressDialog pd = new ProgressDialog(getActivity());
+        pd.setMessage(st1);
+        pd.setCanceledOnTouchOutside(false);
+        pd.show();
+        new Thread(new Runnable() {
             public void run() {
                 try {
-                    Thread.sleep(2000);
-                    mInterHandler.sendEmptyMessage(UPDATE_TEXT_DONE);
-                    Thread.sleep(1000);
-                    mInterHandler.sendEmptyMessage(REFRESH_COMPLETE);
-                    mInterHandler.sendEmptyMessage(UPDATE_TEXT_STAR);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    EMClient.getInstance().contactManager().deleteContact(tobeDeleteUser.getUsername());
+                    // remove user from memory and database
+                    UserDao dao = new UserDao(getActivity());
+                    dao.deleteContact(tobeDeleteUser.getUsername());
+                    StarryHelper.getInstance().getContactList().remove(tobeDeleteUser.getUsername());
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            pd.dismiss();
+                            contactList.remove(tobeDeleteUser);
+                            contactListLayout.refresh();
+
+                        }
+                    });
+                } catch (final Exception e) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            pd.dismiss();
+                            Toast.makeText(getActivity(), st2 + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
                 }
+
             }
         }).start();
-    }
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_friend, container, false);
-        mExpandableListView = (MyExpandableListView) view.findViewById(R.id.address_expandable_listview);
-        mExpandableListView.setOnMeiTuanRefreshListener(this);
-        tv_pull_to_refresh=view.findViewById(R.id.tv_pull_to_refresh);
-        mTextDialog = (TextView) view.findViewById(R.id.text_dialog);
-        mQuickIndexBar = (QuickIndexBar) view.findViewById(R.id.quick_index_bar);
-        initData();
-        setListView();
-        setIndexBar();
-        return view;
+
     }
 
+    class ContactSyncListener implements DataSyncListener{
+        @Override
+        public void onSyncComplete(final boolean success) {
+            EMLog.d(TAG, "on contact list sync success:" + success);
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    getActivity().runOnUiThread(new Runnable(){
 
+                        @Override
+                        public void run() {
+                            if(success){
+                                loadingView.setVisibility(View.GONE);
+                                refresh();
+                            }else{
+                                String s1 = getResources().getString(R.string.get_failed_please_check);
+                                Toast.makeText(getActivity(), s1, Toast.LENGTH_LONG).show();
+                                loadingView.setVisibility(View.GONE);
+                            }
+                        }
 
-    /**
-     * 初始化数据
-     */
-    private void initData() {
-        contactPersonsList = Utils.getSortDataList(getActivity(),"person_name.txt");
-        friendAdapter=new FriendAdapter(getActivity(), contactPersonsList);
-    }
-
-    /**
-     * 设置ListView
-     */
-    private void setListView() {
-        /**设置适配器*/
-        mExpandableListView.setAdapter(friendAdapter);
-
-        /**设置group不可点击*/
-        mExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return true;//注意：一定要返回true，返回true这个方法才有效。
-            }
-        });
-
-        /**展开所有条目*/
-        for (int i = 0; i < contactPersonsList.size(); i++){
-            mExpandableListView.expandGroup(i);
+                    });
+                }
+            });
         }
     }
 
-    /**
-     * 设置setIndexBar
-     */
-    private void setIndexBar() {
-        mQuickIndexBar.setTextView(mTextDialog);//设置textDialog
-        mQuickIndexBar.setPaddingTop(15);//设置顶部padding
-        mQuickIndexBar.setPaddingBottom(15);//设置底部padding
+    class BlackListSyncListener implements DataSyncListener{
 
-        /**设置监听器*/
-        mQuickIndexBar.setOnLetterChangedListener(new QuickIndexBar.OnLetterChangedListener() {
-            @Override
-            public void onLetterChanged(String letter) {
-                for( int i = 0; i< contactPersonsList.size();i++){
-                    if(letter.equals(contactPersonsList.get(i).get(0).firstLetter)){
-                        mExpandableListView.setSelectedGroup(i);
+        @Override
+        public void onSyncComplete(boolean success) {
+            getActivity().runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+                    refresh();
+                }
+            });
+        }
+
+    }
+
+    class ContactInfoSyncListener implements DataSyncListener{
+
+        @Override
+        public void onSyncComplete(final boolean success) {
+            EMLog.d(TAG, "on contactinfo list sync success:" + success);
+            getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    loadingView.setVisibility(View.GONE);
+                    if(success){
+                        refresh();
                     }
                 }
-            }
-            @Override
-            public void onLetterGone() {}
-        });
+            });
+        }
+
     }
+
 }

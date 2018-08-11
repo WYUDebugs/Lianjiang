@@ -9,6 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 
 

@@ -4,7 +4,8 @@ package com.example.sig.lianjiang.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+//import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import android.widget.LinearLayout;
 
 import com.example.sig.lianjiang.activity.LoginActivitysteup1;
 import com.example.sig.lianjiang.activity.MemoryBookListActivity;
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.activity.SquareActivity;
 
 public class DynamicFragment extends Fragment implements View.OnClickListener{

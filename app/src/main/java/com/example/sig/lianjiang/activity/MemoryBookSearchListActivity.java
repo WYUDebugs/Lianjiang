@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryBookListAdapter;
 import com.example.sig.lianjiang.adapter.MemoryBookSearchListAdapter;
 import com.example.sig.lianjiang.utils.StatusBarUtil;

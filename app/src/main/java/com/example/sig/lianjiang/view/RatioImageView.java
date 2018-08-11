@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 
 /**
  * Created by sig on 2018/7/26.

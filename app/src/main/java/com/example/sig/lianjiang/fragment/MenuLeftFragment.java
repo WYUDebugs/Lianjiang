@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.event.HideButtonEvent;
 import com.example.sig.lianjiang.event.ShowButtonEvent;
 import com.example.sig.lianjiang.leftmenu.MenuFragment;

@@ -1,8 +1,8 @@
-package com.example.sig.lianjiang.view;
+package com.example.sig.lianjiang.utils;
 import android.content.Context;
 import android.content.res.TypedArray;
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 
 /**
  * Created by sig on 2018/7/9.

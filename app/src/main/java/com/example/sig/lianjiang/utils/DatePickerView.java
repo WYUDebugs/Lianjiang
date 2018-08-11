@@ -14,7 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 
 import java.util.ArrayList;
 import java.util.List;

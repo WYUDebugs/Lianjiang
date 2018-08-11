@@ -17,7 +17,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 
 
 /**

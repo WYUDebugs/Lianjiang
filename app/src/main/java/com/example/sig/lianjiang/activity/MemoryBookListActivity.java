@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.fragment.MemoryBookListFragment;
 import com.example.sig.lianjiang.fragment.MemoryBookListStarFragment;
 import com.example.sig.lianjiang.utils.StatusBarUtil;

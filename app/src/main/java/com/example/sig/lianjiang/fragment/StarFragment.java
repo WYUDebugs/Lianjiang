@@ -2,13 +2,14 @@ package com.example.sig.lianjiang.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+//import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.CursorTagsAdapter;
 import com.moxun.tagcloudlib.view.TagCloudView;
 

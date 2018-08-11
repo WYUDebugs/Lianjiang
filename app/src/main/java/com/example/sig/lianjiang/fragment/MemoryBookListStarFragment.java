@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.sig.lianjiang.activity.MemoryBookActivity;
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryBookStarAdapter;
 import com.moxun.tagcloudlib.view.TagCloudView;
 

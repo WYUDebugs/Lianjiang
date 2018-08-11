@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
 

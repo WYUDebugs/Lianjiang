@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sig.lianjiang.activity.MemoryBookActivity;
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 
 import java.util.List;
 

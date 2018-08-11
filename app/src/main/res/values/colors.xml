@@ -28,4 +28,5 @@
 
     <color name="text1">#05bffd</color>
     <color name="text2">#696969</color>
+    <color name="holo_black">#ff111111</color>
 </resources>

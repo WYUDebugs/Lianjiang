@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryCoverListAdapter;
 import com.example.sig.lianjiang.bean.CoverPictureBean;
 import com.example.sig.lianjiang.utils.StatusBarUtil;

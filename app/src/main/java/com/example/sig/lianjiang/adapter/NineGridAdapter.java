@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.model.NineGridTestModel;
 import com.example.sig.lianjiang.view.NineGridTestLayout;
 

@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.example.sig.lianjiang.R;
+
 import java.util.ArrayList;
 import java.util.List;
 

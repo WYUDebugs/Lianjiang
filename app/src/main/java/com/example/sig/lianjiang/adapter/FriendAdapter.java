@@ -6,7 +6,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.bean.ContactPerson;
 
 import java.util.ArrayList;

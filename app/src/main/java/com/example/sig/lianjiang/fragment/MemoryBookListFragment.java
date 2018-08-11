@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.example.sig.lianjiang.activity.MemoryBookActivity;
 import com.example.sig.lianjiang.activity.MemoryCoverUpdateActivity;
-import com.example.sig.lianjiang.activity.R;
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryBookListAdapter;
 import com.example.sig.lianjiang.view.ObservableListView;
 import com.nostra13.universalimageloader.core.ImageLoader;

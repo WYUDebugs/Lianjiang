@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.NineGridAdapter;
 import com.example.sig.lianjiang.model.NineGridTestModel;
 import com.example.sig.lianjiang.view.ObservableListView;

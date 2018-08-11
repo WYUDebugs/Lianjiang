@@ -13,6 +13,7 @@
  import android.widget.FrameLayout;
  import android.widget.Toast;
 
+ import com.example.sig.lianjiang.R;
  import com.example.sig.lianjiang.event.HideButtonEvent;
  import com.example.sig.lianjiang.event.ShowButtonEvent;
  import com.example.sig.lianjiang.fragment.DynamicFragment;
@@ -29,7 +30,7 @@
  import de.greenrobot.event.EventBus;
 
 
- public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
      private static final String TAG_PAGE_MESSAGE = "消息";
      private static final String TAG_PAGE_FRIEND = "联系人";
