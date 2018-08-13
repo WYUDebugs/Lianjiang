@@ -52,4 +52,7 @@ dependencies {
     compile 'com.github.WGwangguan:SeparatedEditText:v1.0'
     testCompile 'junit:junit:4.12'
     implementation 'com.android.support:design:26.1.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    //OkHttp请求框架
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
 }

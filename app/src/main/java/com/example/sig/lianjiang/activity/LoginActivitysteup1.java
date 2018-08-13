@@ -6,19 +6,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.StarryHelper;
+import com.example.sig.lianjiang.bean.UserListResultDto;
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class LoginActivitysteup1 extends AppCompatActivity implements View.OnClickListener{
+
+    private UserResultDto resultDto;
+
     private ImageView ivSubmit;
     private Button test;
     private EditText etPhone;
@@ -44,6 +56,9 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
         if (StarryHelper.getInstance().getCurrentUsernName() != null) {
             etPhone.setText(StarryHelper.getInstance().getCurrentUsernName());
         }
+
+        postDemo();
+        getDemo();
     }
     @Override
     public void onClick(View view){
@@ -93,4 +108,84 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
         }
     };
 
+    public void postDemo() {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param phoneParam = new OkHttpUtils.Param("phone", "2");
+        list.add(phoneParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findUserByPhone, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        //UserListResultDto resultDto=OkHttpUtils.getObjectFromJson(response.toString(),UserListResultDto.class);
+                        Log.d("wnf", "*********************************************************************");
+                        Log.d("wnf", "********************resultDto:" + resultDto);
+                        Toast.makeText(LoginActivitysteup1.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
+                        if (resultDto.getData() != null) {
+
+                        } else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(LoginActivitysteup1.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+
+    }
+
+    public void getDemo() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //get方式连接 url，get方式请求链接不能传参数
+                //参数方式：OkHttpUtils.get(url,OkHttpUtils.ResultCallback())
+                OkHttpUtils.get(APPConfig.findAllUser, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        UserListResultDto userListResultDto;
+                        try {
+                            userListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserListResultDto.class);
+                        } catch (Exception e) {
+                            //客户端出错
+                            userListResultDto =  UserListResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        Log.d("wnf", "*********************************************************************");
+                        Log.d("wnf", "********************userListResultDto:" + userListResultDto);
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(LoginActivitysteup1.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).start();
+    }
 }
