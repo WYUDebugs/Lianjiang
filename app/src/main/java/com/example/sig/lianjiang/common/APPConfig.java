@@ -7,6 +7,8 @@ public class APPConfig {
 
     private static String base_url="http://192.168.0.105:8080/starry/";
 
+    private static String img_url="http://192.168.0.105:8080/starry/img/";
+
 
     public static String login = base_url + "user/Login";
     public static String register = base_url + "user/register";

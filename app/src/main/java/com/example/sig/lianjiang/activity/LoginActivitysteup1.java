@@ -124,9 +124,10 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
                     public void onSuccess(Object response) {
                         Log.d("testRun", "response------" + response.toString());
                         try {
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
                             resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
                         } catch (Exception e) {
-                            //客户端出错
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
                             resultDto = UserResultDto.error("Exception:"+e.getClass());
                             e.printStackTrace();
                             Log.e("wnf", "Exception------" + e.getMessage());
@@ -167,9 +168,10 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
                         Log.d("testRun", "response------" + response.toString());
                         UserListResultDto userListResultDto;
                         try {
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
                             userListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserListResultDto.class);
                         } catch (Exception e) {
-                            //客户端出错
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
                             userListResultDto =  UserListResultDto.error("Exception:"+e.getClass());
                             e.printStackTrace();
                             Log.e("wnf", "Exception------" + e.getMessage());
