@@ -3,6 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
+    //**兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.example.sig.lianjiang"
         minSdkVersion 16
@@ -28,6 +30,15 @@ android {
             mavenCentral()
         }
     }
+    configurations {
+        all*.exclude group: 'com.google.code.gson', module: 'gson'
+        all*.exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+        all*.exclude group: 'com.squareup.okio', module: 'okio'
+        all*.exclude group: 'io.reactivex', module: 'rxjava'
+        all*.exclude group: 'io.reactivex', module: 'rxandroid'
+    }
+
+
 }
 
 dependencies {
@@ -54,5 +65,7 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     compile 'com.google.code.gson:gson:2.2.4'
     //OkHttp请求框架
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile'com.squareup.okhttp:okhttp:2.4.0'
+    compile'cn.bmob.android:bmob-sdk:3.5.6'
+    compile 'cn.bmob.android:bmob-sms:1.0.1'
 }

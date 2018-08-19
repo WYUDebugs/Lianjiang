@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,10 +19,16 @@ import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.StarryHelper;
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterActivitysteup2 extends AppCompatActivity implements View.OnClickListener{
     private String phone;
@@ -29,6 +36,9 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
     private EditText nameEditText;
     private TextView ivSubmit;
     private ImageView top_back;
+    private UserResultDto resultDto;
+    private String passWord;
+    private String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +65,10 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
     public void onClick(View view){
         switch (view.getId()){
             case R.id.tvConfirm:
-                register();
+                passWord = passwordEditText.getText().toString().trim();
+                name= nameEditText.getText().toString().trim();
+                registerPost(phone,passWord,name);
+                getIdPost(phone);
                 break;
             case R.id.top_back:
                 finish();
@@ -64,30 +77,29 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
 
     }
 
-    public void register() {
-        final String username = phone;
-        final String pwd = passwordEditText.getText().toString().trim();
+    public void register(final String id,final String passWord) {
+        final String userId = id;
+        final String pwd = passWord;
         if (TextUtils.isEmpty(pwd)) {
             Toast.makeText(this, getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
             passwordEditText.requestFocus();
             return;
         }
-        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(pwd)) {
+        if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pwd)) {
             final ProgressDialog pd = new ProgressDialog(this);
             pd.setMessage(getResources().getString(R.string.Is_the_registered));
             pd.show();
-
             new Thread(new Runnable() {
                 public void run() {
                     try {
                         // call method in SDK
-                        EMClient.getInstance().createAccount(username, pwd);
+                        EMClient.getInstance().createAccount(userId, pwd);
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 if (!RegisterActivitysteup2.this.isFinishing())
                                     pd.dismiss();
                                 // save current user
-                                StarryHelper.getInstance().setCurrentUserName(username);
+                                StarryHelper.getInstance().setCurrentUserName(userId);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
                                 finish();
                             }
@@ -118,6 +130,162 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
             }).start();
 
         }
+
+    }
+    public void registerPost(final String phone,final String passWord,final String name) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param phoneParam = new OkHttpUtils.Param("phone", phone);
+        OkHttpUtils.Param passWordParam = new OkHttpUtils.Param("password", passWord);
+        OkHttpUtils.Param nameParam = new OkHttpUtils.Param("name", name);
+        list.add(phoneParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.register, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                            if(resultDto.getMsg().equals("register_success")){
+
+                                Toast.makeText(RegisterActivitysteup2.this,"注册成功",Toast.LENGTH_SHORT).show();
+                                Intent intent=new Intent(RegisterActivitysteup2.this,LoginActivitysteup2.class);
+                                intent.putExtra("phone",phone);
+                                startActivity(intent);
+                            }else if(resultDto.getMsg().equals("phone_exist")){
+                                Toast.makeText(RegisterActivitysteup2.this,"手机号码已经被注册过",Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(RegisterActivitysteup2.this,"注册失败",Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            //客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(RegisterActivitysteup2.this,"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        //UserListResultDto resultDto=OkHttpUtils.getObjectFromJson(response.toString(),UserListResultDto.class);
+                        Log.d("wnf", "*********************************************************************");
+                        Log.d("wnf", "********************resultDto:" + resultDto);
+                        Toast.makeText(RegisterActivitysteup2.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
+                        if (resultDto.getData() != null) {
+
+                        } else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(RegisterActivitysteup2.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+
+    }
+    public void getIdPost(final String phone) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param phoneParam = new OkHttpUtils.Param("phone", phone);
+        list.add(phoneParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findUserByPhone, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                            if(resultDto.getMsg().equals("success")){
+                                String id=Integer.toString(resultDto.getData().getId());
+                                register(id,passWord);
+                            }else {
+                                Toast.makeText(RegisterActivitysteup2.this,"注册失败",Toast.LENGTH_SHORT).show();
+
+                            }
+                        } catch (Exception e) {
+                            //客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(RegisterActivitysteup2.this,"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        //UserListResultDto resultDto=OkHttpUtils.getObjectFromJson(response.toString(),UserListResultDto.class);
+                        Log.d("wnf", "*********************************************************************");
+                        Log.d("wnf", "********************resultDto:" + resultDto);
+                        Toast.makeText(RegisterActivitysteup2.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(RegisterActivitysteup2.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+
+    }
+
+    public void deleteUserPost(final String phone) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param phoneParam = new OkHttpUtils.Param("phone", phone);
+        list.add(phoneParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.deleteUserByPhone, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                            if(resultDto.getMsg().equals("success")){
+                                Log.e("RegisterActivitysteup2","删除成功");
+                            }else {
+                                Log.e("RegisterActivitysteup2","删除失败");
+                            }
+                        } catch (Exception e) {
+                            //客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(RegisterActivitysteup2.this,"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                            Log.e("RegisterActivitysteup2","删除失败");
+                        }
+                        //UserListResultDto resultDto=OkHttpUtils.getObjectFromJson(response.toString(),UserListResultDto.class);
+                        Log.d("wnf", "*********************************************************************");
+                        Log.d("wnf", "********************resultDto:" + resultDto);
+                        Toast.makeText(RegisterActivitysteup2.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(RegisterActivitysteup2.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+
     }
 
 }

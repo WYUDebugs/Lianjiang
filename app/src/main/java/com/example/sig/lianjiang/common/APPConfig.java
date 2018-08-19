@@ -5,13 +5,14 @@ package com.example.sig.lianjiang.common;
  */
 public class APPConfig {
 
-    private static String base_url="http://192.168.0.105:8080/starry/";
+    private static String base_url="http://10.0.2.2:8080/starry/";
 
 
     public static String login = base_url + "user/Login";
     public static String register = base_url + "user/register";
     public static String findUserByPhone = base_url + "user/findUserByPhone";
     public static String findAllUser = base_url + "user/findAllUser";
+    public static String deleteUserByPhone = base_url + "user/deleteUserByPhone";
 
 
 

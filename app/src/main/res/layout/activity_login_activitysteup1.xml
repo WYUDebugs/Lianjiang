@@ -89,11 +89,6 @@
             android:layout_height="60dp"
             android:layout_marginTop="43dp"
             android:src="@mipmap/ic_confirm_disable" />
-        <Button
-            android:id="@+id/test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="注册测试"/>
         <LinearLayout
             android:gravity="bottom"
             android:layout_gravity="center_horizontal"

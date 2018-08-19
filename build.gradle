@@ -21,7 +21,10 @@ allprojects {
         maven {
             url 'https://maven.google.com'
             maven { url 'http://developer.huawei.com/repo'}
+            maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
         }
+        //Bmob的maven仓库地址--必填
+
     }
 }
 

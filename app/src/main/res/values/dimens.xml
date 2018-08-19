@@ -9,4 +9,6 @@
     <dimen name="ts_20sp">20sp</dimen>
     <dimen name="width">700dp</dimen>
     <dimen name="adaptive_18sp">18sp</dimen>
+    <dimen name="my_topbar_height">53dp</dimen>
+
 </resources>

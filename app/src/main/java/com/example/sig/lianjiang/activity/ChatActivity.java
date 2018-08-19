@@ -1,7 +1,11 @@
 package com.example.sig.lianjiang.activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.Window;
+import android.view.WindowManager;
+
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.fragment.ChatFragment;
 import com.example.sig.lianjiang.runtimepermissions.PermissionsManager;
@@ -16,6 +20,13 @@ public class ChatActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
         setContentView(R.layout.activity_chat);
         activityInstance = this;
         //get user id or group id

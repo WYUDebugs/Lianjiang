@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#252C39"
+    android:background="@color/mytopbar_color"
     android:orientation="vertical"
     android:id="@+id/root_layout"
+    android:fitsSystemWindows="true"
     android:paddingLeft="20dp"
     android:paddingRight="20dp" >
 
@@ -28,7 +29,7 @@
             android:paddingRight="12dp"
             android:visibility="visible" />
 
-        <com.hyphenate.chatuidemo.widget.MyChronometer
+        <com.example.sig.lianjiang.widget.MyChronometer
             android:visibility="invisible"
             android:id="@+id/chronometer"
             android:layout_width="wrap_content"

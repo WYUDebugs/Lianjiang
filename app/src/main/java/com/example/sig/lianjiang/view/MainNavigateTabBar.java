@@ -1,5 +1,6 @@
 package com.example.sig.lianjiang.view;
 //import android.app.Fragment;
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,10 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sig.lianjiang.adapter.MessageAdapter;
+import com.example.sig.lianjiang.db.InviteMessgeDao;
+import com.example.sig.lianjiang.fragment.DynamicFragment;
+import com.example.sig.lianjiang.fragment.FriendFragment;
+import com.example.sig.lianjiang.fragment.MessageFragment;
 import com.example.sig.lianjiang.utils.ThemeUtils;
 
 
 import com.example.sig.lianjiang.R;
+import com.hyphenate.chat.EMClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +60,11 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
 
     private int mCurrentSelectedTab;
 
-    private OnCleanMessageTip monCleanMessageTip;
+    private UpdateTabBar mUpdateTabBar;
+
+    private InviteMessgeDao inviteMessgeDao=new InviteMessgeDao(getContext());
+
+    private Fragment mfragment=null;
 
 
     public MainNavigateTabBar(Context context) {
@@ -95,12 +106,16 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
     *回调接口
      */
 
-    public interface OnCleanMessageTip{
-        public void onClean();
+    public interface UpdateTabBar{
+        public int messageNum();
+        public boolean friendTip();
+        public boolean DynamicTip();
+        public boolean starTip();
+        public void cleanMessage();
     }
 
-    public void setOnCleanMessageTip(OnCleanMessageTip onCleanMessageTip){
-        monCleanMessageTip=onCleanMessageTip;
+    public void setUpdateMessageNum(UpdateTabBar updateTabBar){
+        mUpdateTabBar=updateTabBar;
     }
 
     public void addTab(Class frameLayoutClass, TabParam tabParam) {
@@ -126,27 +141,19 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
 
         holder.tabIcon = (ImageView) view.findViewById(R.id.tab_icon);
         holder.tabTitle = ((TextView) view.findViewById(R.id.tab_title));
-        holder.messagenum=(DragDeleteTextView)view.findViewById(R.id.message_num);
-        holder.messagenum.setOnDeleteTextListener(new DragDeleteTextView.OnDeleteTextListener() {
+        holder.unread_msg_number=(DragDeleteTextView) view.findViewById(R.id.unread_msg_number);
+        holder.tab_tip=(ImageView)view.findViewById(R.id.tab_tip);
+        holder.unread_msg_number.setOnDeleteTextListener(new DragDeleteTextView.OnDeleteTextListener() {
             @Override
             public void onDelete(View view) {
-                monCleanMessageTip.onClean();
+//                mUpdateTabBar.cleanMessage();
                 Toast.makeText(getContext(),"2333",Toast.LENGTH_SHORT).show();
             }
         });
-        holder.tip=(ImageView)view.findViewById(R.id.tab_tip);
         if (TextUtils.isEmpty(tabParam.title)) {
             holder.tabTitle.setVisibility(View.INVISIBLE);
         } else {
             holder.tabTitle.setText(tabParam.title);                        //修改标志
-            if(tabParam.title.equals("消息")){
-                holder.messagenum.setVisibility(View.VISIBLE);
-
-                holder.tip.setVisibility(View.INVISIBLE);
-            }else {
-                holder.messagenum.setVisibility(View.INVISIBLE);
-                holder.tip.setVisibility(View.VISIBLE);
-            }
         }
 
         if (mTabTextSize != 0) {
@@ -173,6 +180,7 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
         }
 
         addView(view, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1.0F));
+        refreshTip();
 
     }
 
@@ -220,13 +228,99 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
             }
         }
     }
+    public void refreshTip(){
+        ((Activity)getContext()).runOnUiThread(new Runnable() {
+            public void run() {
+                for (ViewHolder holder : mViewHolderList){
+                    showTip(holder);
+                    refreshFragment(holder);
+                }
 
+            }
+        });
+    }
+    public void refreshFragment(ViewHolder holder){
+        mFragmentActivity = (FragmentActivity) getContext();
+        FragmentTransaction transaction = mFragmentActivity.getSupportFragmentManager().beginTransaction();
+
+        Fragment fragment = mFragmentActivity.getSupportFragmentManager().findFragmentByTag(holder.tag);
+        if (fragment == null) {
+            fragment = getFragmentInstance(holder.tag);
+            transaction.add(mMainContentLayoutId, fragment, holder.tag);
+        } else {
+            if(holder.tabIndex==0){
+                ((MessageFragment)fragment).refresh();
+            }else if(holder.tabIndex==1){
+                ((FriendFragment)fragment).refresh();
+            }else if(holder.tabIndex==2){
+//                ((DynamicFragment)fragment).refresh();
+            }else {
+//
+            }
+
+        }
+
+        Log.e("1234",Integer.toString(mCurrentSelectedTab));
+    }
+    private void showTip(ViewHolder holder){
+        if(holder.tabIndex==0){
+            int num= EMClient.getInstance().chatManager().getUnreadMsgsCount();;
+            if(num>0&&num<100){
+                holder.unread_msg_number.setVisibility(View.VISIBLE);
+                holder.unread_msg_number.setText(Integer.toString(num));
+            }else if(num>=100){
+                holder.unread_msg_number.setVisibility(View.VISIBLE);
+                holder.unread_msg_number.setText("99+");
+            }else {
+                holder.unread_msg_number.setVisibility(View.INVISIBLE);
+            }
+            holder.tab_tip.setVisibility(View.INVISIBLE);
+
+            Log.e("123","1");
+        }else if(holder.tabIndex==1){
+            holder.unread_msg_number.setVisibility(View.INVISIBLE);
+            int count=inviteMessgeDao.getUnreadMessagesCount();
+            boolean tip;
+            if(count>0){
+                tip=true;
+            }else {
+                tip=false;
+            }
+            if(tip){
+                holder.tab_tip.setVisibility(View.VISIBLE);
+            }else {
+                holder.tab_tip.setVisibility(View.INVISIBLE);
+            }
+            Log.e("123","2");
+        }else if(holder.tabIndex==2){
+            holder.unread_msg_number.setVisibility(View.INVISIBLE);
+//            boolean tip=mUpdateTabBar.DynamicTip();
+            boolean tip=false;
+            if(tip){
+                holder.tab_tip.setVisibility(View.VISIBLE);
+            }else {
+                holder.tab_tip.setVisibility(View.INVISIBLE);
+            }
+            Log.e("123","3");
+        }else{
+            holder.unread_msg_number.setVisibility(View.INVISIBLE);
+//            boolean tip=mUpdateTabBar.starTip();
+            boolean tip=false;
+            if(tip){
+                holder.tab_tip.setVisibility(View.VISIBLE);
+            }else {
+                holder.tab_tip.setVisibility(View.INVISIBLE);
+            }
+            Log.e("123","4");
+        }
+    }
     /**
      * 显示 holder 对应的 fragment
      *
      * @param holder
      */
     private void showFragment(ViewHolder holder) {
+        showTip(holder);
         FragmentTransaction transaction = mFragmentActivity.getSupportFragmentManager().beginTransaction();
         if (isFragmentShown(transaction, holder.tag)) {
             return;
@@ -238,10 +332,20 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
             fragment = getFragmentInstance(holder.tag);
             transaction.add(mMainContentLayoutId, fragment, holder.tag);
         } else {
+            if(holder.tabIndex==0){
+                ((MessageFragment)fragment).refresh();
+            }else if(holder.tabIndex==1){
+                ((FriendFragment)fragment).refresh();
+            }else if(holder.tabIndex==2){
+//                ((DynamicFragment)fragment).refresh();
+            }else {
+//
+            }
             transaction.show(fragment);
         }
         transaction.commit();
         mCurrentSelectedTab = holder.tabIndex;
+        Log.e("1234",Integer.toString(mCurrentSelectedTab));
     }
 
     private boolean isFragmentShown(FragmentTransaction transaction, String newTag) {
@@ -350,8 +454,8 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
         public TextView tabTitle;
         public Class fragmentClass;
         public int tabIndex;
-        public DragDeleteTextView messagenum;
-        public ImageView tip;
+        public DragDeleteTextView unread_msg_number;
+        public ImageView tab_tip;
     }
 
 
@@ -417,6 +521,9 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
         return mCurrentSelectedTab;
     }
 
+    public Fragment getMfragment(){
+        return mfragment;
+    }
 
 
 }

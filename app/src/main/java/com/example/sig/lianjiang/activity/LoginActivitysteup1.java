@@ -1,5 +1,6 @@
 package com.example.sig.lianjiang.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,8 @@ import com.example.sig.lianjiang.StarryHelper;
 import com.example.sig.lianjiang.bean.UserListResultDto;
 import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
+import com.example.sig.lianjiang.runtimepermissions.PermissionsManager;
+import com.example.sig.lianjiang.runtimepermissions.PermissionsResultAction;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 
@@ -32,7 +35,6 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
     private UserResultDto resultDto;
 
     private ImageView ivSubmit;
-    private Button test;
     private EditText etPhone;
     private String phone;
     @Override
@@ -49,31 +51,19 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_login_activitysteup1);
         etPhone=(EditText)findViewById(R.id.etPhone);
         etPhone.addTextChangedListener(mTextWatcher);
-        test=(Button)findViewById(R.id.test);
-        test.setOnClickListener(this);
         ivSubmit=(ImageView)findViewById(R.id.ivSubmit);
         ivSubmit.setOnClickListener(this);
         if (StarryHelper.getInstance().getCurrentUsernName() != null) {
             etPhone.setText(StarryHelper.getInstance().getCurrentUsernName());
         }
-
-        postDemo();
-        getDemo();
+        requestPermissions();
     }
     @Override
     public void onClick(View view){
         switch (view.getId()){
             case R.id.ivSubmit:
                 phone=etPhone.getText().toString();
-                Intent intent=new Intent(this,LoginActivitysteup2.class);
-                intent.putExtra("phone",phone);
-                startActivity(intent);
-                break;
-            case R.id.test:
-                phone=etPhone.getText().toString();
-                Intent intent1=new Intent(this,RegisterActivitysteup1.class);
-                intent1.putExtra("phone",phone);
-                startActivity(intent1);
+                postDemo(phone);
                 break;
         }
 
@@ -101,17 +91,19 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
             editStart = etPhone.getSelectionStart();
             editEnd = etPhone.getSelectionEnd();
             if (temp.length() > 10) {
+                ivSubmit.setClickable(true);
                 ivSubmit.setImageResource(R.mipmap.ic_confirm);
             }else {
                 ivSubmit.setImageResource(R.mipmap.ic_confirm_disable);
+                ivSubmit.setClickable(false);
             }
         }
     };
 
-    public void postDemo() {
+    public void postDemo(final String phone) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param phoneParam = new OkHttpUtils.Param("phone", "2");
+        OkHttpUtils.Param phoneParam = new OkHttpUtils.Param("phone", phone);
         list.add(phoneParam);
 
         new Thread(new Runnable() {
@@ -125,10 +117,20 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
                         Log.d("testRun", "response------" + response.toString());
                         try {
                             resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                            if(resultDto.getData()!=null){
+                                Intent intent=new Intent(LoginActivitysteup1.this,LoginActivitysteup2.class);
+                                intent.putExtra("phone",phone);
+                                startActivity(intent);
+                            }else {
+                                Intent intent1=new Intent(LoginActivitysteup1.this,RegisterActivitysteup1.class);
+                                intent1.putExtra("phone",phone);
+                                startActivity(intent1);
+                            }
                         } catch (Exception e) {
                             //客户端出错
                             resultDto = UserResultDto.error("Exception:"+e.getClass());
                             e.printStackTrace();
+                            Toast.makeText(LoginActivitysteup1.this,"服务器出错了",Toast.LENGTH_SHORT).show();
                             Log.e("wnf", "Exception------" + e.getMessage());
                         }
                         //UserListResultDto resultDto=OkHttpUtils.getObjectFromJson(response.toString(),UserListResultDto.class);
@@ -187,5 +189,19 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
                 });
             }
         }).start();
+    }
+    @TargetApi(23)
+    private void requestPermissions() {
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
+            @Override
+            public void onGranted() {
+//				Toast.makeText(MainActivity.this, "All permissions have been granted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDenied(String permission) {
+                //Toast.makeText(MainActivity.this, "Permission " + permission + " has been denied", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
