@@ -1,5 +1,6 @@
 package com.example.sig.lianjiang.activity;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,11 +9,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sig.lianjiang.runtimepermissions.PermissionsManager;
+import com.example.sig.lianjiang.runtimepermissions.PermissionsResultAction;
 import com.hyphenate.chat.EMClient;
 import com.example.sig.lianjiang.StarryHelper;
 import com.example.sig.lianjiang.R;
 //import com.example.sig.lianjiang.conference.ConferenceActivity;
 import com.hyphenate.util.EasyUtils;
+
+import cn.bmob.sms.BmobSMS;
+import cn.bmob.v3.Bmob;
 
 
 /**
@@ -27,8 +33,8 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle arg0) {
         setContentView(R.layout.activity_splash);
         super.onCreate(arg0);
-
-
+        BmobSMS.initialize(this,"53d8a48a1543952d26d7ded007d1a77e");
+        Bmob.initialize(this, "53d8a48a1543952d26d7ded007d1a77e");
         StarryHelper.getInstance().initHandler(this.getMainLooper());
 
         RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.splash_root);

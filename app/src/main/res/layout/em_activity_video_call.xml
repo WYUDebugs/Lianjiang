@@ -30,7 +30,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp" >
+        android:paddingRight="20dp"
+        android:background="@color/mytopbar_color">
 
         <LinearLayout
             android:id="@+id/ll_top_container"
@@ -38,8 +39,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="5dp"
+            android:background="@color/mytopbar_color"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:fitsSystemWindows="true">
 
             <TextView
                 android:id="@+id/tv_call_state"
@@ -51,7 +54,7 @@
                 android:textSize="22sp"
                 android:visibility="visible" />
 
-            <com.hyphenate.chatuidemo.widget.MyChronometer
+            <com.example.sig.lianjiang.widget.MyChronometer
                 android:id="@+id/chronometer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

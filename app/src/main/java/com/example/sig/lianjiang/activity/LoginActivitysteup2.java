@@ -23,12 +23,18 @@ import android.widget.Toast;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.StarryApplication;
 import com.example.sig.lianjiang.StarryHelper;
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.db.StarryDBManager;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import android.content.DialogInterface.OnCancelListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class LoginActivitysteup2 extends BaseActivity implements View.OnClickListener{
@@ -191,4 +197,5 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
             }
         });
     }
+    
 }

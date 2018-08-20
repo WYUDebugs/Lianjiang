@@ -42,17 +42,12 @@
                 android:text="验证码"
                 android:drawableLeft="@mipmap/login_code"
                 android:drawablePadding="14dp" />
-            <com.kenny.separatededittext.SeparatedEditText
-                android:id="@+id/edit_underline"
+            <com.example.sig.lianjiang.view.SecurityCodeView
+                android:id="@+id/scv_edittext"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:inputType="number"
-                app:blockSpacing="10dp"
-                app:maxLength="4"
-                app:borderColor="@color/lightGrey"
-                app:separateType="@integer/type_underline"
-                app:textColor="@color/colorAccent" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp" />
             <TextView
                 android:textSize="13sp"
                 android:textColor="#FFBABABA"
@@ -61,12 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="已发送验证码至xxx xxxx xxxx" />
-            <Button
-                android:id="@+id/test"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="注册测试"/>
+                android:text="已发送验证码至xxx xxxx xxxx"
+                android:visibility="invisible"/>
         </LinearLayout>
         <TextView
             android:textSize="18sp"
