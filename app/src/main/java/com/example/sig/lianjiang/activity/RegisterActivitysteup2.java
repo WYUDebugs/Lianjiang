@@ -206,26 +206,24 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
                     @Override
                     public void onSuccess(Object response) {
                         Log.d("testRun", "response------" + response.toString());
-                        try {
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
                             resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
-                            if(resultDto.getMsg().equals("success")){
-                                String id=Integer.toString(resultDto.getData().getId());
-                                register(id,passWord);
-                            }else {
-                                Toast.makeText(RegisterActivitysteup2.this,"注册失败",Toast.LENGTH_SHORT).show();
-
-                            }
                         } catch (Exception e) {
-                            //客户端出错
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
                             resultDto = UserResultDto.error("Exception:"+e.getClass());
                             e.printStackTrace();
                             Toast.makeText(RegisterActivitysteup2.this,"服务器出错了",Toast.LENGTH_SHORT).show();
                             Log.e("wnf", "Exception------" + e.getMessage());
                         }
-                        //UserListResultDto resultDto=OkHttpUtils.getObjectFromJson(response.toString(),UserListResultDto.class);
-                        Log.d("wnf", "*********************************************************************");
-                        Log.d("wnf", "********************resultDto:" + resultDto);
-                        Toast.makeText(RegisterActivitysteup2.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
+                        if (resultDto.getMsg().equals("success") && resultDto.getData() != null) {
+                            String id = Integer.toString(resultDto.getData().getId());
+                            register(id, passWord);
+                        } else {
+                            Toast.makeText(RegisterActivitysteup2.this, "注册失败", Toast.LENGTH_SHORT).show();
+                            // 注册失败了是不是应该把我们自己后台的刚刚添加的用户删掉，
+                            // 或者有其他的方法保证环信和我们自己后台的用户信息同时存在
+                        }
                     }
 
                     @Override
