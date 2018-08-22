@@ -6,13 +6,11 @@
     <!-- To access Google+ APIs: -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -30,6 +28,11 @@
     <!-- bugly start -->
     <uses-permission android:name="android.permission.READ_LOGS" />
     <!-- bugly end -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- 这个权限用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- SD卡读取权限，用户写入离线定位数据 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <permission
         android:name="com.example.sig.lianjiang.permission.MIPUSH_RECEIVE"
@@ -178,7 +181,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="3ecea51f560650b1ed8a4b99808f52e8" />
+            android:value="MSNgsXM6iIFGHbmOdZL7QC7Z2B662fvy" />
 
         <activity android:name=".activity.VoiceCallActivity" />
         <activity android:name=".activity.VideoCallActivity" />
@@ -196,7 +199,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.RegisterActivitysteup1" />
-        <activity android:name=".activity.RegisterActivitysteup2"></activity>
+        <activity android:name=".activity.RegisterActivitysteup2" />
+        <activity android:name=".activity.LocationActivity" />
+        <activity android:name=".activity.SearchPositionActivity"></activity>
     </application>
 
 </manifest>

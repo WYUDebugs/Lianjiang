@@ -8,10 +8,6 @@
 
 
 
-    <ImageView
-        android:id="@+id/imageview"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
     <com.example.sig.lianjiang.view.ObservableListView
         android:id="@+id/lv_bbs"
         android:divider="#00000000"

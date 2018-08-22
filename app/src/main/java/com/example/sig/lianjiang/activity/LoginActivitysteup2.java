@@ -197,5 +197,5 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
             }
         });
     }
-    
+
 }

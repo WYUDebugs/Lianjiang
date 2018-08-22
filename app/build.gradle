@@ -51,6 +51,7 @@ dependencies {
     //compile 'com.facebook.fresco:fresco:0.7.0+'
     compile project(':easeui')
     compile project(':hmspush')
+    //OkHttp请求框架
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:recyclerview-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -61,11 +62,10 @@ dependencies {
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.google.firebase:firebase-messaging:11.4.0'
     compile 'com.github.WGwangguan:SeparatedEditText:v1.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'cn.bmob.android:bmob-sdk:3.5.6'
+    compile 'cn.bmob.android:bmob-sms:1.0.1'
     testCompile 'junit:junit:4.12'
     implementation 'com.android.support:design:26.1.0'
-    compile 'com.google.code.gson:gson:2.2.4'
-    //OkHttp请求框架
-    compile'com.squareup.okhttp:okhttp:2.4.0'
-    compile'cn.bmob.android:bmob-sdk:3.5.6'
-    compile 'cn.bmob.android:bmob-sms:1.0.1'
 }
