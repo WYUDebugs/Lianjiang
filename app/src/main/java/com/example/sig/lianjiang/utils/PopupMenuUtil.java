@@ -1,12 +1,14 @@
 package com.example.sig.lianjiang.utils;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.activity.SquareAddActivity;
 
 import android.view.Window;
 import android.view.WindowManager;
@@ -76,10 +78,21 @@ public class PopupMenuUtil implements View.OnClickListener{
     //点击事件,打开popupWindow后如果再次点击加号图标,调用_rlClickAction()关闭弹窗
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.pop_iv_img) {
-            _rlClickAction();
-        } else {
-            Toast.makeText(context, "点击", Toast.LENGTH_SHORT).show();
+//        if (view.getId() == R.id.pop_iv_img) {
+//            _rlClickAction();
+//        } else {
+//            Toast.makeText(context, "点击", Toast.LENGTH_SHORT).show();
+//        }
+        switch (view.getId()){
+            case R.id.pop_iv_img:
+                _rlClickAction();
+                break;
+            case R.id.test1:
+                toSquareAdd();
+                break;
+            case R.id.test2:
+                Toast.makeText(context, "纪念册", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -175,6 +188,9 @@ public class PopupMenuUtil implements View.OnClickListener{
         anim.setDuration(duration);
         anim.start();
     }
-
+    public void toSquareAdd(){
+        Intent intent=new Intent(context, SquareAddActivity.class);
+        context.startActivity(intent);
+    }
 
 }

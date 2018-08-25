@@ -3,6 +3,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.baidu.mapapi.SDKInitializer;
+
 /**
  * Created by sig on 2018/8/7.
  */
@@ -29,7 +31,7 @@ public class StarryApplication extends Application{
         StarryHelper.getInstance().init(applicationContext);
 
         // 初始化华为 HMS 推送服务
-        HMSPushHelper.getInstance().initHMSAgent(instance);
+//        HMSPushHelper.getInstance().initHMSAgent(instance);
     }
 
     public static StarryApplication getInstance() {

@@ -201,7 +201,8 @@
         <activity android:name=".activity.RegisterActivitysteup1" />
         <activity android:name=".activity.RegisterActivitysteup2" />
         <activity android:name=".activity.LocationActivity" />
-        <activity android:name=".activity.SearchPositionActivity"></activity>
+        <activity android:name=".activity.SearchPositionActivity" />
+        <activity android:name=".activity.SquareAddActivity"></activity>
     </application>
 
 </manifest>

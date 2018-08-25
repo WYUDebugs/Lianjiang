@@ -3,16 +3,22 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    >
     <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:id="@+id/user_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
         android:src="@mipmap/user"/>
     <TextView
+        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="20dp"
         android:text="SIG"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,8 +26,10 @@
         android:gravity="right"
         >
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/next"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
             android:src="@mipmap/next"/>
     </LinearLayout>
 </LinearLayout>

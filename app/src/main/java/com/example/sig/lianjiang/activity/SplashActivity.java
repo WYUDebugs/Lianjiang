@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.example.sig.lianjiang.runtimepermissions.PermissionsManager;
 import com.example.sig.lianjiang.runtimepermissions.PermissionsResultAction;
 import com.hyphenate.chat.EMClient;
@@ -35,6 +36,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(arg0);
         BmobSMS.initialize(this,"53d8a48a1543952d26d7ded007d1a77e");
         Bmob.initialize(this, "53d8a48a1543952d26d7ded007d1a77e");
+        SDKInitializer.initialize(getApplicationContext());
         StarryHelper.getInstance().initHandler(this.getMainLooper());
 
         RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.splash_root);

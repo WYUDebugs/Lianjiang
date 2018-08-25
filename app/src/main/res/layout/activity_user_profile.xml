@@ -7,7 +7,8 @@
     >
     <com.example.sig.lianjiang.view.ObservableListView
         android:id="@+id/lv_bbs"
-        android:divider="#000000"
+        android:divider="@color/mytopbar_color"
+        android:dividerHeight="1px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

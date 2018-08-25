@@ -2,10 +2,13 @@ package com.example.sig.lianjiang.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -24,6 +27,7 @@ import java.util.List;
 
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.SearchPositionAdapter;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 
 public class SearchPositionActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
     private Context mContext;
@@ -64,6 +68,7 @@ public class SearchPositionActivity extends AppCompatActivity implements Adapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        theme();
         setContentView(R.layout.activity_search_position);
         initUI();
     }
@@ -148,6 +153,16 @@ public class SearchPositionActivity extends AppCompatActivity implements Adapter
                     Toast.makeText(mContext, "请输入地点", Toast.LENGTH_LONG).show();
                 }
                 break;
+        }
+    }
+
+    private void theme(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
 }

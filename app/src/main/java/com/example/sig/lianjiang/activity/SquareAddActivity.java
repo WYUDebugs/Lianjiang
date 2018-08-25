@@ -1,8 +1,9 @@
 package com.example.sig.lianjiang.activity;
 
+import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,22 +11,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.sig.lianjiang.R;
-import com.example.sig.lianjiang.adapter.MemoryCoverListAdapter;
-import com.example.sig.lianjiang.bean.CoverPictureBean;
 import com.example.sig.lianjiang.utils.CustomDatePicker;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.utils.TimeUtil;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class MomentAddActivity extends AppCompatActivity implements View.OnClickListener {
-
+public class SquareAddActivity extends AppCompatActivity implements View.OnClickListener{
     private ImageView imgTopLeft;
     private TextView tvTopTitle;
     private ImageView imgTopRight;
@@ -34,18 +29,15 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout llLocationTime;
     private Button btSendMoment;
     private TextView tvLocationTime;
-
+    private final static int REQUEST_CODE = 0x123;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         theme();
-        setContentView(R.layout.activity_moment_add);
-
+        setContentView(R.layout.activity_square_add);
         initData();
         initView();
-
     }
-
     private void initData() {
 
     }
@@ -59,7 +51,7 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
         llLocationTime = (LinearLayout) findViewById(R.id.ll_location_time);
         btSendMoment = (Button) findViewById(R.id.bt_send_moment);
         tvLocationTime = (TextView) findViewById(R.id.tv_location_time);
-        tvTopTitle.setText("记录美好时光");
+        tvTopTitle.setText("发布动态");
 
         imgTopLeft.setOnClickListener(this);
         llLocationTime.setOnClickListener(this);
@@ -89,7 +81,7 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
                 finish();
                 break;
             case R.id.ll_location_time:
-                alterDatePicker();
+                getLocation();
                 break;
             case R.id.bt_send_moment:
                 finish();
@@ -106,5 +98,18 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
+    }
+    public void getLocation(){
+        Intent intent = new Intent(this, LocationActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 返回成功
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE && data != null) {
+            String position = data.getStringExtra("position");
+            tvLocationTime.setText(position);
+        }
     }
 }
