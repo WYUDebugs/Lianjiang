@@ -51,4 +51,5 @@
     <color name="greenNorColor">#FF00AD2E</color>
     <!--标题栏的绿色按钮点击颜色-->
     <color name="greenPreBtn">#DD00AD2E</color>
+    <color name="photopicker_background">#181819</color>
 </resources>

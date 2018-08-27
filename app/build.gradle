@@ -51,6 +51,7 @@ dependencies {
     //compile 'com.facebook.fresco:fresco:0.7.0+'
     compile project(':easeui')
     compile project(':hmspush')
+    compile project(':photopicker')
     //OkHttp请求框架
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:recyclerview-v7:26.+'

@@ -68,7 +68,6 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
                 passWord = passwordEditText.getText().toString().trim();
                 name= nameEditText.getText().toString().trim();
                 registerPost(phone,passWord,name);
-                getIdPost(phone);
                 break;
             case R.id.top_back:
                 finish();
@@ -101,7 +100,11 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
                                 // save current user
                                 StarryHelper.getInstance().setCurrentUserName(userId);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
-                                finish();
+                                Intent intent=new Intent(RegisterActivitysteup2.this,LoginActivitysteup2.class);
+                                intent.putExtra("phone",phone);
+                                intent.putExtra("id",Integer.parseInt(id));
+                                startActivity(intent);
+//                                finish();
                             }
                         });
                     } catch (final HyphenateException e) {
@@ -153,10 +156,8 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
                             resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
                             if(resultDto.getMsg().equals("register_success")){
 
-                                Toast.makeText(RegisterActivitysteup2.this,"注册成功",Toast.LENGTH_SHORT).show();
-                                Intent intent=new Intent(RegisterActivitysteup2.this,LoginActivitysteup2.class);
-                                intent.putExtra("phone",phone);
-                                startActivity(intent);
+//                                Toast.makeText(RegisterActivitysteup2.this,"注册成功",Toast.LENGTH_SHORT).show();
+                                getIdPost(phone);
                             }else if(resultDto.getMsg().equals("phone_exist")){
                                 Toast.makeText(RegisterActivitysteup2.this,"手机号码已经被注册过",Toast.LENGTH_SHORT).show();
                             }else {
@@ -223,6 +224,7 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
                             Toast.makeText(RegisterActivitysteup2.this, "注册失败", Toast.LENGTH_SHORT).show();
                             // 注册失败了是不是应该把我们自己后台的刚刚添加的用户删掉，
                             // 或者有其他的方法保证环信和我们自己后台的用户信息同时存在
+                            deleteUserPost(phone);
                         }
                     }
 

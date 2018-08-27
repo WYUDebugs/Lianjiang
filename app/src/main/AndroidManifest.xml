@@ -203,6 +203,12 @@
         <activity android:name=".activity.LocationActivity" />
         <activity android:name=".activity.SearchPositionActivity" />
         <activity android:name=".activity.SquareAddActivity"></activity>
+        <activity
+            android:name="com.lidong.photopicker.PhotoPickerActivity"
+            android:theme="@style/PhotoPickerTheme"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name="com.lidong.photopicker.PhotoPreviewActivity"
+            android:theme="@style/PhotoPickerTheme"/>
     </application>
 
 </manifest>

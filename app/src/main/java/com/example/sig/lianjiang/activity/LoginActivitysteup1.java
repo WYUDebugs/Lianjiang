@@ -37,6 +37,7 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
     private ImageView ivSubmit;
     private EditText etPhone;
     private String phone;
+    private int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +128,9 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
                         }
                         if(resultDto.getData()!=null){
                             Intent intent=new Intent(LoginActivitysteup1.this,LoginActivitysteup2.class);
+                            id=resultDto.getData().getId();
                             intent.putExtra("phone",phone);
+                            intent.putExtra("id",id);
                             startActivity(intent);
                         }else {
                             Intent intent1=new Intent(LoginActivitysteup1.this,RegisterActivitysteup1.class);

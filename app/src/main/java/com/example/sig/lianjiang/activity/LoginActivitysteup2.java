@@ -46,6 +46,7 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
     private EditText passwordEditText;
     private String phone;
     private TextView tvConfirm;
+    private String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +68,7 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_login_activitysteup2);
         Intent intent=getIntent();
         phone=intent.getStringExtra("phone");
+        id=Integer.toString(intent.getIntExtra("id",-1));
         top_back=(ImageView)findViewById(R.id.top_back);
         top_back.setOnClickListener(this);
         passwordEditText=(EditText)findViewById(R.id.etPwd);
@@ -93,7 +95,7 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.tvConfirm:
-                login();
+                login(id);
                 break;
         }
     }
@@ -103,12 +105,12 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
      *
      *
      */
-    public void login() {
+    public void login(String Id) {
         if (!EaseCommonUtils.isNetWorkConnected(this)) {
             Toast.makeText(this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
             return;
         }
-        String currentUsername = phone.trim();
+        String currentUsername = Id.trim();
         String currentPassword = passwordEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(currentUsername)) {
@@ -197,5 +199,6 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
             }
         });
     }
+
 
 }

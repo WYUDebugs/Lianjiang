@@ -4,32 +4,56 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.utils.CustomDatePicker;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.utils.TimeUtil;
+import com.lidong.photopicker.ImageCaptureManager;
+import com.lidong.photopicker.PhotoPickerActivity;
+import com.lidong.photopicker.PhotoPreviewActivity;
+import com.lidong.photopicker.SelectModel;
+import com.lidong.photopicker.intent.PhotoPickerIntent;
+import com.lidong.photopicker.intent.PhotoPreviewIntent;
 
+import android.widget.GridView;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 public class SquareAddActivity extends AppCompatActivity implements View.OnClickListener{
     private ImageView imgTopLeft;
-    private TextView tvTopTitle;
-    private ImageView imgTopRight;
-    private TextView tvTopRight;
+    private TextView tv_send;
     private EditText etMomentContent;
     private LinearLayout llLocationTime;
-    private Button btSendMoment;
     private TextView tvLocationTime;
     private final static int REQUEST_CODE = 0x123;
+    private static final int REQUEST_CAMERA_CODE = 10;
+    private static final int REQUEST_PREVIEW_CODE = 20;
+    private ArrayList<String> imagePaths = new ArrayList<>();
+    private ImageCaptureManager captureManager; // 相机拍照处理类
+    private String TAG =SquareAddActivity.class.getSimpleName();
+    private String depp;
+
+    private GridView gridView;
+    private GridAdapter gridAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,35 +68,43 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
 
     private void initView() {
         imgTopLeft = (ImageView) findViewById(R.id.img_top_left);
-        tvTopTitle = (TextView) findViewById(R.id.tv_top_title);
-        imgTopRight = (ImageView) findViewById(R.id.img_top_right);
-        tvTopRight = (TextView) findViewById(R.id.tv_top_right);
+
         etMomentContent = (EditText) findViewById(R.id.et_moment_content);
         llLocationTime = (LinearLayout) findViewById(R.id.ll_location_time);
-        btSendMoment = (Button) findViewById(R.id.bt_send_moment);
         tvLocationTime = (TextView) findViewById(R.id.tv_location_time);
-        tvTopTitle.setText("发布动态");
-
+        tv_send=findViewById(R.id.tv_send);
         imgTopLeft.setOnClickListener(this);
         llLocationTime.setOnClickListener(this);
-        btSendMoment.setOnClickListener(this);
+        gridView = (GridView) findViewById(R.id.gridView);
+        int cols = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().densityDpi;
+        cols = cols < 3 ? 3 : cols;
+        gridView.setNumColumns(cols);
+        // preview
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String imgs = (String) parent.getItemAtPosition(position);
+                if ("000000".equals(imgs) ){
+                    PhotoPickerIntent intent = new PhotoPickerIntent(SquareAddActivity.this);
+                    intent.setSelectModel(SelectModel.MULTI);
+                    intent.setShowCarema(true); // 是否显示拍照
+                    intent.setMaxTotal(6); // 最多选择照片数量，默认为6
+                    intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+                    startActivityForResult(intent, REQUEST_CAMERA_CODE);
+                }else{
+                    PhotoPreviewIntent intent = new PhotoPreviewIntent(SquareAddActivity.this);
+                    intent.setCurrentItem(position);
+                    intent.setPhotoPaths(imagePaths);
+                    startActivityForResult(intent, REQUEST_PREVIEW_CODE);
+                }
+            }
+        });
+        imagePaths.add("000000");
+        gridAdapter = new GridAdapter(imagePaths);
+        gridView.setAdapter(gridAdapter);
+        tv_send.setOnClickListener(this);
     }
 
-    //自定义弹框3
-    public void alterDatePicker(){
-        String now = TimeUtil.dateToStringNoS(new Date());
-        String startTime = "2000-01-01 00:00";
-        String endTime = "2030-01-01 00:00";
-        CustomDatePicker customDatePicker = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
-            @Override
-            public void handle(String time) { // 回调接口，获得选中的时间
-                tvLocationTime.setText(time);
-            }
-        }, startTime, endTime); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
-        customDatePicker.showSpecificTime(true); // 显示时和分
-        customDatePicker.setIsLoop(true); // 允许循环滚动
-        customDatePicker.show(now);
-    }
 
     @Override
     public void onClick(View v) {
@@ -83,11 +115,21 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
             case R.id.ll_location_time:
                 getLocation();
                 break;
-            case R.id.bt_send_moment:
-                finish();
+            case R.id.tv_send:
+                upLoad();
                 break;
 
         }
+    }
+    public void upLoad(){
+        depp =etMomentContent.getText().toString().trim()!=null?etMomentContent.getText().toString().trim():"woowoeo";
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+
+            }
+        }.start();
     }
     private void theme(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -110,6 +152,97 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE && data != null) {
             String position = data.getStringExtra("position");
             tvLocationTime.setText(position);
+        }
+
+        if(resultCode == RESULT_OK) {
+            switch (requestCode) {
+                // 选择照片
+                case REQUEST_CAMERA_CODE:
+                    ArrayList<String> list = data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
+                    Log.d(TAG, "list: " + "list = [" + list.size());
+                    loadAdpater(list);
+                    break;
+                // 预览
+                case REQUEST_PREVIEW_CODE:
+                    ArrayList<String> ListExtra = data.getStringArrayListExtra(PhotoPreviewActivity.EXTRA_RESULT);
+                    Log.d(TAG, "ListExtra: " + "ListExtra = [" + ListExtra.size());
+                    loadAdpater(ListExtra);
+                    break;
+            }
+        }
+    }
+
+    private void loadAdpater(ArrayList<String> paths){
+        if (imagePaths!=null&& imagePaths.size()>0){
+            imagePaths.clear();
+        }
+        if (paths.contains("000000")){
+            paths.remove("000000");
+        }
+        paths.add("000000");
+        imagePaths.addAll(paths);
+        gridAdapter  = new GridAdapter(imagePaths);
+        gridView.setAdapter(gridAdapter);
+        try{
+            JSONArray obj = new JSONArray(imagePaths);
+            Log.e("--", obj.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private class GridAdapter extends BaseAdapter{
+        private ArrayList<String> listUrls;
+        private LayoutInflater inflater;
+        public GridAdapter(ArrayList<String> listUrls) {
+            this.listUrls = listUrls;
+            if(listUrls.size() == 7){
+                listUrls.remove(listUrls.size()-1);
+            }
+            inflater = LayoutInflater.from(SquareAddActivity.this);
+        }
+
+        public int getCount(){
+            return  listUrls.size();
+        }
+        @Override
+        public String getItem(int position) {
+            return listUrls.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = inflater.inflate(R.layout.item_image, parent,false);
+                holder.image = (ImageView) convertView.findViewById(R.id.imageView);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder)convertView.getTag();
+            }
+
+            final String path=listUrls.get(position);
+            if (path.equals("000000")){
+                holder.image.setImageResource(R.mipmap.add_image);
+            }else {
+                Glide.with(SquareAddActivity.this)
+                        .load(path)
+                        .placeholder(R.mipmap.default_error)
+                        .error(R.mipmap.default_error)
+                        .centerCrop()
+                        .crossFade()
+                        .into(holder.image);
+            }
+            return convertView;
+        }
+        class ViewHolder {
+            ImageView image;
         }
     }
 }

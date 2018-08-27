@@ -1,15 +1,21 @@
 package com.example.sig.lianjiang.adapter;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.activity.UserProfileActivity;
+import com.example.sig.lianjiang.utils.ImageUtils;
 
 import java.util.List;
 
@@ -17,10 +23,11 @@ import java.util.List;
  * Created by sig on 2018/8/22.
  */
 
-public class UserProfileAdapter extends BaseAdapter {
+public class UserProfileAdapter extends BaseAdapter implements View.OnClickListener{
     private Context mContext;
     protected LayoutInflater inflater;
     private List<UserProfile> mList;
+    public ImageView head_background;
     public UserProfileAdapter(Context context) {
         mContext = context;
         inflater = LayoutInflater.from(context);
@@ -48,6 +55,9 @@ public class UserProfileAdapter extends BaseAdapter {
         View view;
         if(position==0){
             view = inflater.inflate(R.layout.user_profile_0, parent, false);
+
+            head_background=view.findViewById(R.id.head_background);
+            head_background.setOnClickListener(this);
         }else{
             if (convertView == null|| convertView.getTag() == null) {
                 view = inflater.inflate(R.layout.user_profile_1, parent, false);
@@ -82,5 +92,20 @@ public class UserProfileAdapter extends BaseAdapter {
             return 0;
         }
         return list.size();
+    }
+    @Override
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.head_background:
+                break;
+        }
+    }
+
+    public void setHeadBackground(Uri uri){
+        Glide
+                .with(mContext)
+                .load(uri)
+                .into(head_background);
+
     }
 }

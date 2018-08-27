@@ -5,7 +5,8 @@ package com.example.sig.lianjiang.common;
  */
 public class APPConfig {
 
-    private static String base_url="http://10.0.2.2:8080/starry/";
+//    private static String base_url="http://10.0.2.2:8080/starry/";
+private static String base_url="http://wyusig.com:8080/starry/";
     private static String img_url="http://192.168.0.105:8080/starry/img/";
 
 
