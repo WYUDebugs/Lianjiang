@@ -127,7 +127,7 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void run() {
                 super.run();
-
+//                拿imagePaths列表上传
             }
         }.start();
     }
