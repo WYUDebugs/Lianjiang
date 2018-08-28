@@ -1,4 +1,5 @@
 package com.example.sig.lianjiang.fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -6,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.activity.UserProfileActivity;
 import com.example.sig.lianjiang.event.HideButtonEvent;
 import com.example.sig.lianjiang.event.ShowButtonEvent;
 import com.example.sig.lianjiang.leftmenu.MenuFragment;
@@ -42,6 +44,13 @@ public class MenuLeftFragment extends MenuFragment {
 
     private void init(){
         head = (CircleImageView) leftMenu.findViewById(R.id.head);
+        head.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

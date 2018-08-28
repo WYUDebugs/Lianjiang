@@ -68,6 +68,18 @@ public class TimeUtil {
         return dateStr;
     }
 
+    public static String dateToStringll(Date date){
+        String dateStr = "";
+        //format的格式可以任意
+        DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        try {
+            dateStr = sdf.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dateStr;
+    }
+
     public static Date stringToDate(String dateStr){
         Date date = new Date();
         //注意format的格式要与日期String的格式相匹配
