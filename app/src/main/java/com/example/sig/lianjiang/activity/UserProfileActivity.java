@@ -2,36 +2,22 @@ package com.example.sig.lianjiang.activity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import com.example.sig.lianjiang.bean.ResultDto;
+import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.utils.ImageUtils;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
-import com.example.sig.lianjiang.utils.OnBooleanListener;
-import com.example.sig.lianjiang.utils.TimeUtil;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.view.ObservableScrollView;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -51,16 +37,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static java.lang.String.valueOf;
-
 public class UserProfileActivity extends BaseActivity implements OnClickListener, ObservableScrollView.ScrollViewListener {
 
-    private OnBooleanListener onPermissionListener;
     public Uri cropImageUri;
     public final int GET_IMAGE_BY_CAMERA_U = 5001;
     public final int CROP_IMAGE_U = 5003;
     public final String USER_IMAGE_NAME = "image.png";
     public final String USER_CROP_IMAGE_NAME = "temporary.png";
+
+    private UserResultDto userResultDto;
 
     private ObservableScrollView mScrollView;
     private LinearLayout topbar;
@@ -182,12 +167,16 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                 } else {
                     Uri imageUriCamera = ImageUtils.imageUriFromCamera;
                     //Toast.makeText(this, imageUriCamera.toString(), Toast.LENGTH_SHORT).show();
+                    //Log.e("wnf", "imageUriCamera.getPath()------" + imageUriCamera.getPath());
+                    //Log.e("wnf", "getImageAbsolutePath------" + ImageUtils.getImageAbsolutePath(this,imageUriCamera));
+                    //updataHead(ImageUtils.getImageAbsolutePath(this,imageUriCamera));
                     // 开始对图片进行裁剪处理
                     cropImage(imageUriCamera, 1, 1, CROP_IMAGE_U);
                 }
                 break;
             case CROP_IMAGE_U:
                 final String s = getExternalCacheDir() + "/" + USER_CROP_IMAGE_NAME;
+                //Log.e("wnf", "path------" + s);
                 // 裁剪头像图片后执行更新头像操作
                 updataHead(s);
                 break;
@@ -197,7 +186,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     }
 
     /**
-     * 裁剪图片
+     * 裁剪图片，固定宽高320
      * @param imageUri
      * @param aspectX
      * @param aspectY
@@ -225,6 +214,38 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         startActivityForResult(intent, return_flag);
     }
 
+    /**
+     * 裁剪图片，自行裁剪宽高
+     * @param imageUri
+     * @param aspectX
+     * @param aspectY
+     * @param return_flag
+     */
+    public void cropImageBig(Uri imageUri, int aspectX, int aspectY,
+                          int return_flag) {
+        File file = new File(this.getExternalCacheDir(), USER_CROP_IMAGE_NAME);
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //高版本一定要加上这两句话，做一下临时的Uri
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            FileProvider.getUriForFile(UserProfileActivity.this, "com.example.sig.lianjiang.fileProvider", file);
+        }
+        cropImageUri = Uri.fromFile(file);
+
+        intent.setDataAndType(imageUri, "image/*");
+        intent.putExtra("crop", "false");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cropImageUri);
+
+        startActivityForResult(intent, return_flag);
+    }
+
+    /**
+     * 将图片设置固定宽高
+     * @param path
+     * @param w
+     * @param h
+     * @return
+     */
     public Bitmap GetBitmap(String path, int w, int h) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inJustDecodeBounds = true;
@@ -251,7 +272,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         fileList.add(new File(path));
         //传递的非文件参数列表
         final Map<String, Object> map = new HashMap<>();
-        map.put("id", String.valueOf(3));//用户的id
+        map.put("id", String.valueOf(3));//当前用户的id
         //使用线程进行网络操作
         new Thread(new Runnable() {
             @Override
@@ -260,21 +281,21 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                     @Override
                     public void onSuccess(Object response) {
                         Log.d("testRun", "response------" + response.toString());
-                        ResultDto resultDto;
                         try {
                             // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
-                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), ResultDto.class);
+                            userResultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
                         } catch (Exception e) {
                             //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
-                            resultDto = ResultDto.error("Exception:" + e.getClass());
+                            userResultDto = UserResultDto.error("Exception:" + e.getClass());
                             e.printStackTrace();
                             Log.e("wnf", "Exception------" + e.getMessage());
                         }
-                        if (resultDto.getMsg().equals("success")) {
-                            Bitmap imageBitmap = GetBitmap(path, 320, 320);
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            imageBitmap.compress(Bitmap.CompressFormat.PNG, 70, baos);
-                            head.setImageBitmap(imageBitmap);
+                        if (userResultDto.getMsg().equals("success")) {
+                            if (userResultDto.getData() != null) {
+                                //图片加载框架，如果图片加载出错或者没加载出来，显示默认图片
+                                Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + userResultDto.getData().getHeadimage())
+                                        .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
+                            }
                             Toast.makeText(UserProfileActivity.this, "头像更新成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(UserProfileActivity.this, "头像更新失败，请重试！", Toast.LENGTH_SHORT).show();
@@ -293,22 +314,4 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         }).start();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 1) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //权限通过
-                if (onPermissionListener != null) {
-                    onPermissionListener.onClick(true);
-                }
-            } else {
-                //权限拒绝
-                if (onPermissionListener != null) {
-                    onPermissionListener.onClick(false);
-                }
-            }
-            return;
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 }
