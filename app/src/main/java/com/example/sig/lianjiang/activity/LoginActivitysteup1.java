@@ -38,6 +38,7 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
     private EditText etPhone;
     private String phone;
     private int id;
+    private String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,8 +130,10 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
                         if(resultDto.getData()!=null){
                             Intent intent=new Intent(LoginActivitysteup1.this,LoginActivitysteup2.class);
                             id=resultDto.getData().getId();
+                            name=resultDto.getData().getName();
                             intent.putExtra("phone",phone);
                             intent.putExtra("id",id);
+                            intent.putExtra("name",name);
                             startActivity(intent);
                         }else {
                             Intent intent1=new Intent(LoginActivitysteup1.this,RegisterActivitysteup1.class);

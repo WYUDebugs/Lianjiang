@@ -142,6 +142,8 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
         OkHttpUtils.Param passWordParam = new OkHttpUtils.Param("password", passWord);
         OkHttpUtils.Param nameParam = new OkHttpUtils.Param("name", name);
         list.add(phoneParam);
+        list.add(passWordParam);
+        list.add(nameParam);
 
         new Thread(new Runnable() {
             @Override

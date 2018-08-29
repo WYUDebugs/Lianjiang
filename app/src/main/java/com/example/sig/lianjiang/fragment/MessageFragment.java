@@ -58,12 +58,12 @@ public class MessageFragment  extends EaseConversationListFragment{
                     // start chat acitivity
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     if(conversation.isGroup()){
-                        if(conversation.getType() == EMConversationType.ChatRoom){
-                            // it's group chat
-                            intent.putExtra(Constant.EXTRA_CHAT_TYPE, Constant.CHATTYPE_CHATROOM);
-                        }else{
+//                        if(conversation.getType() == EMConversationType.ChatRoom){
+//                            // it's group chat
+//                            intent.putExtra(Constant.EXTRA_CHAT_TYPE, Constant.CHATTYPE_CHATROOM);
+//                        }else{
                             intent.putExtra(Constant.EXTRA_CHAT_TYPE, Constant.CHATTYPE_GROUP);
-                        }
+//                        }
 
                     }
                     // it's single chat

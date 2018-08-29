@@ -3,6 +3,7 @@ package com.example.sig.lianjiang.fragment;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -18,6 +19,9 @@ import com.example.sig.lianjiang.activity.AddContactActivity;
 import com.example.sig.lianjiang.activity.ChatActivity;
 import com.example.sig.lianjiang.activity.GroupsActivity;
 import com.example.sig.lianjiang.activity.NewFriendsMsgActivity;
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.hyphenate.chat.EMClient;
 import com.example.sig.lianjiang.Constant;
 import com.example.sig.lianjiang.StarryHelper;
@@ -29,10 +33,13 @@ import com.example.sig.lianjiang.db.UserDao;
 import com.example.sig.lianjiang.view.ContactItemView;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.ui.EaseContactListFragment;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.NetUtils;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 
@@ -49,6 +56,7 @@ public class FriendFragment extends EaseContactListFragment {
     private View loadingView;
     private ContactItemView applicationItem;
     private InviteMessgeDao inviteMessgeDao;
+    private UserResultDto resultDto;
 
     @SuppressLint("InflateParams")
     @Override
@@ -66,7 +74,63 @@ public class FriendFragment extends EaseContactListFragment {
 
         registerForContextMenu(listView);
     }
+    @Override
+    public void getContactList(){
+        super.getContactList();
+        getFriend(contactList);
+    }
+    public void getFriend(List<EaseUser> contactList){
+        for(int i=0;i<contactList.size();i++){
+            getNameAndHeadPost(contactList.get(i).getUsername());
+        }
+    }
+    public void getNameAndHeadPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", id);
+        list.add(idParam);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findUserById, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(getContext(),"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(resultDto.getData()!=null){
+                            String name=resultDto.getData().getName();
+                            String head=APPConfig.img_url +resultDto.getData().getHeadimage();
+                            EaseUserUtils.setUserNick(id,name);
+                            EaseUserUtils.setUserAvatar(id,head);
+
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(getContext(), "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+
+    }
     @Override
     public void refresh() {
         Map<String, EaseUser> m = StarryHelper.getInstance().getContactList();

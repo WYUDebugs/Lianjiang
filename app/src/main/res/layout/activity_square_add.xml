@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="曾经的你们经历了什么,说点什么吧，留下美好回忆"
+            android:hint="有什么想跟小伙伴们分享的"
             android:textSize="15sp"
             android:minLines="5"
             android:lineSpacingMultiplier="1.2"

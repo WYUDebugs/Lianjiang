@@ -47,6 +47,7 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
     private String phone;
     private TextView tvConfirm;
     private String id;
+    private String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,7 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
         Intent intent=getIntent();
         phone=intent.getStringExtra("phone");
         id=Integer.toString(intent.getIntExtra("id",-1));
+        name=intent.getStringExtra("name");
         top_back=(ImageView)findViewById(R.id.top_back);
         top_back.setOnClickListener(this);
         passwordEditText=(EditText)findViewById(R.id.etPwd);
@@ -159,7 +161,7 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
 
                 // update current user's display name for APNs
                 boolean updatenick = EMClient.getInstance().pushManager().updatePushNickname(
-                        StarryApplication.currentUserNick.trim());
+                        name);
                 if (!updatenick) {
                     Log.e("LoginActivity", "update current user nick fail");
                 }
@@ -199,6 +201,7 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
             }
         });
     }
+
 
 
 }

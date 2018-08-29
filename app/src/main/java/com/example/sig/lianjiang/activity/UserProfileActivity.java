@@ -44,6 +44,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     public final int CROP_IMAGE_U = 5003;
     public final String USER_IMAGE_NAME = "image.png";
     public final String USER_CROP_IMAGE_NAME = "temporary.png";
+    private UserResultDto resultDto;
 
     private UserResultDto userResultDto;
 
@@ -53,10 +54,12 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private int imageHeight;
     private ImageView back;
     private TextView userName;
+    private TextView userSignature;
     private TextView userSex;
     private TextView userDay;
     private ImageView head_background;
     private ImageView head;
+    private String userId;
 
 
     @Override
@@ -72,6 +75,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     }
 
     public void initView() {
+        Intent intent = getIntent();
+        userId= intent.getStringExtra("username");
+//        Toast.makeText(this,userId,Toast.LENGTH_SHORT).show();
         back = (ImageView) findViewById(R.id.top_left);
         back.setOnClickListener(this);
         topbarText = (TextView) findViewById(R.id.top_center);
@@ -79,12 +85,14 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         mScrollView = findViewById(R.id.lv_bbs);
 //        mScrollView.setScrollViewListener(this);
         userName = findViewById(R.id.user_name);
+        userSignature=findViewById(R.id.user_signature);
         userSex = findViewById(R.id.user_sex);
         userDay = findViewById(R.id.user_day);
         head = findViewById(R.id.head);
         head_background = findViewById(R.id.head_background);
         head.setOnClickListener(this);
         head_background.setOnClickListener(this);
+        getHead();
     }
 
     /*
@@ -108,7 +116,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.head_background:
-                ImageUtils.showImagePickDialog(this, "修改背景图片");
+//                ImageUtils.showImagePickDialog(this, "修改背景图片");
                 break;
             case R.id.head:
                 ImageUtils.showImagePickDialog(this, "修改头像");
@@ -159,7 +167,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                 //Toast.makeText(this, imageUri.toString(), Toast.LENGTH_SHORT).show();
                 // 开始对图片进行裁剪处理
                 cropImage(imageUri, 1, 1, CROP_IMAGE_U);
-
+//                updataHead(imageUri.toString());
                 break;
             case ImageUtils.REQUEST_CODE_FROM_CAMERA:
                 if (resultCode == RESULT_CANCELED) {
@@ -172,6 +180,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                     //updataHead(ImageUtils.getImageAbsolutePath(this,imageUriCamera));
                     // 开始对图片进行裁剪处理
                     cropImage(imageUriCamera, 1, 1, CROP_IMAGE_U);
+//                    updataHead(imageUriCamera.toString());
                 }
                 break;
             case CROP_IMAGE_U:
@@ -270,9 +279,12 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         //图片列表，后台图片文件对应的key值必须为 file，否则文件参数传递失败
         final List<File> fileList = new ArrayList<>();
         fileList.add(new File(path));
+        Toast.makeText(this,path,Toast.LENGTH_SHORT).show();
         //传递的非文件参数列表
         final Map<String, Object> map = new HashMap<>();
-        map.put("id", String.valueOf(3));//当前用户的id
+//        map.put("id", String.valueOf(3));//当前用户的id
+        Toast.makeText(this,userId,Toast.LENGTH_SHORT).show();
+        map.put("id", userId);//当前用户的id
         //使用线程进行网络操作
         new Thread(new Runnable() {
             @Override
@@ -314,4 +326,53 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         }).start();
     }
 
+    public void getHead() {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", userId);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findUserById, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(UserProfileActivity.this,"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(resultDto.getData()!=null){
+                            Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + resultDto.getData().getHeadimage())
+                                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
+                            userName.setText(resultDto.getData().getName());
+                            if (resultDto.getData().getSignature()!=null){
+                                userSignature.setText(resultDto.getData().getSignature());
+                            }else {
+                                userSignature.setVisibility(View.INVISIBLE);
+                            }
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(UserProfileActivity.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
 }

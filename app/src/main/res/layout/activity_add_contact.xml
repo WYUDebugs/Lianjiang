@@ -43,7 +43,7 @@
         android:layout_margin="10dp"
         android:paddingLeft="5dp"
         android:background="@drawable/em_button_normal_shape"
-        android:hint="@string/user_name"
+        android:hint="对方电话号码"
         android:singleLine="true"
         android:textColorHint="#b3b3b3"
         android:textSize="18sp" />
