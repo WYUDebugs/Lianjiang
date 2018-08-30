@@ -83,6 +83,7 @@ public class FriendFragment extends EaseContactListFragment {
         for(int i=0;i<contactList.size();i++){
             getNameAndHeadPost(contactList.get(i).getUsername());
         }
+        getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
     }
     public void getNameAndHeadPost(final String id) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();

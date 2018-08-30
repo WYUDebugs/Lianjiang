@@ -35,6 +35,7 @@ public class AddContactActivity extends BaseActivity{
     private String toAddUserPhone;
     private ProgressDialog progressDialog;
     private UserResultDto resultDto;
+    private UserResultDto resultDto1;
     private Button indicator;
     private ImageView avatar;
     private int id;
@@ -49,8 +50,8 @@ public class AddContactActivity extends BaseActivity{
         editText = (EditText) findViewById(R.id.edit_note);
         String strAdd = getResources().getString(R.string.add_friend);
         mTextView.setText(strAdd);
-        String strUserName = getResources().getString(R.string.user_name);
-        editText.setHint(strUserName);
+//        String strUserName = getResources().getString(R.string.user_name);
+//        editText.setHint(strUserName);
         searchedUserLayout = (RelativeLayout) findViewById(R.id.ll_user);
         nameText = (TextView) findViewById(R.id.name);
         searchBtn = (Button) findViewById(R.id.search);
@@ -123,9 +124,10 @@ public class AddContactActivity extends BaseActivity{
                 try {
                     //demo use a hardcode reason here, you need let user to input if you like
                     String s = getResources().getString(R.string.Add_a_friend);
-//                    EMClient.getInstance().contactManager().addContact(toAddUsername, s);暂时注释
+                    EMClient.getInstance().contactManager().addContact(Integer.toString(id), s);
                     runOnUiThread(new Runnable() {
                         public void run() {
+                            addFriendPost(EMClient.getInstance().getCurrentUser(),Integer.toString(id));
                             progressDialog.dismiss();
                             String s1 = getResources().getString(R.string.send_successful);
                             Toast.makeText(getApplicationContext(), s1, Toast.LENGTH_LONG).show();
@@ -171,6 +173,8 @@ public class AddContactActivity extends BaseActivity{
                         if(resultDto.getData()!=null){
                             id=resultDto.getData().getId();
                             searchedUserLayout.setVisibility(View.VISIBLE);
+                            indicator.setVisibility(View.VISIBLE);
+                            avatar.setVisibility(View.VISIBLE);
                             nameText.setText(resultDto.getData().getName());
 
                         }else {
@@ -190,8 +194,54 @@ public class AddContactActivity extends BaseActivity{
             }
 
         }).start();
-
     }
+
+    public void addFriendPost(final String userId,final String friendId) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param userIdParam = new OkHttpUtils.Param("userId", userId);
+        OkHttpUtils.Param friendIdParam = new OkHttpUtils.Param("friendId", friendId);
+        list.add(userIdParam);
+        list.add(friendIdParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.addFriend, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto1 = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto1 = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(AddContactActivity.this,"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(resultDto1.getData()!=null){
+
+
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(AddContactActivity.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
     public void back(View v) {
         finish();
     }

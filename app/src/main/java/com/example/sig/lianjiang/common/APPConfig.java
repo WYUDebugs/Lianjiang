@@ -24,6 +24,7 @@ public class APPConfig {
     public static String deleteUserByPhone = server_url + "user/deleteUserByPhone";
 
     public static String updateHeadImage = base_url + "user/updateHeadImage";
+    public static String addFriend=server_url+"friend/addFriend";
 
 
 
