@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryNineGridAdapter;
 import com.example.sig.lianjiang.adapter.NineGridAdapter;
+import com.example.sig.lianjiang.model.MemoryNineGridModel;
 import com.example.sig.lianjiang.model.NineGridTestModel;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.view.ObservableListView;
@@ -52,7 +53,7 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
     private FloatingActionButton fabAddMoment;
     private ObservableListView mListView;
     private MemoryNineGridAdapter mAdapter;
-    private List<NineGridTestModel> mList = new ArrayList<>();
+    private List<MemoryNineGridModel> mList = new ArrayList<>();
     private String[] mUrls = new String[]{"http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg",
             "http://img3.fengniao.com/forum/attachpics/537/165/21472986.jpg",
             "http://d.hiphotos.baidu.com/image/h%3D200/sign=ea218b2c5566d01661199928a729d498/a08b87d6277f9e2fd4f215e91830e924b999f308.jpg",
@@ -121,11 +122,11 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
     }
 
     private void initListData() {
-        NineGridTestModel model1 = new NineGridTestModel();
+        MemoryNineGridModel model1 = new MemoryNineGridModel();
         model1.urlList.add(mUrls[0]);
         mList.add(model1);
 
-        NineGridTestModel model2 = new NineGridTestModel();
+        MemoryNineGridModel model2 = new MemoryNineGridModel();
         model2.urlList.add(mUrls[4]);
         mList.add(model2);
 //
@@ -133,33 +134,33 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
 //        model3.urlList.add(mUrls[2]);
 //        mList.add(model3);
 
-        NineGridTestModel model4 = new NineGridTestModel();
+        MemoryNineGridModel model4 = new MemoryNineGridModel();
         for (int i = 0; i < mUrls.length; i++) {
             model4.urlList.add(mUrls[i]);
         }
         model4.isShowAll = false;
         mList.add(model4);
 
-        NineGridTestModel model5 = new NineGridTestModel();
+        MemoryNineGridModel model5 = new MemoryNineGridModel();
         for (int i = 0; i < mUrls.length; i++) {
             model5.urlList.add(mUrls[i]);
         }
         model5.isShowAll = false;//显示全部图片
         mList.add(model5);
 
-        NineGridTestModel model6 = new NineGridTestModel();
+        MemoryNineGridModel model6 = new MemoryNineGridModel();
         for (int i = 0; i < 9; i++) {
             model6.urlList.add(mUrls[i]);
         }
         mList.add(model6);
 
-        NineGridTestModel model7 = new NineGridTestModel();
+        MemoryNineGridModel model7 = new MemoryNineGridModel();
         for (int i = 3; i < 7; i++) {
             model7.urlList.add(mUrls[i]);
         }
         mList.add(model7);
 
-        NineGridTestModel model8 = new NineGridTestModel();
+        MemoryNineGridModel model8 = new MemoryNineGridModel();
         for (int i = 3; i < 6; i++) {
             model8.urlList.add(mUrls[i]);
         }

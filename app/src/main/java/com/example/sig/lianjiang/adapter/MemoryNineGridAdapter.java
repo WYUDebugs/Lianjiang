@@ -15,6 +15,7 @@ import com.example.sig.lianjiang.activity.MemoryBookActivity;
 import com.example.sig.lianjiang.activity.MemoryBookListActivity;
 import com.example.sig.lianjiang.activity.MemoryCoverUpdateActivity;
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.model.MemoryNineGridModel;
 import com.example.sig.lianjiang.model.NineGridTestModel;
 import com.example.sig.lianjiang.view.NineGridTestLayout;
 
@@ -27,14 +28,14 @@ import java.util.List;
 public class MemoryNineGridAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<NineGridTestModel> mList;
+    private List<MemoryNineGridModel> mList;
     protected LayoutInflater inflater;
     public MemoryNineGridAdapter(Context context) {
         mContext = context;
         inflater = LayoutInflater.from(context);
     }
 
-    public void setList(List<NineGridTestModel> list) {
+    public void setList(List<MemoryNineGridModel> list) {
         mList = list;
     }
 
@@ -119,7 +120,7 @@ public class MemoryNineGridAdapter extends BaseAdapter {
         }
     }
 
-    private int getListSize(List<NineGridTestModel> list) {
+    private int getListSize(List<MemoryNineGridModel> list) {
         if (list == null || list.size() == 0) {
             return 0;
         }

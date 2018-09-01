@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:installLocation="preferExternal"
     package="com.example.sig.lianjiang">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -65,7 +66,9 @@
         </provider>
 
         <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.SquareActivity" />
+        <activity android:name=".activity.SquareActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.MemoryBookListActivity" />
         <activity android:name=".activity.MemoryBookSearchListActivity" />
         <activity android:name=".activity.MemoryBookActivity" />

@@ -65,4 +65,9 @@
         <!--<item name="actionBarTheme">@style/actionBarTheme</item>-->
         <!--<item name="actionBarPopupTheme">@style/actionBarPopupTheme</item>-->
     </style>
+
+    <style name="Comment" parent="android:TextAppearance">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@android:color/holo_blue_dark</item>
+    </style>
 </resources>

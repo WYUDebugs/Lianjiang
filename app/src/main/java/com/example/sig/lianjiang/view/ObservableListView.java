@@ -144,7 +144,7 @@ public class ObservableListView extends ListView implements AbsListView.OnScroll
             recordSp.append(firstVisibleItem, itemRecord);
             int h = getScrollY1();//滚动距离
             //在此进行你需要的操作//TODO
-            Log.e("123",Integer.toString(h));
+//            Log.e("123",Integer.toString(h));
             //Toast.makeText(getContext(),Integer.toString(h),Toast.LENGTH_SHORT).show();
             scrollViewListener.onScroll(h);
         }
