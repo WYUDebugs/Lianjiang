@@ -10,7 +10,7 @@ public class APPConfig {
 //    private static String server_url="http://10.0.2.2:8080/starry/";
 
 //    private static String base_url="http://192.168.0.105:8080/starry/";
-//    private static String base_url="http://10.0.2.2:8080/starry/";
+    private static String test_url="http://10.0.2.2:8080/starry/";
     private static String base_url="http://wyusig.com:8080/starry/";
 
     public static String img_url="http://wyusig.com:8080/starry/img/";
@@ -25,6 +25,7 @@ public class APPConfig {
 
     public static String updateHeadImage = base_url + "user/updateHeadImage";
     public static String addFriend=server_url+"friend/addFriend";
+    public static String sendPublic=test_url+"publish/sendPublic";
 
 
 

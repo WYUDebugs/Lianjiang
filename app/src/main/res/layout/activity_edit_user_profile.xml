@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/light_gray"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/mytopbar_whiteback"
+        />
+    <ScrollView
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="12dp">
+                <include layout="@layout/line_gray" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="@android:color/white"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/llHead"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="头像"
+                        android:layout_weight="1" />
+                    <com.example.sig.lianjiang.view.CircleImageView
+                        android:id="@+id/imv_avatar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@mipmap/icon_head" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/llNickname"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="昵称"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/tvNickname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/llMotto"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="个性签名"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/tvMotto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/service_tag"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="我的标签"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:gravity="right"
+                        android:id="@+id/tips_nor"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:layout_weight="2" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="12dp">
+                <include layout="@layout/line_gray" />
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:id="@+id/llChangePwd"
+                android:background="@android:color/white"
+                android:paddingLeft="15dp"
+                android:paddingRight="9dp"
+                android:layout_width="match_parent"
+                android:layout_height="44dp">
+                <TextView
+                    android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="密码修改"
+                    android:layout_weight="1" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:src="@drawable/arrow_right1" />
+            </LinearLayout>
+            <include layout="@layout/line_gray" />
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:id="@+id/security"
+                android:background="@android:color/white"
+                android:paddingLeft="15dp"
+                android:paddingRight="9dp"
+                android:layout_width="match_parent"
+                android:layout_height="44dp">
+                <TextView
+                    android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="修改手机号码"
+                    android:layout_weight="1" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:src="@drawable/arrow_right1" />
+            </LinearLayout>
+            <include layout="@layout/line_gray" />
+            <LinearLayout
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="12dp">
+                <include layout="@layout/line_gray" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="@android:color/white"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/llUsername"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="用户名"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/tvUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:id="@+id/ivUsername"
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/llName"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="生日"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:id="@+id/ivName"
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="地址"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/tvNation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:id="@+id/tvCard_tip"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="性别"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/tvCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/vcode_ll"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="编号"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/vcode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:id="@+id/vcode_icon"
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/ll_sex"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="添加验证问题"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/tvSex"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                    <ImageView
+                        android:id="@+id/iv_sex"
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/llMyErWei"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="我的二维码"
+                        android:layout_weight="1" />
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/icon_code" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <include layout="@layout/line_gray" />
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/ll_political_status"
+                    android:background="@android:color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp">
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="注销账号"
+                        android:layout_weight="1" />
+                    <TextView
+                        android:textAppearance="@style/TextAppear.Theme.B0_13"
+                        android:id="@+id/tv_political_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                    <ImageView
+                        android:visibility="visible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/arrow_right1" />
+                </LinearLayout>
+                <!--<include layout="@layout/line_gray" />-->
+                <!--<LinearLayout-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:id="@+id/llMyErWei"-->
+                    <!--android:background="@android:color/white"-->
+                    <!--android:paddingLeft="8dp"-->
+                    <!--android:paddingRight="2dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="44dp">-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.CB5_13"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="我的二维码"-->
+                        <!--android:layout_weight="1" />-->
+                    <!--<ImageView-->
+                        <!--android:layout_width="25dp"-->
+                        <!--android:layout_height="25dp"-->
+                        <!--android:src="@drawable/icon_head" />-->
+                    <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="2dp"-->
+                        <!--android:src="@drawable/arrow_right1" />-->
+                <!--</LinearLayout>-->
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="12dp">
+                <include layout="@layout/line_gray" />
+            </LinearLayout>
+            <!--<LinearLayout-->
+                <!--android:orientation="vertical"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:paddingLeft="7dp"-->
+                <!--android:paddingRight="7dp"-->
+                <!--android:visibility="visible"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<LinearLayout-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:id="@+id/llMobile"-->
+                    <!--android:background="@android:color/white"-->
+                    <!--android:paddingLeft="8dp"-->
+                    <!--android:paddingRight="2dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="44dp">-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.CB5_13"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="手机号码"-->
+                        <!--android:layout_weight="1" />-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.B0_13"-->
+                        <!--android:id="@+id/tvMobile"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content" />-->
+                    <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="2dp"-->
+                        <!--android:src="@drawable/arrow_right1" />-->
+                <!--</LinearLayout>-->
+                <!--<include layout="@layout/line_gray" />-->
+                <!--<LinearLayout-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:id="@+id/llDialNumber"-->
+                    <!--android:background="@android:color/white"-->
+                    <!--android:paddingLeft="8dp"-->
+                    <!--android:paddingRight="2dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="44dp">-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.CB5_13"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="电话号码"-->
+                        <!--android:layout_weight="1" />-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.B0_13"-->
+                        <!--android:id="@+id/tvDialNumber"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content" />-->
+                    <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="2dp"-->
+                        <!--android:src="@drawable/arrow_right1" />-->
+                <!--</LinearLayout>-->
+                <!--<include layout="@layout/line_gray" />-->
+                <!--<LinearLayout-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:id="@+id/llArea"-->
+                    <!--android:background="@android:color/white"-->
+                    <!--android:paddingLeft="8dp"-->
+                    <!--android:paddingRight="2dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="44dp">-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.CB5_13"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="现居住市"-->
+                        <!--android:layout_weight="1" />-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.B0_13"-->
+                        <!--android:id="@+id/tvArea"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content" />-->
+                    <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="2dp"-->
+                        <!--android:src="@drawable/arrow_right1" />-->
+                <!--</LinearLayout>-->
+                <!--<include layout="@layout/line_gray" />-->
+                <!--<LinearLayout-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:id="@+id/llAddress"-->
+                    <!--android:background="@android:color/white"-->
+                    <!--android:paddingLeft="8dp"-->
+                    <!--android:paddingRight="2dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="44dp">-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.CB5_13"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="详细地址"-->
+                        <!--android:layout_weight="1" />-->
+                    <!--<TextView-->
+                        <!--android:textAppearance="@style/TextAppear.Theme.B0_13"-->
+                        <!--android:ellipsize="end"-->
+                        <!--android:gravity="right"-->
+                        <!--android:id="@+id/tvAddress"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:maxLines="1"-->
+                        <!--android:layout_weight="2" />-->
+                    <!--<ImageView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginLeft="2dp"-->
+                        <!--android:src="@drawable/arrow_right1" />-->
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+            <!--<include layout="@layout/line_gray" />-->
+            <!--<LinearLayout-->
+                <!--android:gravity="bottom"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="12dp">-->
+                <!--<include layout="@layout/line_gray" />-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:id="@+id/llService"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:paddingLeft="15dp"-->
+                <!--android:paddingRight="9dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="44dp">-->
+                <!--<TextView-->
+                    <!--android:textAppearance="@style/TextAppear.Theme.CB5_13"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="擅长技能"-->
+                    <!--android:layout_weight="1" />-->
+                <!--<TextView-->
+                    <!--android:textAppearance="@style/TextAppear.Theme.B0_13"-->
+                    <!--android:id="@+id/tvService"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="2dp"-->
+                    <!--android:src="@drawable/arrow_right1" />-->
+            <!--</LinearLayout>-->
+            <!--<include layout="@layout/line_gray" />-->
+            <!--<LinearLayout-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:id="@+id/llServiceArea"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:paddingLeft="15dp"-->
+                <!--android:paddingRight="9dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="44dp">-->
+                <!--<TextView-->
+                    <!--android:textAppearance="@style/TextAppear.Theme.CB5_13"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="服务领域"-->
+                    <!--android:layout_weight="1" />-->
+                <!--<TextView-->
+                    <!--android:textAppearance="@style/TextAppear.Theme.B0_13"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="2dp"-->
+                    <!--android:src="@drawable/arrow_right1" />-->
+            <!--</LinearLayout>-->
+            <!--<include layout="@layout/line_gray" />-->
+            <!--<LinearLayout-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:id="@+id/ll_freetime"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:paddingLeft="15dp"-->
+                <!--android:paddingRight="9dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="44dp">-->
+                <!--<TextView-->
+                    <!--android:textAppearance="@style/TextAppear.Theme.CB5_13"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="空闲时间"-->
+                    <!--android:layout_weight="1" />-->
+                <!--<TextView-->
+                    <!--android:textAppearance="@style/TextAppear.Theme.B0_13"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="2dp"-->
+                    <!--android:src="@drawable/arrow_right1" />-->
+            <!--</LinearLayout>-->
+            <!--<include layout="@layout/line_gray" />-->
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

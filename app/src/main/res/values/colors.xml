@@ -52,4 +52,6 @@
     <!--标题栏的绿色按钮点击颜色-->
     <color name="greenPreBtn">#DD00AD2E</color>
     <color name="photopicker_background">#181819</color>
+    <color name="light_gray">#FFEDEEF1</color>
+    <color name="tvtext">#FF333333</color>
 </resources>

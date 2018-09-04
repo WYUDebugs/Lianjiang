@@ -1,5 +1,7 @@
 package com.example.sig.lianjiang.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +23,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.bean.PublicResultDto;
+import com.example.sig.lianjiang.bean.PublishDto;
+import com.example.sig.lianjiang.bean.ResultDto;
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.utils.CustomDatePicker;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.utils.TimeUtil;
+import com.hyphenate.chat.EMClient;
 import com.lidong.photopicker.ImageCaptureManager;
 import com.lidong.photopicker.PhotoPickerActivity;
 import com.lidong.photopicker.PhotoPreviewActivity;
@@ -32,18 +41,23 @@ import com.lidong.photopicker.intent.PhotoPickerIntent;
 import com.lidong.photopicker.intent.PhotoPreviewIntent;
 
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SquareAddActivity extends AppCompatActivity implements View.OnClickListener{
     private ImageView imgTopLeft;
     private TextView tv_send;
     private EditText etMomentContent;
     private LinearLayout llLocationTime;
-    private TextView tvLocationTime;
+    private TextView tv_location;
     private final static int REQUEST_CODE = 0x123;
     private static final int REQUEST_CAMERA_CODE = 10;
     private static final int REQUEST_PREVIEW_CODE = 20;
@@ -51,9 +65,11 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
     private ImageCaptureManager captureManager; // 相机拍照处理类
     private String TAG =SquareAddActivity.class.getSimpleName();
     private String depp;
-
+    private String location;
+    private PublicResultDto ResultDto;
     private GridView gridView;
     private GridAdapter gridAdapter;
+    private boolean progressShow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +87,7 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
 
         etMomentContent = (EditText) findViewById(R.id.et_moment_content);
         llLocationTime = (LinearLayout) findViewById(R.id.ll_location_time);
-        tvLocationTime = (TextView) findViewById(R.id.tv_location_time);
+        tv_location = (TextView) findViewById(R.id.tv_location);
         tv_send=findViewById(R.id.tv_send);
         imgTopLeft.setOnClickListener(this);
         llLocationTime.setOnClickListener(this);
@@ -122,14 +138,12 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
         }
     }
     public void upLoad(){
-        depp =etMomentContent.getText().toString().trim()!=null?etMomentContent.getText().toString().trim():"woowoeo";
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-//                拿imagePaths列表上传
-            }
-        }.start();
+        depp =etMomentContent.getText().toString().trim()!=null?etMomentContent.getText().toString().trim():"";
+        location=tv_location.getText().toString().trim()!=null?tv_location.getText().toString().trim():"中国";
+//        for(int i=0;i<imagePaths.size();i++){
+//            Log.d("zxd",imagePaths.get(i));
+//        }
+        sendPublicPost(imagePaths,depp,location);
     }
     private void theme(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -141,6 +155,7 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
         }
         StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
     }
+
     public void getLocation(){
         Intent intent = new Intent(this, LocationActivity.class);
         startActivityForResult(intent, REQUEST_CODE);
@@ -151,7 +166,7 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
         // 返回成功
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE && data != null) {
             String position = data.getStringExtra("position");
-            tvLocationTime.setText(position);
+            tv_location.setText(position);
         }
 
         if(resultCode == RESULT_OK) {
@@ -244,5 +259,84 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
         class ViewHolder {
             ImageView image;
         }
+    }
+    public void sendPublicPost(final ArrayList<String> imagePaths,final String content,final String address) {
+        progressShow = true;
+        final ProgressDialog pd= new ProgressDialog(SquareAddActivity.this);
+        pd.setCanceledOnTouchOutside(false);
+        pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                progressShow = false;
+            }
+        });
+        pd.setMessage("正在发布......");
+        pd.show();
+
+        //图片列表，后台图片文件对应的key值必须为 file，否则文件参数传递失败
+        final List<File> fileList = new ArrayList<>();
+        for(int i=0;i<imagePaths.size();i++){
+            if(imagePaths.get(i).equals("000000")){
+
+            }else{
+                fileList.add(new File(imagePaths.get(i)));
+            }
+        }
+//        fileList.add(new File(path));
+//        Toast.makeText(this,path,Toast.LENGTH_SHORT).show();
+        //传递的非文件参数列表
+        final Map<String, Object> map = new HashMap<>();
+//        map.put("id", String.valueOf(3));//当前用户的id
+//        Toast.makeText(this,userId,Toast.LENGTH_SHORT).show();
+        map.put("publisher", EMClient.getInstance().getCurrentUser());//当前用户的id
+        map.put("content",content);
+        map.put("address",address);
+        map.put("type",0);
+        //使用线程进行网络操作
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpUtils.postFile(APPConfig.sendPublic, map, fileList, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            ResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            ResultDto = ResultDto.error("Exception:" + e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if (ResultDto.getMsg().equals("publish_success")) {
+                            Toast.makeText(SquareAddActivity.this,"发布成功",Toast.LENGTH_SHORT).show();
+                            if (!SquareAddActivity.this.isFinishing() && pd.isShowing()) {
+                                pd.dismiss();
+                            }
+                            Intent intent=new Intent(SquareAddActivity.this,SquareActivity.class);
+                            startActivity(intent);
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    pd.dismiss();
+                                    Toast.makeText(SquareAddActivity.this,"发布失败",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        e.printStackTrace();
+                        Log.d("testRun", "请求失败------Exception:" + e.getMessage());
+                        pd.dismiss();
+                        Toast.makeText(SquareAddActivity.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+        }).start();
     }
 }

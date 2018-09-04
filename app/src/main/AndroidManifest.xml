@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:installLocation="preferExternal"
-    package="com.example.sig.lianjiang">
+    package="com.example.sig.lianjiang"
+    android:installLocation="preferExternal">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 自动聚焦权限 -->
     <!-- To access Google+ APIs: -->
@@ -66,7 +67,8 @@
         </provider>
 
         <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.SquareActivity"
+        <activity
+            android:name=".activity.SquareActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.MemoryBookListActivity" />
@@ -208,13 +210,15 @@
         <activity android:name=".activity.RegisterActivitysteup2" />
         <activity android:name=".activity.LocationActivity" />
         <activity android:name=".activity.SearchPositionActivity" />
-        <activity android:name=".activity.SquareAddActivity"></activity>
+        <activity android:name=".activity.SquareAddActivity" />
         <activity
             android:name="com.lidong.photopicker.PhotoPickerActivity"
-            android:theme="@style/PhotoPickerTheme"
-            android:configChanges="orientation|screenSize"/>
-        <activity android:name="com.lidong.photopicker.PhotoPreviewActivity"
-            android:theme="@style/PhotoPickerTheme"/>
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/PhotoPickerTheme" />
+        <activity
+            android:name="com.lidong.photopicker.PhotoPreviewActivity"
+            android:theme="@style/PhotoPickerTheme" />
+        <activity android:name=".activity.EditUserProfileActivity"></activity>
     </application>
 
 </manifest>

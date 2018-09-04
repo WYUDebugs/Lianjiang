@@ -51,7 +51,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private ObservableScrollView mScrollView;
     private LinearLayout topbar;
     private TextView topbarText;
-    private int imageHeight;
+    private int imageHeight=200;
     private ImageView back;
     private TextView userName;
     private TextView userSignature;
@@ -68,7 +68,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         theme();
         setContentView(R.layout.activity_user_profile);
         initView();
-        initListeners();
         //图片加载框架，如果图片加载出错或者没加载出来，显示默认图片
         Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + "3a5f0819-d925-47e8-a6a2-2c71a403f07d.png")
                 .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
@@ -81,43 +80,21 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         back = (ImageView) findViewById(R.id.top_left);
         back.setOnClickListener(this);
         topbarText = (TextView) findViewById(R.id.top_center);
-        topbar = (LinearLayout) findViewById(R.id.mytopbar_square);
-        mScrollView = findViewById(R.id.lv_bbs);
-//        mScrollView.setScrollViewListener(this);
+        topbar = (LinearLayout) findViewById(R.id.mytopbar);
+        mScrollView = findViewById(R.id.sv_main_content);
+        mScrollView.setScrollViewListener(this);
         userName = findViewById(R.id.user_name);
         userSignature=findViewById(R.id.user_signature);
-        userSex = findViewById(R.id.user_sex);
-        userDay = findViewById(R.id.user_day);
         head = findViewById(R.id.head);
-        head_background = findViewById(R.id.head_background);
         head.setOnClickListener(this);
-        head_background.setOnClickListener(this);
         getHead();
     }
 
-    /*
-    *  获取顶部图片(也可以任意一控件)高度后，设置滚动监听
-     */
-    private void initListeners() {
-        ViewTreeObserver vto = head_background.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                head_background.getViewTreeObserver().removeGlobalOnLayoutListener(
-                        this);
-                imageHeight = head_background.getHeight();
 
-                mScrollView.setScrollViewListener(UserProfileActivity.this);
-            }
-        });
-    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.head_background:
-//                ImageUtils.showImagePickDialog(this, "修改背景图片");
-                break;
             case R.id.head:
                 ImageUtils.showImagePickDialog(this, "修改头像");
                 break;
@@ -133,6 +110,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
         if (y <= 0) {
             topbar.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));//AGB由相关工具获得，或者美工提供
+            topbarText.setText("");
         } else if (y > 0 && y <= imageHeight - topbar.getHeight()) {
             // 只是layout背景透明(仿知乎滑动效果)
             topbar.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
