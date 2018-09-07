@@ -25,6 +25,10 @@ import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.NineGridAdapter;
+import com.example.sig.lianjiang.bean.PublicListResultDto;
+import com.example.sig.lianjiang.bean.Publish;
+import com.example.sig.lianjiang.bean.PublishDto;
+import com.example.sig.lianjiang.bean.PublishImage;
 import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.model.Comment;
@@ -54,6 +58,7 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
     private NineGridAdapter mAdapter;
     private List<NineGridTestModel> mList = new ArrayList<>();
     private UserResultDto resultDto;
+    private PublicListResultDto publicListResultDto;
     private String[] mUrls = new String[]{"http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg",
             "http://img3.fengniao.com/forum/attachpics/537/165/21472986.jpg",
             "http://d.hiphotos.baidu.com/image/h%3D200/sign=ea218b2c5566d01661199928a729d498/a08b87d6277f9e2fd4f215e91830e924b999f308.jpg",
@@ -147,7 +152,7 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
         textView = (LinearLayout) findViewById(R.id.mytopbar_square);
 
         initImageLoader();
-        initListData();
+        getpublishListPost(EMClient.getInstance().getCurrentUser());
         initView();
 
         mListView.setOnMeiTuanRefreshListener(this);
@@ -163,63 +168,35 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
         ImageLoader.getInstance().init(configuration);
     }
 
-    private void initListData() {
-        for(int i=0;i<20;i++){
+    private void initListData(final List<PublishDto> data) {
+        for(int i=0;i<data.size();i++){
+//            ArrayList<Comment> comments = new ArrayList<Comment>();
+//            List<String> urlList = new ArrayList<>();
+//            comments.add(new Comment(new CommentUser(i + 2, "用户" + i), "评论" + i, null));
+//            comments.add(new Comment(new CommentUser(i + 100, "用户" + (i + 100)), "评论" + i, new CommentUser(i + 200, "用户" + (i + 200))));
+//            comments.add(new Comment(new CommentUser(i + 200, "用户" + (i + 200)), "评论" + i, null));
+//            comments.add(new Comment(new CommentUser(i + 300, "用户" + (i + 300)), "评论" + i, null));
+//            for (int j = 0; j < mUrls.length; j++) {
+//                urlList.add(mUrls[j]);
+//            }
+//            NineGridTestModel model = new NineGridTestModel("假装有内容。。。。",urlList,false,comments);
+//            mList.add(model);
+            PublishDto temp=data.get(i);
             ArrayList<Comment> comments = new ArrayList<Comment>();
             List<String> urlList = new ArrayList<>();
-            comments.add(new Comment(new CommentUser(i + 2, "用户" + i), "评论" + i, null));
-            comments.add(new Comment(new CommentUser(i + 100, "用户" + (i + 100)), "评论" + i, new CommentUser(i + 200, "用户" + (i + 200))));
-            comments.add(new Comment(new CommentUser(i + 200, "用户" + (i + 200)), "评论" + i, null));
-            comments.add(new Comment(new CommentUser(i + 300, "用户" + (i + 300)), "评论" + i, null));
-            for (int j = 0; j < mUrls.length; j++) {
-                urlList.add(mUrls[j]);
+//            comments.add(new Comment(new CommentUser(i + 2, "用户" + i), "评论" + i, null));
+//            comments.add(new Comment(new CommentUser(i + 100, "用户" + (i + 100)), "评论" + i, new CommentUser(i + 200, "用户" + (i + 200))));
+//            comments.add(new Comment(new CommentUser(i + 200, "用户" + (i + 200)), "评论" + i, null));
+//            comments.add(new Comment(new CommentUser(i + 300, "用户" + (i + 300)), "评论" + i, null));
+            for (int j = 0; j < temp.getImageList().size(); j++) {
+                PublishImage publishImage=temp.getImageList().get(j);
+                urlList.add(publishImage.toString());
             }
-            NineGridTestModel model = new NineGridTestModel("假装有内容。。。。",urlList,false,comments);
+            String content=temp.getContent();
+            NineGridTestModel model = new NineGridTestModel(content,urlList,false,comments);
             mList.add(model);
+
         }
-//        NineGridTestModel model1 = new NineGridTestModel();
-//        model1.urlList.add(mUrls[0]);
-//        mList.add(model1);
-//
-//        NineGridTestModel model2 = new NineGridTestModel();
-//        model2.urlList.add(mUrls[4]);
-//        mList.add(model2);
-////
-////        NineGridTestModel model3 = new NineGridTestModel();
-////        model3.urlList.add(mUrls[2]);
-////        mList.add(model3);
-//
-//        NineGridTestModel model4 = new NineGridTestModel();
-//        for (int i = 0; i < mUrls.length; i++) {
-//            model4.urlList.add(mUrls[i]);
-//        }
-//        model4.isShowAll = false;
-//        mList.add(model4);
-//
-//        NineGridTestModel model5 = new NineGridTestModel();
-//        for (int i = 0; i < mUrls.length; i++) {
-//            model5.urlList.add(mUrls[i]);
-//        }
-//        model5.isShowAll = false;//显示全部图片
-//        mList.add(model5);
-//
-//        NineGridTestModel model6 = new NineGridTestModel();
-//        for (int i = 0; i < 9; i++) {
-//            model6.urlList.add(mUrls[i]);
-//        }
-//        mList.add(model6);
-//
-//        NineGridTestModel model7 = new NineGridTestModel();
-//        for (int i = 3; i < 7; i++) {
-//            model7.urlList.add(mUrls[i]);
-//        }
-//        mList.add(model7);
-//
-//        NineGridTestModel model8 = new NineGridTestModel();
-//        for (int i = 3; i < 6; i++) {
-//            model8.urlList.add(mUrls[i]);
-//        }
-//        mList.add(model8);
     }
 
     public void initView() {
@@ -324,5 +301,47 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
                 mAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    public void getpublishListPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("userId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.publishList, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            publicListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicListResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            publicListResultDto = PublicListResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(publicListResultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+                            initListData(publicListResultDto.getData());
+                        }else {
+                            Log.e("zxd","动态为空");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
     }
 }

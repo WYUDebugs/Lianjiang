@@ -26,6 +26,7 @@ public class APPConfig {
     public static String updateHeadImage = base_url + "user/updateHeadImage";
     public static String addFriend=server_url+"friend/addFriend";
     public static String sendPublic=test_url+"publish/sendPublic";
+    public static String publishList=test_url+"publish/publishList";
 
 
 

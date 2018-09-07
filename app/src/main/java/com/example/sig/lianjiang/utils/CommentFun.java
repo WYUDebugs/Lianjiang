@@ -151,7 +151,7 @@ public class CommentFun {
                 if (listView != null) {
                     // 点击某条评论则这条评论刚好在输入框上面，点击评论按钮则输入框刚好挡住按钮
                     int span = btnComment.getId() == R.id.img_input_comment ? 0 : btnComment.getHeight();
-                    listView.smoothScrollBy(coord[1] + span - inputViewCoordinatesInScreen[1], 200);
+//                    listView.smoothScrollBy(coord[1] + span - inputViewCoordinatesInScreen[1], 200);
                 }
             }
 

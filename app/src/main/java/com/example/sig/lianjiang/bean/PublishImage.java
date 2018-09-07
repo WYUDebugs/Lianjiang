@@ -5,16 +5,16 @@ package com.example.sig.lianjiang.bean;
  */
 
 public class PublishImage {
-    private int id;
+    private int pmId;
     private int publicId;
     private String path;
 
-    public int getId() {
-        return id;
+    public int getPmId() {
+        return pmId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPmId(int pmId) {
+        this.pmId = pmId;
     }
 
     public int getPublicId() {
@@ -36,7 +36,7 @@ public class PublishImage {
     @Override
     public String toString() {
         return "PublishImage{" +
-                "id=" + id +
+                "pmId=" + pmId +
                 ", publicId=" + publicId +
                 ", path='" + path + '\'' +
                 '}';
