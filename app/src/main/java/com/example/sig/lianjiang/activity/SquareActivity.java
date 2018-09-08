@@ -121,7 +121,7 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
+                    getpublishListPost(EMClient.getInstance().getCurrentUser());
                     mInterHandler.sendEmptyMessage(UPDATE_TEXT_DONE);
                     Thread.sleep(1000);
                     mInterHandler.sendEmptyMessage(REFRESH_COMPLETE);
@@ -169,6 +169,7 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
     }
 
     private void initListData(final List<PublishDto> data) {
+        mList.clear();
         for(int i=0;i<data.size();i++){
 //            ArrayList<Comment> comments = new ArrayList<Comment>();
 //            List<String> urlList = new ArrayList<>();
@@ -189,8 +190,8 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
 //            comments.add(new Comment(new CommentUser(i + 200, "用户" + (i + 200)), "评论" + i, null));
 //            comments.add(new Comment(new CommentUser(i + 300, "用户" + (i + 300)), "评论" + i, null));
             for (int j = 0; j < temp.getImageList().size(); j++) {
-                PublishImage publishImage=temp.getImageList().get(j);
-                urlList.add(publishImage.toString());
+                String publishImage=temp.getImageList().get(j).getPath();
+                urlList.add(APPConfig.test_image_url+publishImage);
             }
             String content=temp.getContent();
             NineGridTestModel model = new NineGridTestModel(content,urlList,false,comments);
@@ -222,12 +223,12 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
             }
         }));
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),"click "+position,Toast.LENGTH_SHORT).show();
-            }
-        });
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(getApplicationContext(),"click "+position,Toast.LENGTH_SHORT).show();
+//            }
+//        });
         mListView.setScrollViewListener(this);
     }
     @Override
@@ -330,6 +331,7 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
                         if(publicListResultDto.getMsg().equals("success")){
                             //sUser.setmName(resultDto.getData().getName());
                             initListData(publicListResultDto.getData());
+                            mAdapter.notifyDataSetChanged();
                         }else {
                             Log.e("zxd","动态为空");
                         }

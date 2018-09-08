@@ -56,7 +56,7 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
     /*Tab文字的颜色*/
     private float mTabTextSize;
     /*默认选中的tab index*/
-    private int mDefaultSelectedTab = 0;
+    private int mDefaultSelectedTab = 1;
 
     private int mCurrentSelectedTab;
 
@@ -250,6 +250,40 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
         } else {
             if(holder.tabIndex==0){
                 ((MessageFragment)fragment).refresh();
+            }else if(holder.tabIndex==1){
+                ((FriendFragment)fragment).refresh();
+            }else if(holder.tabIndex==2){
+//                ((DynamicFragment)fragment).refresh();
+            }else {
+//
+            }
+
+        }
+
+        Log.e("1234",Integer.toString(mCurrentSelectedTab));
+    }
+    public void refreshHead(){
+        ((Activity)getContext()).runOnUiThread(new Runnable() {
+            public void run() {
+                for (ViewHolder holder : mViewHolderList){
+//                    showTip(holder);
+                    refreshFragmentHead(holder);
+                }
+
+            }
+        });
+    }
+    public void refreshFragmentHead(ViewHolder holder){
+        mFragmentActivity = (FragmentActivity) getContext();
+        FragmentTransaction transaction = mFragmentActivity.getSupportFragmentManager().beginTransaction();
+
+        Fragment fragment = mFragmentActivity.getSupportFragmentManager().findFragmentByTag(holder.tag);
+        if (fragment == null) {
+            fragment = getFragmentInstance(holder.tag);
+            transaction.add(mMainContentLayoutId, fragment, holder.tag);
+        } else {
+            if(holder.tabIndex==0){
+                ((MessageFragment)fragment).update();
             }else if(holder.tabIndex==1){
                 ((FriendFragment)fragment).refresh();
             }else if(holder.tabIndex==2){

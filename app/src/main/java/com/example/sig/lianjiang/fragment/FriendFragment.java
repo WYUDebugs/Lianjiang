@@ -79,11 +79,17 @@ public class FriendFragment extends EaseContactListFragment {
         super.getContactList();
         getFriend(contactList);
     }
-    public void getFriend(List<EaseUser> contactList){
-        for(int i=0;i<contactList.size();i++){
-            getNameAndHeadPost(contactList.get(i).getUsername());
-        }
-        getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
+    public void getFriend(final List<EaseUser> contactList){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=0;i<contactList.size();i++){
+                    getNameAndHeadPost(contactList.get(i).getUsername());
+                }
+                getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
+            }
+        }).start();
+
     }
     public void getNameAndHeadPost(final String id) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
@@ -99,7 +105,7 @@ public class FriendFragment extends EaseContactListFragment {
                 OkHttpUtils.post(APPConfig.findUserById, new OkHttpUtils.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
-                        Log.d("testRun", "response------" + response.toString());
+                        Log.d("testRun", "response------b" + response.toString());
                         try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
                             // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
                             resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
@@ -115,7 +121,11 @@ public class FriendFragment extends EaseContactListFragment {
                             String head=APPConfig.img_url +resultDto.getData().getHeadimage();
                             EaseUserUtils.setUserNick(id,name);
                             EaseUserUtils.setUserAvatar(id,head);
-
+                            Log.d("zxd","子类");
+                            if(id.equals(EMClient.getInstance().getCurrentUser())){
+                                contactListLayout.init(contactList);
+                                Log.d("zxd","子类刷新");
+                            }
                         }else {
 
                         }

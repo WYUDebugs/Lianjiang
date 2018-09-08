@@ -14,6 +14,7 @@ public class APPConfig {
     private static String base_url="http://wyusig.com:8080/starry/";
 
     public static String img_url="http://wyusig.com:8080/starry/img/";
+    public static String test_image_url="http://10.0.2.2:8080/starry/img/";
 
 
     public static String login = server_url + "user/Login";
@@ -27,6 +28,7 @@ public class APPConfig {
     public static String addFriend=server_url+"friend/addFriend";
     public static String sendPublic=test_url+"publish/sendPublic";
     public static String publishList=test_url+"publish/publishList";
+    public static String findMemoryBookById=test_url+"memoryBook/findMemoryBookById";
 
 
 

@@ -336,6 +336,7 @@
      private void setHeadandname(){
          getContactList();
          getFriend(contactList);
+
      }
      private void getContactList() {
          contactList.clear();
@@ -412,11 +413,18 @@
 
      }
 
-     public void getFriend(List<EaseUser> contactList){
-         for(int i=0;i<contactList.size();i++){
-             getNameAndHeadPost(contactList.get(i).getUsername());
-         }
-         getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
+     public void getFriend(final List<EaseUser> contactList){
+
+         new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 for(int i=0;i<contactList.size();i++){
+                     getNameAndHeadPost(contactList.get(i).getUsername());
+                 }
+                 getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
+                 mNavigateTabBar.refreshHead();
+             }
+         }).start();
      }
      public class MyContactListener implements EMContactListener {
          @Override

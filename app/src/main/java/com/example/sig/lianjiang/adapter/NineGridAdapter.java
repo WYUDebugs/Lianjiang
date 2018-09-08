@@ -40,7 +40,7 @@ public class NineGridAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return getListSize(mList);
+        return getListSize(mList)+1;
     }
 
     @Override
@@ -58,7 +58,11 @@ public class NineGridAdapter extends BaseAdapter {
 
         ViewHolder holder = null;
         if(position==0){
-            convertView = inflater.inflate(R.layout.activity_square_list1, parent, false);
+//            if(mList.size()!=0){
+                convertView = inflater.inflate(R.layout.activity_square_list1, parent, false);
+//            }else {
+//                convertView = inflater.inflate(R.layout.square_none, parent, false);
+//            }
         }else {
             if (convertView == null || convertView.getTag() == null) {
                 convertView = inflater.inflate(R.layout.square_item_view, parent, false);
@@ -72,13 +76,15 @@ public class NineGridAdapter extends BaseAdapter {
             holder.mContent.setText(mList.get(index).mContent);
             CommentFun.parseCommentList(mContext, mList.get(index).mComment,
                     holder.mCommentList,holder.mBtnInput,  mTagHandler);
-            holder.layout.setIsShowAll(mList.get(position).isShowAll);
-            holder.layout.setUrlList(mList.get(position).urlList);
+            holder.layout.setIsShowAll(mList.get(index).isShowAll);
+            holder.layout.setUrlList(mList.get(index).urlList);
+
+
         }
 
 
         //防止ListView的OnItemClick与item里面子view的点击发生冲突
-        ((ViewGroup) convertView).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+//        ((ViewGroup) convertView).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         return convertView;
     }

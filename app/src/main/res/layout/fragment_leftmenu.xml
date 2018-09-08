@@ -2,63 +2,138 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mytopbar_color">
+    android:background="@color/white">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <com.example.sig.lianjiang.view.CircleImageView
-            android:id="@+id/head"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:src="@mipmap/icon_head"
-            />
-        <LinearLayout
-            android:id="@+id/setUser"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="200dp"
+            android:background="@mipmap/left_bg">
+            <com.example.sig.lianjiang.view.CircleImageView
+                xmlns:pv="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/head"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@mipmap/icon_head"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                pv:border_color="#FFFFFF"
+                pv:border_width="3dp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:orientation="horizontal"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="10dp">
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="动态"/>
+            <include layout="@layout/vertical_line_gray"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="收藏"/>
+            <include layout="@layout/vertical_line_gray"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="相册"/>
+        </LinearLayout>
+        <include layout="@layout/line_gray" />
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:id="@+id/setUser"
+            android:background="@android:color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="9dp"
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
                 android:src="@mipmap/ic_setuser"/>
             <TextView
+                android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="编辑资料"
+                android:layout_weight="1" />
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:textSize="20dp"
-                android:textColor="@color/white"
-                android:text="编辑资料"/>
-
-
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/arrow_right1" />
         </LinearLayout>
+        <include layout="@layout/line_gray" />
         <LinearLayout
-            android:id="@+id/login_out"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp">
+            android:id="@+id/login_out"
+            android:background="@android:color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="9dp"
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@mipmap/ic_loginout"/>
             <TextView
+                android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="退出登录"
+                android:layout_weight="1" />
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:textSize="20dp"
-                android:textColor="@color/white"
-                android:text="退出登录"/>
-
-
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/arrow_right1" />
         </LinearLayout>
+        <include layout="@layout/line_gray" />
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:id="@+id/setting"
+            android:background="@android:color/white"
+            android:paddingLeft="15dp"
+            android:paddingRight="9dp"
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/setting"/>
+            <TextView
+                android:textAppearance="@style/TextAppear.Theme.CB5_13"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="设置"
+                android:layout_weight="1" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/arrow_right1" />
+        </LinearLayout>
+        <include layout="@layout/line_gray" />
     </LinearLayout>
 </ScrollView>

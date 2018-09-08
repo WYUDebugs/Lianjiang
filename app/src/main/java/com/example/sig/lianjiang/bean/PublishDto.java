@@ -8,7 +8,7 @@ import java.util.List;
 public class PublishDto {
     private int id;
     private int publisher; //发布人id
-    private Date time;  //发布的时间
+    private String time;  //发布的时间
     private String content;  //发布的内容
     private int times_of_browse; //浏览数
     private int times_of_praise;  //点赞数
@@ -35,11 +35,11 @@ public class PublishDto {
         this.publisher = publisher;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -13,11 +14,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sig.lianjiang.activity.AddContactActivity;
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.hyphenate.chat.EMClient;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.db.InviteMessgeDao;
 import com.example.sig.lianjiang.domain.InviteMessage;
 import com.example.sig.lianjiang.domain.InviteMessage.InviteMessageStatus;
+
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Created by sig on 2018/8/8.
@@ -27,6 +34,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
     private Context context;
     private InviteMessgeDao messgeDao;
+    private UserResultDto resultDto;
 
     public NewFriendsMsgAdapter(Context context, int textViewResourceId, List<InviteMessage> objects) {
         super(context, textViewResourceId, objects);
@@ -241,7 +249,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                 // call api
                 try {
                     if (msg.getStatus() == InviteMessageStatus.BEINVITEED) {//accept be friends
-                        EMClient.getInstance().contactManager().acceptInvitation(msg.getFrom());
+                        EMClient.getInstance().contactManager().acceptInvitation(msg.getFrom());//环信后台
+                        addFriendPost(EMClient.getInstance().getCurrentUser(),msg.getFrom());//自家后台
                     } else if (msg.getStatus() == InviteMessageStatus.BEAPPLYED) { //accept application to join group
                         EMClient.getInstance().groupManager().acceptApplication(msg.getFrom(), msg.getGroupId());
                     } else if (msg.getStatus() == InviteMessageStatus.GROUPINVITATION) {
@@ -276,6 +285,52 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
                 }
             }
+        }).start();
+    }
+
+    public void addFriendPost(final String userId,final String friendId) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param userIdParam = new OkHttpUtils.Param("userId", userId);
+        OkHttpUtils.Param friendIdParam = new OkHttpUtils.Param("friendId", friendId);
+        list.add(userIdParam);
+        list.add(friendIdParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.addFriend, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(getContext(),"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(resultDto.getData()!=null){
+
+
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(getContext(), "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
         }).start();
     }
 
