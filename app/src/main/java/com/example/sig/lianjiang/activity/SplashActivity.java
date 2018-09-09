@@ -2,8 +2,11 @@ package com.example.sig.lianjiang.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,6 +15,7 @@ import android.widget.Toast;
 import com.baidu.mapapi.SDKInitializer;
 import com.example.sig.lianjiang.runtimepermissions.PermissionsManager;
 import com.example.sig.lianjiang.runtimepermissions.PermissionsResultAction;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.hyphenate.chat.EMClient;
 import com.example.sig.lianjiang.StarryHelper;
 import com.example.sig.lianjiang.R;
@@ -32,6 +36,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle arg0) {
+        theme();
         setContentView(R.layout.activity_splash);
         super.onCreate(arg0);
         BmobSMS.initialize(this,"53d8a48a1543952d26d7ded007d1a77e");
@@ -93,7 +98,15 @@ public class SplashActivity extends BaseActivity {
         }).start();
 
     }
-
+    private void theme(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
     /**
      * get sdk version
      */

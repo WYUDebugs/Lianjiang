@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -12,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -63,6 +65,7 @@ public class GroupsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        theme();
         setContentView(R.layout.activity_groups);
 
         instance = this;
@@ -102,10 +105,10 @@ public class GroupsActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 1) {
                     // create a new group
-//                    startActivityForResult(new Intent(GroupsActivity.this, NewGroupActivity.class), 0);
+                    startActivityForResult(new Intent(GroupsActivity.this, NewGroupActivity.class), 0);
                 } else if (position == 2) {
                     // join a public group
-//                    startActivityForResult(new Intent(GroupsActivity.this, PublicGroupsActivity.class), 0);
+                    startActivityForResult(new Intent(GroupsActivity.this, PublicGroupsActivity.class), 0);
                 } else {
                     // enter group chat
                     Intent intent = new Intent(GroupsActivity.this, ChatActivity.class);
@@ -133,6 +136,15 @@ public class GroupsActivity extends BaseActivity {
         registerGroupChangeReceiver();
     }
 
+    private void theme() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
     void registerGroupChangeReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constant.ACTION_GROUP_CHANAGED);

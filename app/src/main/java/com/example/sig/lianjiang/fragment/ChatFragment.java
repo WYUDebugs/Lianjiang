@@ -209,7 +209,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                                 e.printStackTrace();
                                 getActivity().runOnUiThread(new Runnable() {
                                     public void run() {
-                                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "撤回失败", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
