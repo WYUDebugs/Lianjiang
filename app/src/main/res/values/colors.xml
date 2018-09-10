@@ -54,4 +54,12 @@
     <color name="photopicker_background">#181819</color>
     <color name="light_gray">#FFEDEEF1</color>
     <color name="tvtext">#FF333333</color>
+    <color name="f">#FFFFFF</color>
+    <color name="b0">#FFB0B0B0</color>
+    <color name="se_999999">#FF999999</color>
+    <color name="darker_gray">#FFDDDDDD</color>
+    <color name="green">#FF38CFB0</color>
+    <color name="hintcolor">#FFC7C7CC</color>
+    <color name="tipscolor">#FF03DF80</color>
+    <color name="strokeline">#FFE3E3E3</color>
 </resources>

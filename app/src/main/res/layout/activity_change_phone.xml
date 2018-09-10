@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/light_gray"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        layout="@layout/mytopbar_whiteback1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="12dp">
+        <include layout="@layout/line_gray" />
+    </LinearLayout>
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/llContent2"-->
+        <!--android:background="@color/f"-->
+        <!--android:focusable="true"-->
+        <!--android:focusableInTouchMode="true"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+        <!--<EditText-->
+            <!--android:textAppearance="@style/TextAppear.Theme.CB3_14"-->
+            <!--android:textColorHint="@color/b0"-->
+            <!--android:gravity="top"-->
+            <!--android:id="@+id/edtMsg"-->
+            <!--android:background="@null"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:paddingRight="10dp"-->
+            <!--android:paddingBottom="25dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:minHeight="66dp" />-->
+        <!--<TextView-->
+            <!--android:textAppearance="@style/TextAppear.Theme.B0_10"-->
+            <!--android:id="@+id/tvMsgNum"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:layout_alignRight="@id/edtMsg"-->
+            <!--android:layout_alignBottom="@id/edtMsg" />-->
+    <!--</RelativeLayout>-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/llContent3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@color/f"
+            android:paddingRight="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
+            <TextView
+                android:textAppearance="@style/TextAppear.Theme.CB3_14"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="+86" />
+            <EditText
+                android:textAppearance="@style/TextAppear.Theme.CB3_14"
+                android:textColorHint="@color/se_999999"
+                android:gravity="center_vertical"
+                android:id="@+id/mobile_edit"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="输入你的手机号码"
+                android:ems="10"
+                android:singleLine="true"
+                android:layout_weight="1"
+                android:inputType="number" />
+            <TextView
+                android:textAppearance="@style/TextAppear.Theme.Green_10"
+                android:gravity="center"
+                android:id="@+id/tvGetYzm"
+                android:background="@drawable/shape_line_green"
+                android:layout_width="72dp"
+                android:layout_height="24dp"
+                android:text="获取验证码" />
+            <TextView
+                android:textAppearance="@style/TextAppear.Theme.Se_999999_10"
+                android:gravity="center"
+                android:id="@+id/tvSecond"
+                android:background="@drawable/shape_line_grey"
+                android:visibility="gone"
+                android:layout_width="72dp"
+                android:layout_height="24dp"
+                android:text="倒计时50s" />
+        </LinearLayout>
+        <include layout="@layout/line_gray" />
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@color/f"
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
+            <TextView
+                android:textAppearance="@style/TextAppear.Theme.CB3_14"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="验证码" />
+            <EditText
+                android:textAppearance="@style/TextAppear.Theme.CB3_14"
+                android:textColorHint="@color/se_999999"
+                android:gravity="center_vertical"
+                android:id="@+id/edtYzm"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="输入验证码"
+                android:ems="10"
+                android:singleLine="true"
+                android:inputType="number" />
+        </LinearLayout>
+    </LinearLayout>
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/llContent"-->
+        <!--android:background="@color/f"-->
+        <!--android:focusable="true"-->
+        <!--android:focusableInTouchMode="true"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="48dp">-->
+        <!--<EditText-->
+            <!--android:textAppearance="@style/TextAppear.Theme.CB3_14"-->
+            <!--android:textColorHint="@color/b0"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:id="@+id/edtContent"-->
+            <!--android:background="@null"-->
+            <!--android:paddingLeft="15dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+        <!--<ImageView-->
+            <!--android:id="@+id/ivDel"-->
+            <!--android:padding="10dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/zhaohuimima_anniu1"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true" />-->
+    <!--</RelativeLayout>-->
+    <include layout="@layout/line_gray" />
+    <Button
+        android:id="@+id/bt_send_moment"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:text="提交"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:background="@drawable/shape_button_green_selector"/>
+</LinearLayout>

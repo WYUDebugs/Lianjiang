@@ -174,7 +174,7 @@
             <LinearLayout
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:id="@+id/security"
+                android:id="@+id/change_phone"
                 android:background="@android:color/white"
                 android:paddingLeft="15dp"
                 android:paddingRight="9dp"

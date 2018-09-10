@@ -78,4 +78,20 @@
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">#7F0C0008</item>
     </style>
+    <style name="TextAppear.Theme.CB3_14" parent="android:TextAppearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#7F0C003F</item>
+    </style>
+    <style name="TextAppear.Theme.Se_999999_10" parent="android:TextAppearance">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#7F0C00BF</item>
+    </style>
+    <style name="TextAppear.Theme.B0_10" parent="android:TextAppearance">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#7F0C0008</item>
+    </style>
+    <style name="TextAppear.Theme.Green_10" parent="android:TextAppearance">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#7F0C007E</item>
+    </style>
 </resources>

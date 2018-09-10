@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mytopbar_back"
+    android:id="@+id/mytopbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="?attr/actionBarSize"
-    android:background="@color/transparent"
+    android:layout_height="50dp"
+    android:background="@color/mytopbar_color"
     android:gravity="center"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
@@ -18,17 +17,19 @@
 
 
         <ImageView
-            android:id="@+id/top_back"
+            android:id="@+id/top_left"
             android:layout_alignParentLeft="true"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/memoryback"
-            android:onClick="back"/>
-        <!--<TextView-->
-        <!--android:id="@+id/top_margin"-->
-        <!--android:layout_width="8dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_toLeftOf="@+id/top_more"/>-->
+            android:src="@drawable/back" />
+        <TextView
+            android:id="@+id/top_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
         <!--<ImageView-->
         <!--android:id="@+id/top_search"-->
         <!--android:layout_toLeftOf="@+id/top_margin"-->
