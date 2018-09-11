@@ -5,18 +5,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.example.sig.lianjiang.R;
 /**
  * Created by sig on 2018/9/10.
  */
 
-public class ChangeInfoActivity extends AppCompatActivity{
+public class ChangeInfoActivity extends AppCompatActivity implements View.OnClickListener{
+    private ImageView back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         theme();
         setContentView(R.layout.activity_change_info);
+        back=(ImageView)findViewById(R.id.top_left);
+        back.setOnClickListener(this);
     }
     private void theme() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -27,7 +31,13 @@ public class ChangeInfoActivity extends AppCompatActivity{
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
-    public void back(View view){
-        finish();
+    @Override
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.top_left:
+                finish();
+                break;
+
+        }
     }
 }

@@ -76,7 +76,7 @@ public class RegisterActivitysteup1 extends AppCompatActivity implements View.On
                     tvPhoneTip.setVisibility(View.VISIBLE);
                     tvPhoneTip.setText("已发送验证码至"+phone);
                     Toast.makeText(RegisterActivitysteup1.this,"验证码发送成功",Toast.LENGTH_SHORT).show();
-                    CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(tvConfirm, 60000, 1000);
+                    CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(tvConfirm, 60000, 1000,R.mipmap.bg_confirm,R.mipmap.bg_confirm_diasble);
                     mCountDownTimerUtils.start();
                 }else {
                     tvPhoneTip.setVisibility(View.VISIBLE);

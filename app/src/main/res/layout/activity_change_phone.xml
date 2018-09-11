@@ -86,15 +86,15 @@
                 android:layout_width="72dp"
                 android:layout_height="24dp"
                 android:text="获取验证码" />
-            <TextView
-                android:textAppearance="@style/TextAppear.Theme.Se_999999_10"
-                android:gravity="center"
-                android:id="@+id/tvSecond"
-                android:background="@drawable/shape_line_grey"
-                android:visibility="gone"
-                android:layout_width="72dp"
-                android:layout_height="24dp"
-                android:text="倒计时50s" />
+            <!--<TextView-->
+                <!--android:textAppearance="@style/TextAppear.Theme.Se_999999_10"-->
+                <!--android:gravity="center"-->
+                <!--android:id="@+id/tvSecond"-->
+                <!--android:background="@drawable/shape_line_grey"-->
+                <!--android:visibility="gone"-->
+                <!--android:layout_width="72dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:text="倒计时50s" />-->
         </LinearLayout>
         <include layout="@layout/line_gray" />
         <LinearLayout

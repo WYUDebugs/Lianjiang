@@ -78,7 +78,8 @@
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvNickname"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="你的昵称"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -105,7 +106,8 @@
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvMotto"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="明天世间怎去估计"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -135,7 +137,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:layout_weight="2" />
+                        android:layout_weight="2"
+                        android:text="暂未开发"/>
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -186,6 +189,14 @@
                     android:layout_height="wrap_content"
                     android:text="修改手机号码"
                     android:layout_weight="1" />
+                <TextView
+                    android:textAppearance="@style/TextAppear.Theme.B0_13"
+                    android:gravity="right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:layout_weight="2"
+                    android:text="12345678901"/>
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -227,7 +238,8 @@
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvUsername"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        />
                     <ImageView
                         android:id="@+id/ivUsername"
                         android:visibility="invisible"
@@ -240,7 +252,7 @@
                 <LinearLayout
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:id="@+id/llName"
+                    android:id="@+id/llDirth"
                     android:background="@android:color/white"
                     android:paddingLeft="8dp"
                     android:paddingRight="2dp"
@@ -254,12 +266,12 @@
                         android:layout_weight="1" />
                     <TextView
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
-                        android:id="@+id/tvName"
+                        android:id="@+id/tvBirth"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="1997/1/1"/>
                     <ImageView
                         android:id="@+id/ivName"
-                        android:visibility="invisible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
@@ -267,6 +279,7 @@
                 </LinearLayout>
                 <include layout="@layout/line_gray" />
                 <LinearLayout
+                    android:id="@+id/llAdress"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:background="@android:color/white"
@@ -282,11 +295,11 @@
                         android:layout_weight="1" />
                     <TextView
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
-                        android:id="@+id/tvNation"
+                        android:id="@+id/tvlocation"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="五邑大学"/>
                     <ImageView
-                        android:visibility="invisible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
@@ -294,6 +307,7 @@
                 </LinearLayout>
                 <include layout="@layout/line_gray" />
                 <LinearLayout
+                    android:id="@+id/set_sex"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:background="@android:color/white"
@@ -311,10 +325,10 @@
                     <TextView
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvCard"
+                        android:text="男"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <ImageView
-                        android:visibility="invisible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
@@ -374,7 +388,6 @@
                         android:text="" />
                     <ImageView
                         android:id="@+id/iv_sex"
-                        android:visibility="invisible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"

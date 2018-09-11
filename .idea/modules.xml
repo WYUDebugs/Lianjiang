@@ -7,6 +7,8 @@
       <module fileurl="file://$PROJECT_DIR$/../easeui/easeui/easeui.iml" filepath="$PROJECT_DIR$/../easeui/easeui/easeui.iml" />
       <module fileurl="file://$PROJECT_DIR$/hmspush/hmspush.iml" filepath="$PROJECT_DIR$/hmspush/hmspush.iml" />
       <module fileurl="file://$PROJECT_DIR$/photopicker/photopicker.iml" filepath="$PROJECT_DIR$/photopicker/photopicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pickerview/pickerview.iml" filepath="$PROJECT_DIR$/pickerview/pickerview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheelview/wheelview.iml" filepath="$PROJECT_DIR$/wheelview/wheelview.iml" />
     </modules>
   </component>
 </project>

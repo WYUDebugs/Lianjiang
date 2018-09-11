@@ -83,7 +83,7 @@
         android:layout_marginLeft="15dp"
         android:text="密码为8-16位数字，字母或符号组成，不可为纯数字" />
     <Button
-        android:id="@+id/bt_send_moment"
+        android:id="@+id/bt_send"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"

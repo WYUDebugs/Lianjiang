@@ -49,9 +49,9 @@
     <application
         android:name=".StarryApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_StarryLogo"
+        android:icon="@mipmap/ic_starrylogo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_StarryLogo"
+        android:roundIcon="@mipmap/ic_starrylogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
