@@ -41,6 +41,10 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
     private LinearLayout changeSex;
     private TextView tvlocation;
     private TextView tvBirth;
+
+    public final static String LEVEL_NICK="nick";
+    public final static String  LEVEL_SIGNA="signa";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +100,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.llNickname:
                 Intent intent1=new Intent(EditUserProfileActivity.this,ChangeInfoActivity.class);
+                intent1.putExtra("level",LEVEL_NICK);
                 startActivity(intent1);
                 break;
             case R.id.set_sex:
@@ -103,6 +108,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.llMotto:
                 Intent intent2=new Intent(EditUserProfileActivity.this,ChangeInfoActivity.class);
+                intent2.putExtra("level",LEVEL_SIGNA);
                 startActivity(intent2);
                 break;
             case R.id.llChangePwd:

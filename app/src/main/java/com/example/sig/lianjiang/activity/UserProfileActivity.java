@@ -60,6 +60,12 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private ImageView head_background;
     private ImageView head;
     private String userId;
+    private int sexId;//0 代表男性，1代表女性
+    private String birthday;//生日
+    private TextView date;
+    private String address;//地址
+    private TextView dizi;
+    private ImageView sex;
 
 
     @Override
@@ -87,6 +93,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         userSignature=findViewById(R.id.user_signature);
         head = findViewById(R.id.head);
         head.setOnClickListener(this);
+        sex=findViewById(R.id.sex);
+        dizi=findViewById(R.id.address);
+        date=findViewById(R.id.date);
         getHead();
     }
 
@@ -333,7 +342,20 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                             Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + resultDto.getData().getHeadimage())
                                     .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
                             userName.setText(resultDto.getData().getName());
+                            sexId=resultDto.getData().getGender();
+                            if (sexId == 1) {
+                                sex.setImageResource(R.mipmap.icon_female);
+                            }
+                            birthday=resultDto.getData().getBirthday();
+                            if (birthday != null) {
+                                date.setText(birthday);
+                            }
+                            address=resultDto.getData().getAddress();
+                            if (address!=null) {
+                                dizi.setText(address);
+                            }
                             if (resultDto.getData().getSignature()!=null){
+
                                 userSignature.setText(resultDto.getData().getSignature());
                             }else {
                                 userSignature.setVisibility(View.INVISIBLE);

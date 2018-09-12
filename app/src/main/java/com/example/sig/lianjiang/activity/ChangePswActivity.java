@@ -58,6 +58,7 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
                 finish();
                 break;
             case R.id.bt_send:
+//                showCodeDialog();
                 break;
         }
     }

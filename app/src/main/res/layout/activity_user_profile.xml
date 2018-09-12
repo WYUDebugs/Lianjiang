@@ -347,6 +347,7 @@
                             android:layout_height="20dp"
                             android:src="@mipmap/ic_age" />
                         <TextView
+                            android:id="@+id/date"
                             android:textAppearance="@style/TextAppear.Theme.CB5_13"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -374,11 +375,12 @@
                             android:layout_height="20dp"
                             android:src="@mipmap/ic_adress" />
                         <TextView
+                            android:id="@+id/address"
                             android:textAppearance="@style/TextAppear.Theme.CB5_13"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
-                            android:text="江门市五邑大学"
+                            android:text="中国"
                             android:layout_weight="1" />
                         <ImageView
                             android:layout_width="20dp"
