@@ -76,20 +76,23 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.ivDel:
                 editText.setText("");
+                break;
             case R.id.bt_send_moment:
                 if (getLevel().equals(LEVEL_NICK)) {
                     String textContent=editText.getText().toString();
                     if (textContent.isEmpty()) {
                         Toast.makeText(this, "不能为空", Toast.LENGTH_SHORT).show();
+                    } else {
+                        submitChangeNick(textContent);
                     }
-                    submitChangeNick(textContent);
                     break;
                 } else if (getLevel().equals(LEVEL_SIGNA)) {
                     String textContent2=editText.getText().toString();
                     if (textContent2.isEmpty()) {
                         Toast.makeText(this, "不能为空", Toast.LENGTH_SHORT).show();
+                    } else {
+                        submitChangeSigna(textContent2);
                     }
-                    submitChangeSigna(textContent2);
                     break;
                 }
             default:

@@ -53,6 +53,7 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
     private EditText oldPswET;
     private EditText newPswET;
     private TextView title;
+    private String newPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,20 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.bt_send:
                 String oldPassword=oldPswET.getText().toString();
-                getPhoneNum(oldPassword);
+                newPassword=newPswET.getText().toString();
+                if (oldPassword.isEmpty() || newPassword.isEmpty()) {
+                    Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    boolean flag=judgNewPsw(newPassword);
+                    if (flag == false) {
+                        Toast.makeText(this, "请按照要求填写新密码", Toast.LENGTH_SHORT).show();
+                    } else {
+                        getPhoneNum(oldPassword);
+                    }
+                }
+                break;
+
+            default:
                 break;
         }
     }
@@ -166,7 +180,7 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
                             sendMsg(phone);
                             showCodeDialog();
                         } else {
-                            Toast.makeText(ChangePswActivity.this, "密码错误，请重新输入", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChangePswActivity.this, "旧密码输入错误，请重新输入", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -273,24 +287,24 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
             public void done(BmobException ex) {
 
                 if(ex == null){
-                    String newPassword=newPswET.getText().toString();
-                    changePsw(newPassword);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        Thread.sleep(4000); //延时4秒关闭修改页面
-                                        finish();
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
+                       changePsw(newPassword);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Thread.sleep(4000); //延时4秒关闭修改页面
+                                            finish();
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
-                            }).start();
-                        }
-                    }).start();
+                                }).start();
+                            }
+                        }).start();
+
 
                 }else {
                     text.setText("验证码输入错误");
@@ -299,6 +313,15 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+    }
+    private boolean judgNewPsw(String newPsw) {
+        String telRegex = "^(?![^a-zA-Z]+$)(?!\\D+$).{8,16}$";
+        if (newPsw==null) {
+            return false;
+        }
+        else{
+            return newPsw.matches(telRegex);
+        }
     }
 
     @Override
