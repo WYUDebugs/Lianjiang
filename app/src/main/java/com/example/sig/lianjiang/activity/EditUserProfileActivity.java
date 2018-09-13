@@ -216,7 +216,8 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
         CustomDatePicker customDatePicker = new CustomDatePicker(this, new CustomDatePicker.ResultHandler() {
             @Override
             public void handle(String time) { // 回调接口，获得选中的时间
-                tvBirth.setText(time.substring(0,10));
+                String date=time.substring(0,10);
+                submitChangeBirth(date);
             }
         }, startTime, endTime); // 初始化日期格式请用：yyyy-MM-dd HH:mm，否则不能正常运行
         customDatePicker.showSpecificTime(false); // 显示时和分
@@ -257,6 +258,54 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                             } else {
                                 textView.setText("男");
                             }
+                            Toast.makeText(EditUserProfileActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(EditUserProfileActivity.this, "修改失败，请重试！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(EditUserProfileActivity.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+
+    }
+    public void submitChangeBirth(final String birthday) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param birthParam = new OkHttpUtils.Param("birthday", birthday);
+        String id= EMClient.getInstance().getCurrentUser();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",id);
+        list.add(birthParam);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.changeUserById, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(EditUserProfileActivity.this,"服务器出错,修改失败",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if (resultDto.getMsg().equals("success")) {
+                            tvBirth.setText(birthday);
                             Toast.makeText(EditUserProfileActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
 
                         } else {
