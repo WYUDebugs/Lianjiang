@@ -315,13 +315,14 @@
                     android:paddingRight="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="44dp">
+
                     <TextView
-                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
                         android:id="@+id/tvCard_tip"
-                        android:layout_width="0dp"
+                        android:layout_width="311dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="性别"
-                        android:layout_weight="1" />
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13" />
                     <TextView
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvCard"
