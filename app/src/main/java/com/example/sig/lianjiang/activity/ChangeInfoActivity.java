@@ -37,6 +37,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
     private TextView title;
     private EditText editText;
     private Button button;
+    private ImageView imageView;
 
 
     @Override
@@ -44,14 +45,19 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         theme();
         setContentView(R.layout.activity_change_info);
+        init();
+        getLevel();
+
+    }
+    private void init(){
         title=findViewById(R.id.profile_title);
         editText=findViewById(R.id.edtContent);
         button=(Button)findViewById(R.id.bt_send_moment);
         button.setOnClickListener(this);
         back=(ImageView)findViewById(R.id.top_left);
         back.setOnClickListener(this);
-        getLevel();
-
+        imageView=findViewById(R.id.ivDel);
+        imageView.setOnClickListener(this);
     }
     private void theme() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -68,6 +74,8 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
             case R.id.top_left:
                 finish();
                 break;
+            case R.id.ivDel:
+                editText.setText("");
             case R.id.bt_send_moment:
                 if (getLevel().equals(LEVEL_NICK)) {
                     String textContent=editText.getText().toString();
@@ -105,8 +113,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param nameParam = new OkHttpUtils.Param("name", name);
-       // String id=EMClient.getInstance().getCurrentUser();
-        String id="1";
+        String id=EMClient.getInstance().getCurrentUser();
         OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",id);
         list.add(nameParam);
         list.add(idParam);
@@ -132,6 +139,17 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                         }
                         if (resultDto.getMsg().equals("success")) {
                             Toast.makeText(ChangeInfoActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.sleep(3000); //延时3秒关闭修改页面
+                                        finish();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
                         } else {
                             Toast.makeText(ChangeInfoActivity.this, "修改失败，请重试！", Toast.LENGTH_SHORT).show();
                         }
@@ -153,8 +171,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param signaParam = new OkHttpUtils.Param("signature", signature);
-        //String id=EMClient.getInstance().getCurrentUser();
-        String id="1";
+        String id=EMClient.getInstance().getCurrentUser();
         OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",id);
         list.add(signaParam);
         list.add(idParam);
@@ -181,6 +198,17 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
                         }
                         if (resultDto.getMsg().equals("success")) {
                             Toast.makeText(ChangeInfoActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.sleep(3000); //延时3秒关闭修改页面
+                                        finish();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
                         } else {
                             Toast.makeText(ChangeInfoActivity.this, "修改失败，请重试！", Toast.LENGTH_SHORT).show();
                         }

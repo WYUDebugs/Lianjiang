@@ -19,20 +19,21 @@
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="44dp">
+
         <EditText
-            android:textSize="@dimen/font_size_item"
-            android:textColorHint="@color/hintcolor"
-            android:gravity="center_vertical"
             android:id="@+id/oldpassword"
-            android:background="@null"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:hint="请输入原始密码"
-            android:ems="10"
-            android:singleLine="true"
             android:layout_weight="1"
-            android:inputType="textPassword" />
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center_vertical"
+            android:hint="请输入原始密码"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColorHint="@color/hintcolor"
+            android:textSize="@dimen/font_size_item" />
         <ImageView
             android:id="@+id/iv_old_password"
             android:paddingLeft="15dp"

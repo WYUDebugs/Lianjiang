@@ -37,5 +37,7 @@ public class APPConfig {
     public static String TYPE = "userType";
 
     public static String changeUserById=test_url+"user/changeUserById";
+    public static String changePhoneById=test_url+"user/changePhoneById";
+    public static String ckPsw=test_url+"user/checkPsw";
 }
 

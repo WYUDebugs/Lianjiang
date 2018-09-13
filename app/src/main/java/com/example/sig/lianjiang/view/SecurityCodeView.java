@@ -98,7 +98,6 @@ public class SecurityCodeView extends RelativeLayout {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL
                         && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    Toast.makeText(getContext(),"111",Toast.LENGTH_SHORT).show();
                     if (onKeyDelete()) return true;
                     return true;
                 }
