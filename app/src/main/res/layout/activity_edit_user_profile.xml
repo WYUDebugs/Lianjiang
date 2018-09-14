@@ -78,8 +78,7 @@
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvNickname"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="你的昵称"/>
+                        android:layout_height="wrap_content" />
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -106,8 +105,7 @@
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvMotto"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="明天世间怎去估计"/>
+                        android:layout_height="wrap_content" />
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -190,13 +188,13 @@
                     android:text="修改手机号码"
                     android:layout_weight="1" />
                 <TextView
+                    android:id="@+id/phone_num"
                     android:textAppearance="@style/TextAppear.Theme.B0_13"
                     android:gravity="right"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:layout_weight="2"
-                    android:text="12345678901"/>
+                    android:layout_weight="2" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -258,12 +256,13 @@
                     android:paddingRight="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="44dp">
+
                     <TextView
-                        android:textAppearance="@style/TextAppear.Theme.CB5_13"
-                        android:layout_width="0dp"
+                        android:layout_width="274dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="生日"
-                        android:layout_weight="1" />
+                        android:textAppearance="@style/TextAppear.Theme.CB5_13" />
                     <TextView
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvBirth"
@@ -297,8 +296,7 @@
                         android:textAppearance="@style/TextAppear.Theme.B0_13"
                         android:id="@+id/tvlocation"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="五邑大学"/>
+                        android:layout_height="wrap_content" />
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

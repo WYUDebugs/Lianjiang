@@ -38,6 +38,9 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
     private EditText editText;
     private Button button;
     private ImageView imageView;
+    private TextView nickName;
+    private TextView singa;
+
 
 
     @Override
@@ -50,6 +53,8 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
 
     }
     private void init(){
+        singa=(TextView)findViewById(R.id.tvMotto);
+        nickName=(TextView)findViewById(R.id.tvNickname);
         title=findViewById(R.id.profile_title);
         editText=findViewById(R.id.edtContent);
         button=(Button)findViewById(R.id.bt_send_moment);

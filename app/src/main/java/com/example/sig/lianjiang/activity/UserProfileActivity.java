@@ -60,7 +60,6 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private ImageView head_background;
     private ImageView head;
     private String userId;
-    private int sexId;//0 代表男性，1代表女性
     private String birthday;//生日
     private TextView date;
     private String address;//地址
@@ -75,8 +74,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         setContentView(R.layout.activity_user_profile);
         initView();
         //图片加载框架，如果图片加载出错或者没加载出来，显示默认图片
-        Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + "3a5f0819-d925-47e8-a6a2-2c71a403f07d.png")
-                .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
+      /* Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + "3a5f0819-d925-47e8-a6a2-2c71a403f07d.png")
+                .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);*/
     }
 
     public void initView() {
@@ -266,11 +265,11 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         //图片列表，后台图片文件对应的key值必须为 file，否则文件参数传递失败
         final List<File> fileList = new ArrayList<>();
         fileList.add(new File(path));
-        Toast.makeText(this,path,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,path,Toast.LENGTH_SHORT).show();
         //传递的非文件参数列表
         final Map<String, Object> map = new HashMap<>();
 //        map.put("id", String.valueOf(3));//当前用户的id
-        Toast.makeText(this,userId,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,userId,Toast.LENGTH_SHORT).show();
         map.put("id", userId);//当前用户的id
         //使用线程进行网络操作
         new Thread(new Runnable() {
@@ -342,7 +341,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                             Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + resultDto.getData().getHeadimage())
                                     .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
                             userName.setText(resultDto.getData().getName());
-                            sexId=resultDto.getData().getGender();
+                            int sexId=resultDto.getData().getGender();
                             if (sexId == 1) {
                                 sex.setImageResource(R.mipmap.icon_female);
                             }

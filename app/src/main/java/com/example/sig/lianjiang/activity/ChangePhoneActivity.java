@@ -38,6 +38,7 @@ public class ChangePhoneActivity extends AppCompatActivity implements View.OnCli
     private Button button;
     private EditText yzm_edit;
     private TextView title;
+    private TextView phoneNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class ChangePhoneActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void init(){
+        phoneNum=(TextView)findViewById(R.id.phone_num);
         title=findViewById(R.id.profile_title);
         title.setText("更改手机号");
         back=(ImageView)findViewById(R.id.top_left);

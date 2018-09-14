@@ -161,7 +161,7 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
             public void run() {
                 //post方式连接  url，post方式请求必须传参
                 //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
-                OkHttpUtils.post(APPConfig.ckPsw, new OkHttpUtils.ResultCallback() {
+                OkHttpUtils.post(APPConfig.checkPsw, new OkHttpUtils.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         Log.d("testRun", "response------" + response.toString());

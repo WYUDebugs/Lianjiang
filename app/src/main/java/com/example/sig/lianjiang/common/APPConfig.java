@@ -35,9 +35,12 @@ public class APPConfig {
     public static String PSW = "password";
     public static String USERDATA = "userData";//获取当前用户的key
     public static String TYPE = "userType";
-
+    /**
+     * Hmp
+     */
     public static String changeUserById=test_url+"user/changeUserById";
     public static String changePhoneById=test_url+"user/changePhoneById";
-    public static String ckPsw=test_url+"user/checkPsw";
+    public static String checkPsw=test_url+"user/checkPsw";
+    public static String findUserByIdText=test_url+"user/findUserById";
 }
 
