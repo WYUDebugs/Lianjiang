@@ -27,6 +27,7 @@
  import com.example.sig.lianjiang.fragment.StarFragment;
  import com.example.sig.lianjiang.leftmenu.FlowingView;
  import com.example.sig.lianjiang.leftmenu.LeftDrawerLayout;
+ import com.example.sig.lianjiang.utils.ConfigUtil;
  import com.example.sig.lianjiang.utils.OkHttpUtils;
  import com.example.sig.lianjiang.utils.PopupMenuUtil;
  import com.example.sig.lianjiang.view.CircleImageView;
@@ -159,6 +160,11 @@
              return;
          }
          setContentView(R.layout.activity_main);
+         // 如果没有显示过引导图，则显示之（为了方便查看效果，此处把判断条件注释掉了）
+          if (ConfigUtil.needShowGuide(this))
+         {
+             startActivity(new Intent(this, WelcomeGuideActivity.class));
+         }
          // runtime permission for android 6.0, just require all permissions here for simple
          requestPermissions();
          mNavigateTabBar = (MainNavigateTabBar) findViewById(R.id.mainTabBar);

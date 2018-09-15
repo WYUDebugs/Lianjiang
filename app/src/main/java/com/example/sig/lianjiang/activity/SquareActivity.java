@@ -242,7 +242,7 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
             title.setText("");
         } else {
             textView.setBackgroundColor(Color.argb((int) 255, 57, 58, 62));
-            title.setText("广场");
+            title.setText("动态");
         }
     }
     public void getUserPost(final String id) {

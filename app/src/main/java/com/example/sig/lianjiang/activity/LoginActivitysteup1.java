@@ -23,6 +23,7 @@ import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.runtimepermissions.PermissionsManager;
 import com.example.sig.lianjiang.runtimepermissions.PermissionsResultAction;
+import com.example.sig.lianjiang.utils.ConfigUtil;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 
@@ -51,6 +52,10 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
         }
         StatusBarUtil.StatusBarLightMode(this);
         setContentView(R.layout.activity_login_activitysteup1);
+        // 如果没有显示过引导图，则显示之（为了方便查看效果，此处把判断条件注释掉了）
+         if (ConfigUtil.needShowGuide(this)) {
+            startActivity(new Intent(this, WelcomeGuideActivity.class));
+        }
         etPhone=(EditText)findViewById(R.id.etPhone);
         etPhone.addTextChangedListener(mTextWatcher);
         ivSubmit=(ImageView)findViewById(R.id.ivSubmit);
@@ -199,7 +204,7 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onDenied(String permission) {
-                //Toast.makeText(MainActivity.this, "Permission " + permission + " has been denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivitysteup1.this, "权限： " + permission + "未被授权", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/photopicker/photopicker.iml" filepath="$PROJECT_DIR$/photopicker/photopicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/pickerview/pickerview.iml" filepath="$PROJECT_DIR$/pickerview/pickerview.iml" />
       <module fileurl="file://$PROJECT_DIR$/wheelview/wheelview.iml" filepath="$PROJECT_DIR$/wheelview/wheelview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zwlviewpager/zwlviewpager.iml" filepath="$PROJECT_DIR$/zwlviewpager/zwlviewpager.iml" />
     </modules>
   </component>
 </project>

@@ -18,6 +18,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <com.dalong.zwlviewpager.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                app:orientation="horizontal"
+                android:paddingEnd="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingStart="20dp"
+                 />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,7 +52,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="广场"/>
+                        android:text="动态"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -73,7 +87,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="登录测试"/>
+                        android:text="引导测试"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
