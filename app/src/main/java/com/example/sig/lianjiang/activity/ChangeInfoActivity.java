@@ -108,9 +108,15 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         Intent intent=getIntent();
         String level=intent.getStringExtra("level");
         if (level.equals(LEVEL_NICK)) {
+            String nickate=intent.getStringExtra("nickDate");
+            editText.setText(nickate);
+            editText.setTextColor(getResources().getColor(R.color.gray_pressed));
             title.setText("修改昵称");
             return LEVEL_NICK;
         } else if (level.equals(LEVEL_SIGNA)){
+            String signaDate=intent.getStringExtra("signaDate");
+            editText.setText(signaDate);
+            editText.setTextColor(getResources().getColor(R.color.gray_pressed));
             title.setText("修改签名");
             return LEVEL_SIGNA;
         }

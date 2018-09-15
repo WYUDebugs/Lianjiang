@@ -146,6 +146,8 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
             case R.id.llNickname:
                 Intent intent1=new Intent(EditUserProfileActivity.this,ChangeInfoActivity.class);
                 intent1.putExtra("level",LEVEL_NICK);
+                String nickdate=tv_nick.getText().toString();
+                intent1.putExtra("nickDate",nickdate);
                 startActivity(intent1);
                 break;
             case R.id.set_sex:
@@ -153,6 +155,8 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.llMotto:
                 Intent intent2=new Intent(EditUserProfileActivity.this,ChangeInfoActivity.class);
+                String signaDate=tv_signa.getText().toString();
+                intent2.putExtra("signaDate",signaDate);
                 intent2.putExtra("level",LEVEL_SIGNA);
                 startActivity(intent2);
                 break;
@@ -483,7 +487,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
             public void run() {
                 //post方式连接  url，post方式请求必须传参
                 //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
-                OkHttpUtils.post(APPConfig.findUserByIdText, new OkHttpUtils.ResultCallback() {
+                OkHttpUtils.post(APPConfig.findUserById, new OkHttpUtils.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         Log.d("testRun", "response------" + response.toString());
@@ -531,5 +535,9 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
          getUserDate();
     }
 
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getUserDate();
+    }
 }

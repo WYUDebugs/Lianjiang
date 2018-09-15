@@ -374,4 +374,16 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
         }).start();
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getHead();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getHead();
+    }
 }
