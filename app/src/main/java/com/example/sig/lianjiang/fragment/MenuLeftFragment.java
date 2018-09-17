@@ -60,7 +60,11 @@ public class MenuLeftFragment extends MenuFragment implements View.OnClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getHead();
+    }
     private void init(){
         head = (CircleImageView) leftMenu.findViewById(R.id.head);
         loginOut=(LinearLayout)leftMenu.findViewById(R.id.login_out);

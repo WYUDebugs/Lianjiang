@@ -297,6 +297,15 @@
             android:name=".activity.WelcomeGuideActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".activity.SharedFilesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide">
+        </activity>
+
+        <activity android:name="com.hyphenate.easeui.ui.EaseDingMsgSendActivity"></activity>
+        <activity android:name=".activity.EditActivity"></activity>
+        <activity android:name=".activity.GroupSearchMessageActivity"></activity>
+
     </application>
 
 </manifest>

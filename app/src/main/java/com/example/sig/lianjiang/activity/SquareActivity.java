@@ -1,10 +1,13 @@
 package com.example.sig.lianjiang.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.NineGridAdapter;
+import com.example.sig.lianjiang.adapter.SquareAdapter;
 import com.example.sig.lianjiang.bean.PublicListResultDto;
 import com.example.sig.lianjiang.bean.Publish;
 import com.example.sig.lianjiang.bean.PublishDto;
@@ -37,74 +41,70 @@ import com.example.sig.lianjiang.model.NineGridTestModel;
 import com.example.sig.lianjiang.utils.CommentFun;
 import com.example.sig.lianjiang.utils.CustomTagHandler;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
+import com.example.sig.lianjiang.utils.RecycleViewUtils;
+import com.example.sig.lianjiang.view.CircleImageView;
 import com.example.sig.lianjiang.view.ObservableListView;
 import com.hyphenate.chat.EMClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.sch.rfview.AnimRFRecyclerView;
+import com.sch.rfview.decoration.DividerItemDecoration;
+import com.sch.rfview.manager.AnimRFLinearLayoutManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SquareActivity extends AppCompatActivity implements ObservableListView.OnMeiTuanRefreshListener,View.OnClickListener,ObservableListView.ScrollViewListener{
-    private TextView title;
+public class SquareActivity extends AppCompatActivity implements View.OnClickListener{
+    private TextView titleText;
     private ImageView back;
     private TextView tv_pull_to_refresh;
     private int imageHeight=800;
-    private LinearLayout textView;
+    private LinearLayout title;
     public static CommentUser sUser = new CommentUser(Integer.parseInt(EMClient.getInstance().getCurrentUser()), "未知用户"); // 当前登录用户
-    private ObservableListView mListView;
-    private NineGridAdapter mAdapter;
+    private AnimRFRecyclerView mRecyclerView;
+    private SquareAdapter mAdapter;
     private List<NineGridTestModel> mList = new ArrayList<>();
     private UserResultDto resultDto;
     private PublicListResultDto publicListResultDto;
-    private String[] mUrls = new String[]{"http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg",
-            "http://img3.fengniao.com/forum/attachpics/537/165/21472986.jpg",
-            "http://d.hiphotos.baidu.com/image/h%3D200/sign=ea218b2c5566d01661199928a729d498/a08b87d6277f9e2fd4f215e91830e924b999f308.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=3445377427,2645691367&fm=21&gp=0.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=2644422079,4250545639&fm=21&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=1444023808,3753293381&fm=21&gp=0.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=882039601,2636712663&fm=21&gp=0.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=4119861953,350096499&fm=21&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=2437456944,1135705439&fm=21&gp=0.jpg",
-            "http://img2.imgtn.bdimg.com/it/u=3251359643,4211266111&fm=21&gp=0.jpg",
-            "http://img4.duitang.com/uploads/item/201506/11/20150611000809_yFe5Z.jpeg",
-            "http://img5.imgtn.bdimg.com/it/u=1717647885,4193212272&fm=21&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=2024625579,507531332&fm=21&gp=0.jpg"};
-    private final static int REFRESH_COMPLETE = 0;
-    private static final int UPDATE_TEXT_DONE=1;
-    private static final int UPDATE_TEXT_STAR=2;
-    private InterHandler mInterHandler = new InterHandler(this);
-
-    private  class InterHandler extends Handler {
-        private WeakReference<SquareActivity> mActivity;
-        public InterHandler(SquareActivity activity){
-            mActivity = new WeakReference<SquareActivity>(activity);
-        }
+    private View headerView;
+    private View footerView;
+    private Handler mHandler = new Handler();
+    int mDistance = 0;
+    private RecycleViewUtils recycleViewUtils;
+    private CircleImageView head;
+    private boolean progressShow;
+    //滑动监听事件
+    RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        //dy:每一次竖直滑动增量 向下为正 向上为负
         @Override
-        public void handleMessage(android.os.Message msg) {
-            SquareActivity activity = mActivity.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    case REFRESH_COMPLETE:
-                        activity.mListView.setOnRefreshComplete();
-                        activity.mAdapter.notifyDataSetChanged();
-                        activity.mListView.setSelection(0);
-                        break;
-                    case UPDATE_TEXT_DONE:
-                        tv_pull_to_refresh.setText("刷新完成");
-                        mListView.fin();
-                        break;
-                    case UPDATE_TEXT_STAR:
-                        tv_pull_to_refresh.setText("下拉刷新");
-                        break;
-                }
-            }else{
-                super.handleMessage(msg);
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+//            mDistance += dy;
+//            float percent = mDistance * 1f / maxDistance;//百分比
+//            int alpha = (int) (percent * 255);
+////            int argb = Color.argb(alpha, 57, 174, 255);
+            mDistance=recycleViewUtils.getScrollY();
+            Log.d("zxd",Integer.toString(mDistance));
+            if (mDistance <= 0) {
+                title.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));//AGB由相关工具获得，或者美工提供
+            } else if (mDistance > 0 && mDistance <= 800 -title.getHeight()
+                    ) {
+                // 只是layout背景透明(仿知乎滑动效果)
+                title.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
+                titleText.setText("");
+            } else {
+                title.setBackgroundColor(Color.argb((int) 255, 57, 58, 62));
+                titleText.setText("动态");
             }
+//            setSystemBarAlpha(alpha);
         }
-    }
+    };
+
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -114,25 +114,7 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
 
         }
     }
-    @Override
-    public void onRefresh() {
-        new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                try {
-                    getpublishListPost(EMClient.getInstance().getCurrentUser());
-                    mInterHandler.sendEmptyMessage(UPDATE_TEXT_DONE);
-                    Thread.sleep(1000);
-                    mInterHandler.sendEmptyMessage(REFRESH_COMPLETE);
-                    mInterHandler.sendEmptyMessage(UPDATE_TEXT_STAR);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,19 +125,17 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        getUserPost(EMClient.getInstance().getCurrentUser());
         setContentView(R.layout.activity_square);
         tv_pull_to_refresh=(TextView) findViewById(R.id.tv_pull_to_refresh);
-        title=(TextView)findViewById(R.id.top_center);
+        titleText=(TextView)findViewById(R.id.top_center);
         back=(ImageView)findViewById(R.id.top_left);
         back.setOnClickListener(this);
-        textView = (LinearLayout) findViewById(R.id.mytopbar_square);
-
+        title = (LinearLayout) findViewById(R.id.mytopbar_square);
+//        setSystemBarAlpha(0);
         initImageLoader();
-        getpublishListPost(EMClient.getInstance().getCurrentUser());
+//        getpublishListPost(EMClient.getInstance().getCurrentUser());
         initView();
-
-        mListView.setOnMeiTuanRefreshListener(this);
+        getUserPost(EMClient.getInstance().getCurrentUser());
 
 
     }
@@ -201,8 +181,30 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
     }
 
     public void initView() {
-        mListView = (ObservableListView) findViewById(R.id.lv_bbs);
-        mAdapter = new NineGridAdapter(this,mList,new CustomTagHandler(this, new CustomTagHandler.OnCommentClickListener() {
+        mRecyclerView = (AnimRFRecyclerView) findViewById(R.id.lv_bbs);
+        // 头部
+        headerView = LayoutInflater.from(SquareActivity.this).inflate(R.layout.header_view, null);
+        head=(CircleImageView) headerView.findViewById(R.id.head);
+        // 脚部
+        footerView = LayoutInflater.from(SquareActivity.this).inflate(R.layout.footer_view, null);
+        // 使用重写后的线性布局管理器
+        AnimRFLinearLayoutManager manager = new AnimRFLinearLayoutManager(SquareActivity.this);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(SquareActivity.this, manager.getOrientation(), true));
+//            // 添加头部和脚部，如果不添加就使用默认的头部和脚部
+            mRecyclerView.addHeaderView(headerView);
+//            // 设置头部的最大拉伸倍率，默认1.5f，必须写在setHeaderImage()之前
+            mRecyclerView.setScaleRatio(1.7f);
+//            // 设置下拉时拉伸的图片，不设置就使用默认的
+            mRecyclerView.setHeaderImage((ImageView) headerView.findViewById(R.id.iv_hander));
+            mRecyclerView.addFootView(footerView);
+        // 设置刷新动画的颜色
+        mRecyclerView.setColor(Color.argb((int) 255, 56,207,176), Color.argb((int) 255, 57, 58, 62));
+        // 设置头部恢复动画的执行时间，默认500毫秒
+        mRecyclerView.setHeaderImageDurationMillis(300);
+        // 设置拉伸到最高时头部的透明度，默认0.5f
+        mRecyclerView.setHeaderImageMinAlpha(1.0f);
+        mAdapter = new SquareAdapter(this,mList,new CustomTagHandler(this, new CustomTagHandler.OnCommentClickListener() {
             @Override
             public void onCommentatorClick(View view, CommentUser commentator) {
                 Toast.makeText(getApplicationContext(), commentator.mName, Toast.LENGTH_SHORT).show();
@@ -222,30 +224,94 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
                 inputComment(view, commentator);
             }
         }));
-        mListView.setAdapter(mAdapter);
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mRecyclerView.setAdapter(mAdapter);
+        // 设置刷新和加载更多数据的监听，分别在onRefresh()和onLoadMore()方法中执行刷新和加载更多操作
+        mRecyclerView.setLoadDataListener(new AnimRFRecyclerView.LoadDataListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new MyRunnable(true)).start();
+            }
+
+            @Override
+            public void onLoadMore() {
+                new Thread(new MyRunnable(false)).start();
+            }
+        });
+
+        // 刷新
+        mRecyclerView.setRefresh(true);
+        recycleViewUtils = new RecycleViewUtils().with(mRecyclerView);
+        mRecyclerView.addOnScrollListener(mOnScrollListener);
+//        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Toast.makeText(getApplicationContext(),"click "+position,Toast.LENGTH_SHORT).show();
 //            }
 //        });
-        mListView.setScrollViewListener(this);
+
     }
-    @Override
-    public void onScroll(int h){
-        if (h <= 0) {
-            textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));//AGB由相关工具获得，或者美工提供
-        } else if (h > 0 && h <= imageHeight -textView.getHeight()
-                ) {
-            // 只是layout背景透明(仿知乎滑动效果)
-            textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
-            title.setText("");
-        } else {
-            textView.setBackgroundColor(Color.argb((int) 255, 57, 58, 62));
-            title.setText("动态");
+    class MyRunnable implements Runnable {
+
+        boolean isRefresh;
+
+        public MyRunnable(boolean isRefresh) {
+            this.isRefresh = isRefresh;
+        }
+
+        @Override
+        public void run() {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isRefresh) {
+                        getpublishListPost(EMClient.getInstance().getCurrentUser());
+                        refreshComplate();
+                        // 刷新完成后调用，必须在UI线程中
+                        mRecyclerView.refreshComplate();
+                    } else {
+//                        addData();
+                        loadMoreComplate();
+                        // 加载更多完成后调用，必须在UI线程中
+                        mRecyclerView.loadMoreComplate();
+                    }
+                }
+            }, 2000);
         }
     }
+    public void refreshComplate() {
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    public void loadMoreComplate() {
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+//    @Override
+//    public void onScroll(int h){
+//        if (h <= 0) {
+//            textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));//AGB由相关工具获得，或者美工提供
+//        } else if (h > 0 && h <= imageHeight -textView.getHeight()
+//                ) {
+//            // 只是layout背景透明(仿知乎滑动效果)
+//            textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
+//            title.setText("");
+//        } else {
+//            textView.setBackgroundColor(Color.argb((int) 255, 57, 58, 62));
+//            title.setText("动态");
+//        }
+//    }
     public void getUserPost(final String id) {
+//        progressShow = true;
+//        final ProgressDialog pd= new ProgressDialog(SquareActivity.this);
+//        pd.setCanceledOnTouchOutside(false);
+//        pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//                progressShow = false;
+//            }
+//        });
+//        pd.setMessage("正在获取用户信息......");
+//        pd.show();
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", id);
@@ -271,8 +337,18 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
                         }
                         if(resultDto.getData()!=null){
                             sUser.setmName(resultDto.getData().getName());
+                            Picasso.with(SquareActivity.this).load(APPConfig.img_url + resultDto.getData().getHeadimage())
+                                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
+//                            if (!SquareActivity.this.isFinishing() && pd.isShowing()) {
+//                                pd.dismiss();
+//                            }
                         }else {
-
+//                            runOnUiThread(new Runnable() {
+//                                public void run() {
+//                                    pd.dismiss();
+//                                    Toast.makeText(SquareActivity.this,"获取失败",Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
                         }
                     }
 
@@ -285,6 +361,11 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
 
         }).start();
     }
+    //点击点赞
+    public void clickGood(View view){
+
+    }
+    //点击评论
     public void inputComment(final View v) {
         inputComment(v, null);
     }
@@ -296,10 +377,12 @@ public class SquareActivity extends AppCompatActivity implements ObservableListV
      */
     public void inputComment(final View v, CommentUser receiver) {
 
-        CommentFun.inputComment(SquareActivity.this, mListView, v, receiver, new CommentFun.InputCommentListener() {
+        CommentFun.inputComment(SquareActivity.this, mRecyclerView, v, receiver, new CommentFun.InputCommentListener() {
             @Override
             public void onCommitComment() {
-                mAdapter.notifyDataSetChanged();
+//                mAdapter.notifyDataSetChanged();
+                Log.d("对话框","12345");
+                mRecyclerView.getAdapter().notifyDataSetChanged();
             }
         });
     }

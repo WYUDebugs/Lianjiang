@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.model.Comment;
 import com.example.sig.lianjiang.model.CommentUser;
 import com.hyphenate.chat.EMClient;
+import com.sch.rfview.AnimRFRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +95,7 @@ public class CommentFun {
     /**
      * 弹出评论对话框
      */
-    public static void inputComment(final Activity activity, final ListView listView,
+    public static void inputComment(final Activity activity, final AnimRFRecyclerView recyclerView,
                                     final View btnComment, final CommentUser receiver,
                                     final InputCommentListener listener) {
 
@@ -112,7 +114,7 @@ public class CommentFun {
         // 获取评论的位置,不要在CommentDialogListener.onShow()中获取，onShow在输入法弹出后才调用，
         // 此时btnComment所属的父布局可能已经被ListView回收
         final int[] coord = new int[2];
-        if (listView != null) {
+        if (recyclerView != null) {
             btnComment.getLocationOnScreen(coord);
         }
 
@@ -148,7 +150,7 @@ public class CommentFun {
              */
             @Override
             public void onShow(int[] inputViewCoordinatesInScreen) {
-                if (listView != null) {
+                if (recyclerView != null) {
                     // 点击某条评论则这条评论刚好在输入框上面，点击评论按钮则输入框刚好挡住按钮
                     int span = btnComment.getId() == R.id.img_input_comment ? 0 : btnComment.getHeight();
 //                    listView.smoothScrollBy(coord[1] + span - inputViewCoordinatesInScreen[1], 200);

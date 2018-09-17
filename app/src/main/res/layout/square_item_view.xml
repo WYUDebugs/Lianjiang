@@ -57,9 +57,11 @@
                     android:orientation="horizontal"
                     android:gravity="right">
                     <ImageView
+                        android:id="@+id/iv_good"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginRight="20dp"
+                        android:onClick="clickGood"
                         android:src="@mipmap/icon_like"/>
 
                     <ImageView
@@ -86,11 +88,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </LinearLayout>
-    <FrameLayout
-        android:id="@+id/viewLine"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#cccccc"
-        />
+    <!--<FrameLayout-->
+        <!--android:id="@+id/viewLine"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#cccccc"-->
+        <!--/>-->
 </LinearLayout>

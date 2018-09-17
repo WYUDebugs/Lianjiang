@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +23,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -68,6 +72,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     private OwnerAdminAdapter ownerAdminAdapter;
     private ProgressDialog progressDialog;
     private TextView announcementText;
+    private UserResultDto resultDto;
 
 
     public static GroupDetailsActivity instance;
@@ -1132,6 +1137,54 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         }
     }
 
+    public void getNameAndHeadPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findUserById, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------b" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(resultDto.getData()!=null){
+                            String name=resultDto.getData().getName();
+                            String head=APPConfig.img_url +resultDto.getData().getHeadimage();
+                            EaseUserUtils.setUserNick(id,name);
+                            EaseUserUtils.setUserAvatar(id,head);
+                            Log.d("zxd","子类");
+                            if(id.equals(EMClient.getInstance().getCurrentUser())){
+                                Log.d("zxd","子类刷新");
+                            }
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+
+    }
     protected void updateGroup() {
         new Thread(new Runnable() {
             public void run() {
@@ -1147,6 +1200,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         adminList.addAll(group.getAdminList());
                         memberList.clear();
                         EMCursorResult<String> result = null;
+                        EMCursorResult<String> muteResult = null;
+                        EMCursorResult<String> blackResult = null;
                         do {
                             // page size set to 20 is convenient for testing, should be applied to big value
                             result = EMClient.getInstance().groupManager().fetchGroupMembers(groupId,
@@ -1154,10 +1209,16 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                                     20);
                             EMLog.d(TAG, "fetchGroupMembers result.size:" + result.getData().size());
                             memberList.addAll(result.getData());
+                            for(int i=0;i<result.getData().size();i++){
+                                getNameAndHeadPost(result.getData().get(i));
+                            }
                         } while (result.getCursor() != null && !result.getCursor().isEmpty());
 
                         muteList.clear();
                         muteList.addAll(EMClient.getInstance().groupManager().fetchGroupMuteList(groupId, 0, 200).keySet());
+//                        for(int i=0;i<result.getData().size();i++){
+//                            getNameAndHeadPost(result.getData().get(i));
+//                        }
                         blackList.clear();
                         blackList.addAll(EMClient.getInstance().groupManager().fetchGroupBlackList(groupId, 0, 200));
 
