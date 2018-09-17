@@ -147,7 +147,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 Intent intent1=new Intent(EditUserProfileActivity.this,ChangeInfoActivity.class);
                 intent1.putExtra("level",LEVEL_NICK);
                 String nickdate=tv_nick.getText().toString();
-                intent1.putExtra("nickDate",nickdate);
                 startActivity(intent1);
                 break;
             case R.id.set_sex:
@@ -156,7 +155,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
             case R.id.llMotto:
                 Intent intent2=new Intent(EditUserProfileActivity.this,ChangeInfoActivity.class);
                 String signaDate=tv_signa.getText().toString();
-                intent2.putExtra("signaDate",signaDate);
                 intent2.putExtra("level",LEVEL_SIGNA);
                 startActivity(intent2);
                 break;

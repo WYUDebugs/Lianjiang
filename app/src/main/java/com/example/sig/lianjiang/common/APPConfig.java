@@ -38,12 +38,14 @@ public class APPConfig {
     /**
      * Hmp
      */
-   // public static String changeUserById=test_url+"user/changeUserById";
+//    public static String changeUserById=test_url+"user/changeUserById";
+//    public static String changePhoneById=test_url+"user/changePhoneById";
+//    public static String checkPsw=test_url+"user/checkPsw";
+//    public static String findUserByIdText=test_url+"user/findUserById";
+
     public static String changeUserById=server_url+"user/changeUserById";
-    //public static String changePhoneById=test_url+"user/changePhoneById";
     public static String changePhoneById=server_url+"user/changePhoneById";
-    //public static String checkPsw=test_url+"user/checkPsw";
     public static String checkPsw=server_url+"user/checkPsw";
-    public static String findUserByIdText=test_url+"user/findUserById";
+
 }
 

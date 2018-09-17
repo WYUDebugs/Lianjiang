@@ -198,7 +198,7 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
     public void changePsw(final String password) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param newPswParam = new OkHttpUtils.Param("password", password);
+        OkHttpUtils.Param newPswParam = new OkHttpUtils.Param("newPsw", password);
         String id= EMClient.getInstance().getCurrentUser();
         OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",id);
         list.add(newPswParam);

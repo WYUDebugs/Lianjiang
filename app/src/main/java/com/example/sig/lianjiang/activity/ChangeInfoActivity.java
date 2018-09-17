@@ -38,6 +38,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
     private EditText editText;
     private Button button;
     private ImageView imageView;
+    private String userId;
     private TextView nickName;
     private TextView singa;
 
@@ -53,6 +54,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
 
     }
     private void init(){
+        userId=EMClient.getInstance().getCurrentUser();
         singa=(TextView)findViewById(R.id.tvMotto);
         nickName=(TextView)findViewById(R.id.tvNickname);
         title=findViewById(R.id.profile_title);
@@ -108,15 +110,9 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         Intent intent=getIntent();
         String level=intent.getStringExtra("level");
         if (level.equals(LEVEL_NICK)) {
-            String nickate=intent.getStringExtra("nickDate");
-            editText.setText(nickate);
-            editText.setTextColor(getResources().getColor(R.color.gray_pressed));
             title.setText("修改昵称");
             return LEVEL_NICK;
         } else if (level.equals(LEVEL_SIGNA)){
-            String signaDate=intent.getStringExtra("signaDate");
-            editText.setText(signaDate);
-            editText.setTextColor(getResources().getColor(R.color.gray_pressed));
             title.setText("修改签名");
             return LEVEL_SIGNA;
         }
@@ -127,8 +123,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param nameParam = new OkHttpUtils.Param("name", name);
-        String id=EMClient.getInstance().getCurrentUser();
-        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",id);
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",userId);
         list.add(nameParam);
         list.add(idParam);
 
@@ -185,8 +180,7 @@ public class ChangeInfoActivity extends AppCompatActivity implements View.OnClic
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param signaParam = new OkHttpUtils.Param("signature", signature);
-        String id=EMClient.getInstance().getCurrentUser();
-        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",id);
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",userId);
         list.add(signaParam);
         list.add(idParam);
 
