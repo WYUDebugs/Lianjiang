@@ -12,7 +12,7 @@
     <color name="delete">@android:color/holo_red_dark</color>
     <color name="first">@android:color/darker_gray</color>
     <color name="no_read">#FF8C00</color>
-    <color name="paint_color">#00000000</color>
+    <color name="paint_color">#ffd500</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="grey">#696969</color>

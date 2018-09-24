@@ -56,6 +56,7 @@ dependencies {
     compile project(':pickerview')
     compile project(':zwlviewpager')
     compile project(':AnimRefreshRecyclerView')
+    compile project(':likeView')
     //OkHttp请求框架
     //图片加载框架
     compile 'com.android.support:appcompat-v7:26.+'

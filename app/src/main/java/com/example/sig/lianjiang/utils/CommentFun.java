@@ -3,6 +3,7 @@ package com.example.sig.lianjiang.utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,8 @@ import android.widget.Toast;
 import com.example.sig.lianjiang.R;
 
 import com.example.sig.lianjiang.activity.SquareActivity;
+import com.example.sig.lianjiang.bean.PublicComment;
+import com.example.sig.lianjiang.bean.PublicCommentResultDto;
 import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.model.Comment;
@@ -37,6 +40,9 @@ import java.util.List;
 
 public class CommentFun {
     public static final int KEY_COMMENT_SOURCE_COMMENT_LIST = -200162;
+    public static final int KEY_PUBLISHID_LIST = -2018923;
+    public static String content="";
+    public static PublicCommentResultDto publicCommentResultDto;
 
     /**
      * 在页面中显示评论列表
@@ -46,10 +52,12 @@ public class CommentFun {
      * @param commentList
      * @param tagHandler
      */
-    public static void parseCommentList(Context context, ArrayList<Comment> mCommentList, LinearLayout commentList,View btnComment,
+    public static void parseCommentList(Context context, List<Comment> mCommentList,String id, LinearLayout commentList,View btnComment,
                                          Html.TagHandler tagHandler) {
         if (btnComment != null) {
             btnComment.setTag(KEY_COMMENT_SOURCE_COMMENT_LIST, mCommentList);
+            Log.e("comment",id);
+            btnComment.setTag(KEY_PUBLISHID_LIST, id);
         }
         TextView textView;
         Comment comment;
@@ -99,7 +107,10 @@ public class CommentFun {
                                     final View btnComment, final CommentUser receiver,
                                     final InputCommentListener listener) {
 
-        final ArrayList<Comment> commentList = (ArrayList) btnComment.getTag(KEY_COMMENT_SOURCE_COMMENT_LIST);
+        final List<Comment> commentList = (List) btnComment.getTag(KEY_COMMENT_SOURCE_COMMENT_LIST);
+        final String id=(String)btnComment.getTag(KEY_PUBLISHID_LIST);
+        Log.e("comment","弹出"+id);
+
 
         String hint;
         if (receiver != null) {
@@ -122,7 +133,7 @@ public class CommentFun {
         showInputComment(activity, hint, new CommentDialogListener() {
             @Override
             public void onClickPublish(final Dialog dialog, EditText input, final TextView btn) {
-                final String content = input.getText().toString();
+                content = input.getText().toString();
                 if (content.trim().equals("")) {
                     Toast.makeText(activity, "评论不能为空", Toast.LENGTH_SHORT).show();
                     return;
@@ -135,6 +146,7 @@ public class CommentFun {
 
                 }else{
                     Log.e("111",comment.mContent);
+                    addCommentPost(Integer.toString(SquareActivity.sUser.mId),"0",id,content);
                 }
                 commentList.add(comment);
                 if (listener != null) {
@@ -230,9 +242,72 @@ public class CommentFun {
         void onDismiss();
     }
 
+    public static  void addComment(final List<PublicComment> comments, final View btnComment, final addCommentListener listener){
+        final List<Comment> commentList = (List) btnComment.getTag(KEY_COMMENT_SOURCE_COMMENT_LIST);
 
+        for(int i=0;i<comments.size();i++){
 
+//            Comment comment = new Comment(comments.get(i).getCommentator(), comments.get(i).getCommentContent(), comments.get(i).getReceiveId());
+        }
 
+    }
 
+    public static class addCommentListener {
+        //　评论成功时调用
+        public void onCommitComment() {
 
+        }
+    }
+
+    public static void addCommentPost(final String cId,final String rId,final String pId,final String cContent) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param pidParam = new OkHttpUtils.Param("pId", pId);
+        OkHttpUtils.Param cidParam = new OkHttpUtils.Param("cId", cId);
+        OkHttpUtils.Param contentParam = new OkHttpUtils.Param("cContent", cContent);
+//        OkHttpUtils.Param ridParam = new OkHttpUtils.Param("rId", "0");
+
+        list.add(pidParam);
+        list.add(cidParam);
+        list.add(contentParam);
+//        list.add(ridParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.addComment, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            publicCommentResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicCommentResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            publicCommentResultDto = PublicCommentResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(publicCommentResultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+//                            initListData(publicListResultDto.getData());
+//                            mAdapter.notifyDataSetChanged();
+                            Log.e("zxd","评论成功");
+
+                        }else {
+                            Log.e("zxd","失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
 }

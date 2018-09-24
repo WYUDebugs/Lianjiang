@@ -5,17 +5,18 @@ import java.util.Date;
  */
 
 public class PublishGood {
-    private int id;
+    private int gdId;
     private int publishId;
     private int manOfPraise;
-    private Date timeOfPraise;
+    private String timeOfPraise;
+    private User user;
 
-    public int getId() {
-        return id;
+    public int getGdId() {
+        return gdId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setGdId(int gdId) {
+        this.gdId = gdId;
     }
 
     public int getPublishId() {
@@ -34,11 +35,30 @@ public class PublishGood {
         this.manOfPraise = manOfPraise;
     }
 
-    public Date getTimeOfPraise() {
+    public String getTimeOfPraise() {
         return timeOfPraise;
     }
 
-    public void setTimeOfPraise(Date timeOfPraise) {
+    public void setTimeOfPraise(String timeOfPraise) {
         this.timeOfPraise = timeOfPraise;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "PublishGoodDto{" +
+                "gdId=" + gdId +
+                ", publishId=" + publishId +
+                ", manOfPraise=" + manOfPraise +
+                ", timeOfPraise='" + timeOfPraise + '\'' +
+                ", user=" + user +
+                '}';
     }
 }

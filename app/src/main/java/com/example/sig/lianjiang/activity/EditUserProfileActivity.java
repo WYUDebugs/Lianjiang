@@ -83,7 +83,6 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
        /* Picasso.with(EditUserProfileActivity.this).load(APPConfig.img_url + "3a5f0819-d925-47e8-a6a2-2c71a403f07d.png")
                 .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(headImage);*/
         getCardData();   //加载男女选择器内容
-        initCustomOptionPicker();
     }
 
     private void initView(){
@@ -150,6 +149,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                 startActivity(intent1);
                 break;
             case R.id.set_sex:
+                initCustomOptionPicker();
                 pvCustomOptions.show(); //弹出性别选择器
                 break;
             case R.id.llMotto:
@@ -178,6 +178,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE && data != null) {
             String position = data.getStringExtra("position");
             tvlocation.setText(position);
+            submitChangeAddress(position);
         }
      switch (requestCode) {
             case ImageUtils.REQUEST_CODE_FROM_ALBUM:
@@ -341,6 +342,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
 
                     }
                 })
+
                 .isDialog(true)
                 .build();
 
@@ -377,6 +379,7 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
 
     }
     public void submitChangeGender(final String gender) {
+        Log.d("zxd111","提交性别");
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param genderParam = new OkHttpUtils.Param("gender", gender);
@@ -511,6 +514,11 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
                             int sexId=resultDto.getData().getGender();
                             if (sexId==1) {
                                 textView.setText("女");
+                            }else {
+                                textView.setText("男");
+                            }
+                            if(resultDto.getData().getAddress()!=null){
+                                tvlocation.setText(resultDto.getData().getAddress());
                             }
                         }
                     }
@@ -526,6 +534,52 @@ public class EditUserProfileActivity extends AppCompatActivity implements View.O
         }).start();
     }
 
+    public void submitChangeAddress(final String address) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param addressParam = new OkHttpUtils.Param("address", address);
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id",userId);
+        list.add(addressParam);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.changeUserById, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(EditUserProfileActivity.this,"服务器出错,修改失败",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if (resultDto.getMsg().equals("success")) {
+                            Toast.makeText(EditUserProfileActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(EditUserProfileActivity.this, "修改失败，请重试！", Toast.LENGTH_SHORT).show();
+                            getUserDate();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(EditUserProfileActivity.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+
+    }
 
     @Override
     protected void onResume() {

@@ -18,6 +18,25 @@ public class PublishDto {
     private int type;  //动态的类型，默认为0为发布的动态，1为分享过来的动态
     private List<PublishImage> imageList;
     private User user;
+    private List<PublicComment> commentDtos;
+    private List<PublishGood> goods;
+
+
+    public List<PublishGood> getGoods() {
+        return goods;
+    }
+
+    public void setGoods(List<PublishGood> goods) {
+        this.goods = goods;
+    }
+
+    public List<PublicComment> getCommentDtos() {
+        return commentDtos;
+    }
+
+    public void setCommentDtos(List<PublicComment> commentDtos) {
+        this.commentDtos = commentDtos;
+    }
 
     public int getId() {
         return id;
@@ -117,7 +136,7 @@ public class PublishDto {
 
     @Override
     public String toString() {
-        return "Publish{" +
+        return "PublishDto{" +
                 "id=" + id +
                 ", publisher=" + publisher +
                 ", time=" + time +
@@ -130,6 +149,8 @@ public class PublishDto {
                 ", type=" + type +
                 ", imageList=" + imageList +
                 ", user=" + user +
+                ", commentDtos=" + commentDtos +
+                ", goods=" + goods +
                 '}';
     }
 }

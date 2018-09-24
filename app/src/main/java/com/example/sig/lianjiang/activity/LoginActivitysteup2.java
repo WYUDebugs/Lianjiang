@@ -74,6 +74,7 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
         top_back=(ImageView)findViewById(R.id.top_back);
         top_back.setOnClickListener(this);
         passwordEditText=(EditText)findViewById(R.id.etPwd);
+        passwordEditText.addTextChangedListener(mTextWatcher);
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -101,7 +102,37 @@ public class LoginActivitysteup2 extends BaseActivity implements View.OnClickLis
                 break;
         }
     }
+    TextWatcher mTextWatcher = new TextWatcher() {
+        private CharSequence temp;
+        private int editStart ;
+        private int editEnd ;
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // TODO Auto-generated method stub
+            temp = s;
+        }
 
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+            // TODO Auto-generated method stub
+            //          mTextView.setText(s);//将输入的内容实时显示
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+            editStart = passwordEditText.getSelectionStart();
+            editEnd = passwordEditText.getSelectionEnd();
+            if (temp.length() > 5) {
+                tvConfirm.setClickable(true);
+                tvConfirm.setBackgroundResource(R.mipmap.bg_confirm);
+            }else {
+                tvConfirm.setBackgroundResource(R.mipmap.bg_confirm_diasble);
+                tvConfirm.setClickable(false);
+            }
+        }
+    };
     /**
      * login
      *

@@ -74,8 +74,8 @@ public class NineGridAdapter extends BaseAdapter {
             }
             int index = position - 1;
             holder.mContent.setText(mList.get(index).mContent);
-            CommentFun.parseCommentList(mContext, mList.get(index).mComment,
-                    holder.mCommentList,holder.mBtnInput,  mTagHandler);
+//            CommentFun.parseCommentList(mContext, mList.get(index).mComment,
+//                    holder.mCommentList,holder.mBtnInput,  mTagHandler);
             holder.layout.setIsShowAll(mList.get(index).isShowAll);
             holder.layout.setUrlList(mList.get(index).urlList);
 

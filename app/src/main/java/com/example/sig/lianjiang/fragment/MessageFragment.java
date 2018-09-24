@@ -1,6 +1,7 @@
 package com.example.sig.lianjiang.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -87,6 +88,16 @@ public class MessageFragment  extends EaseConversationListFragment{
                 }
             }
         });
+        //打开侧滑菜单
+        titleBar.getLeftLayout().setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d("zxd","已执行");
+//                Toast.makeText(getContext(),"1111",Toast.LENGTH_SHORT).show();
+                MainActivity.leftDrawerLayout.openDrawer();
+            }
+        });
         super.setUpView();
     }
 
@@ -171,6 +182,12 @@ public class MessageFragment  extends EaseConversationListFragment{
 
     }
 
+    public void setHead(String uri){
+        titleBar.setHead(uri);
+
+    }
+
+
     public void getNameAndHeadPost(final String id) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
@@ -202,6 +219,7 @@ public class MessageFragment  extends EaseConversationListFragment{
                             EaseUserUtils.setUserNick(id,name);
                             EaseUserUtils.setUserAvatar(id,head);
                             if(id.equals(EMClient.getInstance().getCurrentUser())){
+                                setHead(APPConfig.img_url + resultDto.getData().getHeadimage());
                                 conversationListView.init(conversationList);
                                 Log.e("zxd","子类完成");
                             }

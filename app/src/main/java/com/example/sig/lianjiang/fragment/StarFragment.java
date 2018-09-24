@@ -4,13 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 //import android.app.Fragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.activity.ChangePswActivity;
 import com.example.sig.lianjiang.adapter.CursorTagsAdapter;
+import com.example.sig.lianjiang.view.SecurityCodeView;
 import com.moxun.tagcloudlib.view.TagCloudView;
 
 import java.util.ArrayList;
@@ -50,11 +54,30 @@ public class StarFragment extends Fragment implements TagCloudView.OnTagClickLis
         if (view.isSelected()) {
             //加入集合
             listClick.add(list.get(position));
-            Toast.makeText(getActivity(), "你点击的是：" + list.get(position), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "你点击的是：" + list.get(position), Toast.LENGTH_SHORT).show();
+            showCodeDialog();
         } else {
             //移除集合
             listClick.remove(list.get(position));
         }
         //Toast.makeText(getActivity(), "点击过的标签：" + listClick.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 验证码输入框
+     */
+    private void showCodeDialog(){
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+        builder.setTitle("");
+
+        View view=View.inflate(getContext(),R.layout.star_dialog,null);
+
+//        editSecurity = (SecurityCodeView) view.findViewById(R.id.scv_edittext);
+//        text = (TextView) view.findViewById(R.id.tv_text);
+//        editSecurity.setInputCompleteListener(this);
+
+        builder.setView(view);
+        builder.show();
     }
 }

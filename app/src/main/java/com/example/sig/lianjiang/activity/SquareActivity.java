@@ -2,6 +2,7 @@ package com.example.sig.lianjiang.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -29,10 +30,15 @@ import android.widget.Toast;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.NineGridAdapter;
 import com.example.sig.lianjiang.adapter.SquareAdapter;
+import com.example.sig.lianjiang.bean.PublicComment;
+import com.example.sig.lianjiang.bean.PublicCommentListResultDto;
 import com.example.sig.lianjiang.bean.PublicListResultDto;
 import com.example.sig.lianjiang.bean.Publish;
 import com.example.sig.lianjiang.bean.PublishDto;
+import com.example.sig.lianjiang.bean.PublishGood;
 import com.example.sig.lianjiang.bean.PublishImage;
+import com.example.sig.lianjiang.bean.User;
+import com.example.sig.lianjiang.bean.UserListResultDto;
 import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.model.Comment;
@@ -40,10 +46,12 @@ import com.example.sig.lianjiang.model.CommentUser;
 import com.example.sig.lianjiang.model.NineGridTestModel;
 import com.example.sig.lianjiang.utils.CommentFun;
 import com.example.sig.lianjiang.utils.CustomTagHandler;
+import com.example.sig.lianjiang.utils.GoodFun;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.RecycleViewUtils;
 import com.example.sig.lianjiang.view.CircleImageView;
 import com.example.sig.lianjiang.view.ObservableListView;
+import com.example.sig.lianjiang.view.PraiseTextView;
 import com.hyphenate.chat.EMClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -57,6 +65,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.sig.lianjiang.utils.CommentFun.KEY_COMMENT_SOURCE_COMMENT_LIST;
+import static com.example.sig.lianjiang.utils.GoodFun.KEY_PUBLISHID_LIST;
+
 public class SquareActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView titleText;
     private ImageView back;
@@ -69,6 +80,9 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
     private List<NineGridTestModel> mList = new ArrayList<>();
     private UserResultDto resultDto;
     private PublicListResultDto publicListResultDto;
+    private PublicCommentListResultDto publicCommentListResultDto;
+    private UserListResultDto goodList;
+
     private View headerView;
     private View footerView;
     private Handler mHandler = new Handler();
@@ -163,18 +177,53 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
 //            NineGridTestModel model = new NineGridTestModel("假装有内容。。。。",urlList,false,comments);
 //            mList.add(model);
             PublishDto temp=data.get(i);
-            ArrayList<Comment> comments = new ArrayList<Comment>();
+            List<Comment> comments = new ArrayList<Comment>();
             List<String> urlList = new ArrayList<>();
+            List<PraiseTextView.PraiseInfo> mPraiseInfos = new ArrayList<> ();
+            boolean likeFlag=false;
 //            comments.add(new Comment(new CommentUser(i + 2, "用户" + i), "评论" + i, null));
 //            comments.add(new Comment(new CommentUser(i + 100, "用户" + (i + 100)), "评论" + i, new CommentUser(i + 200, "用户" + (i + 200))));
 //            comments.add(new Comment(new CommentUser(i + 200, "用户" + (i + 200)), "评论" + i, null));
 //            comments.add(new Comment(new CommentUser(i + 300, "用户" + (i + 300)), "评论" + i, null));
             for (int j = 0; j < temp.getImageList().size(); j++) {
                 String publishImage=temp.getImageList().get(j).getPath();
-                urlList.add(APPConfig.test_image_url+publishImage);
+                urlList.add(APPConfig.img_url+publishImage);
+            }
+
+            if(temp.getCommentDtos()!=null){
+                Log.d("zxd",Integer.toString(temp.getId())+"评论不为空");
+                for(int j=0;j<temp.getCommentDtos().size();j++){
+                    PublicComment publicComment=temp.getCommentDtos().get(j);
+                    if(publicComment.getCommentator()!=0){
+                        if(publicComment.getReceiveId()==0){
+//
+                            comments.add(new Comment(new CommentUser(publicComment.getCommentator(),publicComment.getcUser().getName()),publicComment.getCommentContent(),null));
+                        }else{
+                            comments.add(new Comment(new CommentUser(publicComment.getCommentator(),publicComment.getcUser().getName()),publicComment.getCommentContent(),new CommentUser(publicComment.getReceiveId(),publicComment.getrUser().getName())));
+                        }
+                    }
+
+                }
+            }else {
+                Log.d("zxd",Integer.toString(temp.getId())+"评论空");
+            }
+            for(int j=0;j<temp.getGoods().size();j++){
+                PublishGood publishGood=temp.getGoods().get(j);
+                if(publishGood.getManOfPraise()!=0){
+                    mPraiseInfos.add (new PraiseTextView.PraiseInfo ().setId (publishGood.getUser().getId()).setNickname (publishGood.getUser().getName()));
+                    if(publishGood.getManOfPraise()==SquareActivity.sUser.mId){
+                        likeFlag=true;
+                    }
+                }
             }
             String content=temp.getContent();
-            NineGridTestModel model = new NineGridTestModel(content,urlList,false,comments);
+            String publishId=Integer.toString(temp.getId());
+            String head=temp.getUser().getHeadimage();
+            String name=temp.getUser().getName();
+            String address=temp.getAddress();
+            String time=temp.getTime();
+            String userId=Integer.toString(temp.getUser().getId());
+            NineGridTestModel model = new NineGridTestModel(content,urlList,false,comments,publishId,mPraiseInfos,head,name,address,time,userId,likeFlag);
             mList.add(model);
 
         }
@@ -207,12 +256,18 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
         mAdapter = new SquareAdapter(this,mList,new CustomTagHandler(this, new CustomTagHandler.OnCommentClickListener() {
             @Override
             public void onCommentatorClick(View view, CommentUser commentator) {
-                Toast.makeText(getApplicationContext(), commentator.mName, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), commentator.mName, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SquareActivity.this, UserProfileActivity.class);
+                intent.putExtra("username",Integer.toString(commentator.mId));
+                startActivity(intent);
             }
 
             @Override
             public void onReceiverClick(View view, CommentUser receiver) {
-                Toast.makeText(getApplicationContext(), receiver.mName, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), receiver.mName, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SquareActivity.this, UserProfileActivity.class);
+                intent.putExtra("username",Integer.toString(receiver.mId));
+                startActivity(intent);
             }
 
             // 点击评论内容，弹出输入框回复评论
@@ -382,12 +437,182 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
             public void onCommitComment() {
 //                mAdapter.notifyDataSetChanged();
                 Log.d("对话框","12345");
+//                v.getTag(KEY_PUBLISHID_LIST).toString()+
+                Log.d("comment",Integer.toString(sUser.mId)+"   "+"   "+CommentFun.content);
+                if(v.getTag(KEY_COMMENT_SOURCE_COMMENT_LIST)!=null){
+                    Log.d("comment",v.getTag(KEY_COMMENT_SOURCE_COMMENT_LIST).toString());
+                }else{
+                    Log.d("comment","空");
+                }
+                if(v.getTag(KEY_PUBLISHID_LIST)!=null){
+                    Log.d("comment",v.getTag(KEY_PUBLISHID_LIST).toString());
+                }else{
+                    Log.d("comment","id空");
+                }
+
+
+//                addCommentPost(Integer.toString(sUser.mId),v.getTag(KEY_PUBLISHID_LIST).toString(),CommentFun.content);
                 mRecyclerView.getAdapter().notifyDataSetChanged();
             }
         });
     }
 
+    public void addLike(View view){
+        addGoodPost(view.getTag(KEY_PUBLISHID_LIST).toString(),view);
+        Log.d("good",view.getTag(KEY_PUBLISHID_LIST).toString());
+    }
+
+    public void getGood(final View v, List<PraiseTextView.PraiseInfo> mPraiseInfos) {
+
+        GoodFun.addGood(mPraiseInfos ,v, new GoodFun.addGoodListener() {
+            @Override
+            public void onCommitComment() {
+//                mAdapter.notifyDataSetChanged();
+                Log.d("对话框","12345");
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
+
+    public void addComment(final View v,CommentUser commentor,CommentUser receiver){
+
+    }
     public void getpublishListPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("userId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.publishList, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            publicListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicListResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            publicListResultDto = PublicListResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(publicListResultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+                            initListData(publicListResultDto.getData());
+                            mAdapter.notifyDataSetChanged();
+                        }else {
+                            Log.e("zxd","动态为空");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+    public void getCommentPost(final String cId,final String pId,final String cContent) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param pidParam = new OkHttpUtils.Param("pId", pId);
+        OkHttpUtils.Param cidParam = new OkHttpUtils.Param("cId", cId);
+        OkHttpUtils.Param contentParam = new OkHttpUtils.Param("cContent", cContent);
+        list.add(pidParam);
+        list.add(cidParam);
+        list.add(contentParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.getCommentList, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            publicCommentListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicCommentListResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            publicCommentListResultDto = PublicCommentListResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(publicCommentListResultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+
+                        }else {
+                            Log.e("zxd","动态为空");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+    public void addCommentPost(final String cId,final String pId,final String cContent) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param pidParam = new OkHttpUtils.Param("pId", pId);
+        OkHttpUtils.Param cidParam = new OkHttpUtils.Param("cId", cId);
+        OkHttpUtils.Param contentParam = new OkHttpUtils.Param("cContent", cContent);
+        list.add(pidParam);
+        list.add(cidParam);
+        list.add(contentParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.addComment, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            publicListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicListResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            publicListResultDto = PublicListResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(publicListResultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+//                            initListData(publicListResultDto.getData());
+//                            mAdapter.notifyDataSetChanged();
+
+                        }else {
+                            Log.e("zxd","动态为空");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+    public void deleteCommentPost(final String id) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param idParam = new OkHttpUtils.Param("userId", id);
@@ -429,4 +654,96 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
 
         }).start();
     }
+    public void getGoodPost(final String id,final View view) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("userId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.getGoodList, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            goodList = OkHttpUtils.getObjectFromJson(response.toString(), UserListResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            goodList = UserListResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(goodList.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+                            List<User> goodUsr=goodList.getData();
+                            List<PraiseTextView.PraiseInfo> mPraiseInfos = new ArrayList<> ();
+                            for(int i=0;i<goodUsr.size();i++){
+                                User user=goodUsr.get(i);
+                                mPraiseInfos.add (new PraiseTextView.PraiseInfo ().setId (user.getId()).setNickname (user.getName()));
+                            }
+                            getGood(view,mPraiseInfos);
+                            mAdapter.notifyDataSetChanged();
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+    public void addGoodPost(final String id, final View view) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("userId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.addGood, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(resultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+//                            initListData(publicListResultDto.getData());
+                            Toast.makeText(SquareActivity.this,"点赞成功",Toast.LENGTH_SHORT).show();
+                            getGoodPost(id,view);
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
 }

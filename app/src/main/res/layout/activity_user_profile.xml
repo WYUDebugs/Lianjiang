@@ -126,7 +126,7 @@
                         android:background="@android:color/white"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="10dp"
                         android:layout_below="@id/motto">
                         <LinearLayout
                             android:orientation="vertical"
@@ -134,13 +134,18 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
-                            <TextView
-                                android:textSize="14dp"
-                                android:textColor="@color/tvtext"
+                            <!--<TextView-->
+                                <!--android:textSize="14dp"-->
+                                <!--android:textColor="@color/tvtext"-->
+                                <!--android:layout_gravity="center"-->
+                                <!--android:id="@+id/tvNum1"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content" />-->
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:layout_gravity="center"
-                                android:id="@+id/tvNum1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:src="@mipmap/gold1"/>
                             <TextView
                                 android:textSize="12dp"
                                 android:layout_gravity="center"
@@ -148,7 +153,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="专项技能" />
+                                android:text="初来乍到" />
                         </LinearLayout>
                         <LinearLayout
                             android:orientation="vertical"
@@ -156,13 +161,18 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
-                            <TextView
-                                android:textSize="14dp"
-                                android:textColor="@color/tvtext"
+                            <!--<TextView-->
+                                <!--android:textSize="14dp"-->
+                                <!--android:textColor="@color/tvtext"-->
+                                <!--android:layout_gravity="center"-->
+                                <!--android:id="@+id/tvNum2"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content" />-->
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:layout_gravity="center"
-                                android:id="@+id/tvNum2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:src="@mipmap/gold2"/>
                             <TextView
                                 android:textSize="12dp"
                                 android:layout_gravity="center"
@@ -170,7 +180,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="注册时间" />
+                                android:text="时间萌主" />
                         </LinearLayout>
                         <LinearLayout
                             android:orientation="vertical"
@@ -178,13 +188,18 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
-                            <TextView
-                                android:textSize="14dp"
-                                android:textColor="@color/tvtext"
+                            <!--<TextView-->
+                                <!--android:textSize="14dp"-->
+                                <!--android:textColor="@color/tvtext"-->
+                                <!--android:layout_gravity="center"-->
+                                <!--android:id="@+id/tvNum3"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content" />-->
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:layout_gravity="center"
-                                android:id="@+id/tvNum3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:src="@mipmap/gold3"/>
                             <TextView
                                 android:textSize="12dp"
                                 android:layout_gravity="center"
@@ -192,7 +207,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="所在大学" />
+                                android:text="动态萌新" />
                         </LinearLayout>
                         <LinearLayout
                             android:orientation="vertical"
@@ -200,13 +215,18 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
-                            <TextView
-                                android:textSize="14dp"
-                                android:textColor="@color/tvtext"
+                            <!--<TextView-->
+                                <!--android:textSize="14dp"-->
+                                <!--android:textColor="@color/tvtext"-->
+                                <!--android:layout_gravity="center"-->
+                                <!--android:id="@+id/tvNum4"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content" />-->
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:layout_gravity="center"
-                                android:id="@+id/tvNum4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:src="@mipmap/gold4"/>
                             <TextView
                                 android:textSize="12dp"
                                 android:layout_gravity="center"
@@ -214,7 +234,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="所在公司" />
+                                android:text="沉默是金" />
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>

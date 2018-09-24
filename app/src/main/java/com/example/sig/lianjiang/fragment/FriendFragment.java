@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.sig.lianjiang.activity.AddContactActivity;
 import com.example.sig.lianjiang.activity.ChatActivity;
 import com.example.sig.lianjiang.activity.GroupsActivity;
+import com.example.sig.lianjiang.activity.MainActivity;
 import com.example.sig.lianjiang.activity.NewFriendsMsgActivity;
 import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
@@ -71,7 +72,6 @@ public class FriendFragment extends EaseContactListFragment {
         //add loading view
         loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_friend, null);
         contentContainer.addView(loadingView);
-
         registerForContextMenu(listView);
     }
     @Override
@@ -123,6 +123,7 @@ public class FriendFragment extends EaseContactListFragment {
                             EaseUserUtils.setUserAvatar(id,head);
                             Log.d("zxd","子类");
                             if(id.equals(EMClient.getInstance().getCurrentUser())){
+                                setHead(APPConfig.img_url + resultDto.getData().getHeadimage());
                                 contactListLayout.init(contactList);
                                 Log.d("zxd","子类刷新");
                             }
@@ -161,7 +162,9 @@ public class FriendFragment extends EaseContactListFragment {
         }
     }
 
-
+    protected void setHead(String uri){
+        titleBar.setHead(uri);
+    }
     @SuppressWarnings("unchecked")
     @Override
     protected void setUpView() {
@@ -174,6 +177,7 @@ public class FriendFragment extends EaseContactListFragment {
                 NetUtils.hasDataConnection(getActivity());
             }
         });
+
         //设置联系人数据
         Map<String, EaseUser> m = StarryHelper.getInstance().getContactList();
         if (m instanceof Hashtable<?, ?>) {
@@ -200,10 +204,20 @@ public class FriendFragment extends EaseContactListFragment {
 
             @Override
             public void onClick(View v) {
+                Log.d("zxd111","right已执行");
                 startActivity(new Intent(getActivity(), AddContactActivity.class));
             }
         });
+        //打开侧滑菜单
+        titleBar.setLeftLayoutClickListener(new OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Log.d("zxd","已执行");
+//                Toast.makeText(getContext(),"1111",Toast.LENGTH_SHORT).show();
+                MainActivity.leftDrawerLayout.openDrawer();
+            }
+        });
 
         contactSyncListener = new ContactSyncListener();
         StarryHelper.getInstance().addSyncContactListener(contactSyncListener);

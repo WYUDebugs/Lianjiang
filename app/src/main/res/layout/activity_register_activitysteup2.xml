@@ -29,10 +29,17 @@
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
             android:paddingLeft="37dp"
-            android:paddingRight="37dp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="77dp">
+            <TextView
+                android:textSize="12dp"
+                android:textColor="#FF02BFA6"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="密码为8-16位数字，字母或符号组成，不可为纯数字" />
             <TextView
                 android:textSize="13sp"
                 android:textColor="#FF282828"
@@ -56,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="10"
                     android:layout_marginTop="28dp"
-                    android:hint="请输入密码 ( 6-20位 )"
+                    android:hint="请输入密码"
                     android:maxLength="20"
                     android:inputType="textPassword"
                     />
@@ -89,10 +96,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:hint="请输入呢称(10个字符内)"
+                android:hint="请输入呢称(13个字符内)"
                 android:maxLength="20"
                 />
         </LinearLayout>
+
         <TextView
             android:textSize="18sp"
             android:textColor="@android:color/white"

@@ -5,11 +5,11 @@ package com.example.sig.lianjiang.model;
  */
 
 public class CommentUser {
-    public long mId; // id
+    public int mId; // id
     public String mName; // 用户名
 
 
-    public CommentUser(long mId, String mName) {
+    public CommentUser(int mId, String mName) {
         this.mId = mId;
         this.mName = mName;
     }

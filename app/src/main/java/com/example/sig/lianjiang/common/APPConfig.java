@@ -26,8 +26,11 @@ public class APPConfig {
 
     public static String updateHeadImage = base_url + "user/updateHeadImage";
     public static String addFriend=server_url+"friend/addFriend";
-    public static String sendPublic=test_url+"publish/sendPublic";
-    public static String publishList=test_url+"publish/publishList";
+//    public static String sendPublic=test_url+"publish/sendPublic";
+//    public static String publishList=test_url+"publish/publishList";
+//    public static String findMemoryBookById=test_url+"memoryBook/findMemoryBookById";
+    public static String sendPublic=server_url+"publish/sendPublic";
+    public static String publishList=server_url+"publish/publishList";
     public static String findMemoryBookById=test_url+"memoryBook/findMemoryBookById";
 
     public static String IS_LOGIN = "is_login";
@@ -46,6 +49,17 @@ public class APPConfig {
     public static String changeUserById=server_url+"user/changeUserById";
     public static String changePhoneById=server_url+"user/changePhoneById";
     public static String checkPsw=server_url+"user/checkPsw";
+
+//    public static String addComment=test_url+"comment/add";
+//    public static String getCommentList=test_url+"comment/show";
+//    public static String deleteComment=test_url+"comment/delete";
+//    public static String addGood=test_url+"good/praise";
+//    public static String getGoodList=test_url+"good/showPraiseMans";
+    public static String addComment=server_url+"comment/add";
+    public static String getCommentList=server_url+"comment/show";
+    public static String deleteComment=server_url+"comment/delete";
+    public static String addGood=server_url+"good/praise";
+    public static String getGoodList=server_url+"good/showPraiseMans";
 
 }
 

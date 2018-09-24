@@ -1,5 +1,7 @@
 package com.example.sig.lianjiang.utils;
 
+import android.util.Log;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -198,12 +200,29 @@ public class TimeUtil {
     /* 
      * 将时间戳转换为时间
      */
-    public static String stampToDate(String s){
+    public static String stampToDate(String s,String format){
         String res;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(format==null){
+            format="yyyy-MM-dd";
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
         long lt = new Long(s);
         Date date = new Date(lt);
         res = simpleDateFormat.format(date);
         return res;
+    }
+
+
+
+    public static boolean beforeToday(String seconds){
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        String toDay=df.format(new Date());
+        String time=stampToDate(seconds,null);
+        Log.d("zxd",toDay+"  "+time);
+        if (time.compareTo(toDay)<0){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

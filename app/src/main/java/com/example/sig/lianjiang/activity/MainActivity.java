@@ -209,6 +209,7 @@
          }
      };
 
+
      @TargetApi(23)
      private void requestPermissions() {
          PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {

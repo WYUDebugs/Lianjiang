@@ -1,4 +1,6 @@
 package com.example.sig.lianjiang.model;
+import com.example.sig.lianjiang.view.PraiseTextView;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +18,34 @@ public class NineGridTestModel implements Serializable {
 
     public boolean isShowAll = false;
 
-    public ArrayList<Comment> mComment; // 评论列表
+//    public List<String> mGood= new ArrayList<>();
 
-    public NineGridTestModel(String mContent,List<String> urlList,boolean isShowAll,ArrayList<Comment> mComment){
+    public List<Comment> mComment; // 评论列表
+
+    public String publishId;
+    public List<PraiseTextView.PraiseInfo> mPraiseInfos = new ArrayList<> ();
+
+    public String head;
+    public String name;
+    public String address;
+    public String time;
+    public String userId;
+    public boolean likeFlag;
+
+
+    public NineGridTestModel(String mContent,List<String> urlList,boolean isShowAll,List<Comment> mComment,String publishId,List<PraiseTextView.PraiseInfo> mPraiseInfos,String head,String name,String address ,String time,String userId,boolean likeFlag){
         this.mContent=mContent;
         this.urlList=urlList;
         this.isShowAll=isShowAll;
         this.mComment=mComment;
+        this.publishId=publishId;
+        this.mPraiseInfos=mPraiseInfos;
+        this.head=head;
+        this.name=name;
+        this.address=address;
+        this.time=time;
+        this.userId=userId;
+        this.likeFlag=likeFlag;
     }
 }
 

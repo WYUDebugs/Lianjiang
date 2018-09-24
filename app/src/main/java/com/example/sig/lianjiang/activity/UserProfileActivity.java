@@ -65,6 +65,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     private String address;//地址
     private TextView dizi;
     private ImageView sex;
+    private LinearLayout llInfo;
 
 
     @Override
@@ -95,6 +96,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         sex=findViewById(R.id.sex);
         dizi=findViewById(R.id.address);
         date=findViewById(R.id.date);
+        llInfo=(LinearLayout)findViewById(R.id.llInfo);
+        llInfo.setOnClickListener(this);
         getHead();
     }
 
@@ -108,6 +111,10 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                 break;
             case R.id.top_left:
                 finish();
+                break;
+            case R.id.llInfo:
+                Intent intent=new Intent(UserProfileActivity.this,EditUserProfileActivity.class);
+                startActivity(intent);
                 break;
 
 

@@ -104,7 +104,7 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
                     PhotoPickerIntent intent = new PhotoPickerIntent(SquareAddActivity.this);
                     intent.setSelectModel(SelectModel.MULTI);
                     intent.setShowCarema(true); // 是否显示拍照
-                    intent.setMaxTotal(6); // 最多选择照片数量，默认为6
+                    intent.setMaxTotal(9); // 最多选择照片数量，默认为6
                     intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
                     startActivityForResult(intent, REQUEST_CAMERA_CODE);
                 }else{
@@ -140,6 +140,9 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
     public void upLoad(){
         depp =etMomentContent.getText().toString().trim()!=null?etMomentContent.getText().toString().trim():"";
         location=tv_location.getText().toString().trim()!=null?tv_location.getText().toString().trim():"中国";
+        if(location.equals("添加地点")){
+            location="";
+        }
 //        for(int i=0;i<imagePaths.size();i++){
 //            Log.d("zxd",imagePaths.get(i));
 //        }
@@ -261,6 +264,7 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
         }
     }
     public void sendPublicPost(final ArrayList<String> imagePaths,final String content,final String address) {
+
         progressShow = true;
         final ProgressDialog pd= new ProgressDialog(SquareAddActivity.this);
         pd.setCanceledOnTouchOutside(false);

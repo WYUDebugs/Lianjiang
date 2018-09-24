@@ -83,6 +83,12 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
             Toast.makeText(this, getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
             passwordEditText.requestFocus();
             return;
+        }else {
+            boolean flag=judgNewPsw(pwd);
+            if (flag == false) {
+                Toast.makeText(this, "请按照要求填写密码", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pwd)) {
             final ProgressDialog pd = new ProgressDialog(this);
@@ -136,6 +142,11 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
 
     }
     public void registerPost(final String phone,final String passWord,final String name) {
+        if(name.length()>13){
+            Toast.makeText(getApplicationContext(), "名字过长", Toast.LENGTH_SHORT).show();
+        }else if(TextUtils.isEmpty(name)){
+            Toast.makeText(getApplicationContext(), "名字不能为空", Toast.LENGTH_SHORT).show();
+        }
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param phoneParam = new OkHttpUtils.Param("phone", phone);
@@ -288,6 +299,15 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
 
         }).start();
 
+    }
+    private boolean judgNewPsw(String newPsw) {
+        String telRegex = "^(?![^a-zA-Z]+$)(?!\\D+$).{8,16}$";
+        if (newPsw==null) {
+            return false;
+        }
+        else{
+            return newPsw.matches(telRegex);
+        }
     }
 
 }

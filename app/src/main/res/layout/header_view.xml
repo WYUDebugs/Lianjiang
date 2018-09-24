@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_hander"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:src="@mipmap/show2" />
+    <com.example.sig.lianjiang.view.CircleImageView
+        xmlns:pv="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/head"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/icon_head"
+        pv:border_color="#FFFFFF"
+        pv:border_width="3dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

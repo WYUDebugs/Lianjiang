@@ -1,8 +1,14 @@
 package com.example.sig.lianjiang.activity;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
+
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
@@ -19,14 +25,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.StarryHelper;
+import com.example.sig.lianjiang.bean.HuanXinTokenBean;
 import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.view.SecurityCodeView;
 import com.example.sig.lianjiang.widget.CountDownTimerUtils;
+import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.lidong.photopicker.Image;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +72,20 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
     private EditText newPswET;
     private TextView title;
     private String newPassword;
-
+    private HuanXinTokenBean tokenBean;
+    private Gson gson=new Gson();
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if (null!=msg){
+                String result =  msg.obj.toString();
+                Log.e("zxd111",result);
+                tokenBean = gson.fromJson(result.toString(),HuanXinTokenBean.class);
+                Log.d("zxd111",newPassword);
+                updatePass(EMClient.getInstance().getCurrentUser(),newPassword);
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -287,23 +318,23 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
             public void done(BmobException ex) {
 
                 if(ex == null){
-                       changePsw(newPassword);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            Thread.sleep(4000); //延时4秒关闭修改页面
-                                            finish();
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
+                    getToken();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.sleep(4000); //延时4秒关闭修改页面
+                                        finish();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
                                     }
-                                }).start();
-                            }
-                        }).start();
+                                }
+                            }).start();
+                        }
+                    }).start();
 
 
                 }else {
@@ -332,4 +363,98 @@ public class ChangePswActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    private void getToken(){
+        OkHttpClient client = new OkHttpClient();
+        String gson = "{\"grant_type\":\"client_credentials\",\"client_id\":\"YXA69bYccJi3EeiNupWPROesfA\",\"client_secret\":\"YXA6rMugkOh4xQsE9ebBNeWDs0QSiRA\"}";
+        String baseUrl = "https://a1.easemob.com/1112180804146704/starry/token";
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson);
+        Request request = new Request.Builder()
+                .header("content-type","application/json")
+                .post(requestBody)
+                .url(baseUrl)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Request request, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse( @NonNull Response response) throws IOException {
+                Message message = mHandler.obtainMessage();
+                message.obj = response.body().string();
+                message.sendToTarget();
+
+//                Log.d("zxd",response.body().toString());
+            }
+        });
+
+    }
+
+    public void updatePass(String user,String newPsw){
+        logout();
+        OkHttpClient client = new OkHttpClient();
+        String baseUrl = "https://a1.easemob.com/1112180804146704/starry/users/" +
+                user+ "/password";
+        String gson = "{\"newpassword\":\""+newPsw+"\"}";
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson);
+        String access_token = tokenBean.getAccess_token();
+        Log.e("xxx",access_token);
+        Request request = new Request.Builder()
+                .addHeader("Authorization","Bearer "+access_token)
+                .url(baseUrl)
+                .put(requestBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Request request, @NonNull IOException e) {
+                Log.e("xxx","fail");
+            }
+
+            @Override
+            public void onResponse( @NonNull Response response) throws IOException {
+                Log.e("zxd",response.body().string());
+                changePsw(newPassword);
+            }
+        });
+    }
+    void logout() {
+        final ProgressDialog pd = new ProgressDialog(ChangePswActivity.this);
+        String st = getResources().getString(R.string.Are_logged_out);
+        pd.setMessage(st);
+        pd.setCanceledOnTouchOutside(false);
+        pd.show();
+        StarryHelper.getInstance().logout(true,new EMCallBack() {
+
+            @Override
+            public void onSuccess() {
+                ChangePswActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        pd.dismiss();
+
+                        startActivity(new Intent(ChangePswActivity.this, LoginActivitysteup1.class));
+
+                    }
+                });
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                ChangePswActivity.this.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        pd.dismiss();
+                        Toast.makeText(ChangePswActivity.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
 }
