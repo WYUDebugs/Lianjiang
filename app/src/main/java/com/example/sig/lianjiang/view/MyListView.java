@@ -130,30 +130,30 @@ public class MyListView extends ListView implements AbsListView.OnScrollListener
     }
 
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        switch (MotionEventCompat.getActionMasked(ev)){
-            case MotionEvent.ACTION_DOWN:
-                if(state == DONE){
-                    if(itemView != null){                                          //关闭之前的ItemView删除按钮的显示状态
-                        itemView.close();
-                    }
-                    int dowX = (int) ev.getX();
-                    int dowY = (int) ev.getY();
-                    int itemPosition = pointToPosition(dowX,dowY);
-                    if(itemPosition == AbsListView.INVALID_POSITION){
-                        return  super.dispatchTouchEvent(ev);
-                    }
-                    itemView = (SlideView) getChildAt(itemPosition - getFirstVisiblePosition());                  //记录当前ItemVIew
-                }else{
-                    //bug在这里
-
-                }
-                break;
-
-        }
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        switch (MotionEventCompat.getActionMasked(ev)){
+//            case MotionEvent.ACTION_DOWN:
+//                if(state == DONE){
+//                    if(itemView != null){                                          //关闭之前的ItemView删除按钮的显示状态
+//                        itemView.close();
+//                    }
+//                    int dowX = (int) ev.getX();
+//                    int dowY = (int) ev.getY();
+//                    int itemPosition = pointToPosition(dowX,dowY);
+//                    if(itemPosition == AbsListView.INVALID_POSITION){
+//                        return  super.dispatchTouchEvent(ev);
+//                    }
+//                    itemView = (SlideView) getChildAt(itemPosition - getFirstVisiblePosition());                  //记录当前ItemVIew
+//                }else{
+//                    //bug在这里
+//
+//                }
+//                break;
+//
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {

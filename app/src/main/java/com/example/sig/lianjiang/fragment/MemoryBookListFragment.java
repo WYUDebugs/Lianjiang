@@ -80,7 +80,7 @@ public class MemoryBookListFragment extends Fragment implements ObservableListVi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("wnf", "position=========================="+position);
-                if (position == 1) {
+                if (position == 0) {
 
                 } else {
                     Intent intent = new Intent(getActivity(), MemoryBookActivity.class);
@@ -281,4 +281,7 @@ public class MemoryBookListFragment extends Fragment implements ObservableListVi
             }
         }
     }
+
+
+
 }

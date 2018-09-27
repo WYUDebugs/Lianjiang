@@ -61,5 +61,9 @@ public class APPConfig {
     public static String addGood=server_url+"good/praise";
     public static String getGoodList=server_url+"good/showPraiseMans";
 
+
+    public static String findMemoryListByUserId=test_url+"memoryBook/findMemoryListByUserId";
+
+
 }
 

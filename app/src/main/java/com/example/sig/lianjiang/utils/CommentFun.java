@@ -88,6 +88,7 @@ public class CommentFun {
             textView.setTag(CustomTagHandler.KEY_RECEIVER, comment.mReceiver);
 
             textView.setTag(KEY_COMMENT_SOURCE_COMMENT_LIST, mCommentList);
+            textView.setTag(KEY_PUBLISHID_LIST,id);
         }
         for (; i < commentList.getChildCount(); i++) {
             commentList.getChildAt(i).setVisibility(View.GONE);
@@ -139,21 +140,28 @@ public class CommentFun {
                     return;
                 }
                 btn.setClickable(false);
-                final long receiverId = receiver == null ? -1 : receiver.mId;
+                final int receiverId = receiver == null ? 0 : receiver.mId;
+                Log.e("111","接受者"+Integer.toString(receiverId));
                 Comment comment = new Comment(SquareActivity.sUser, content, receiver);
                 if(comment==null){
                     Log.e("111","kong");
 
                 }else{
                     Log.e("111",comment.mContent);
-                    addCommentPost(Integer.toString(SquareActivity.sUser.mId),"0",id,content);
+                    if(receiverId==0){
+                        addCommentPost(Integer.toString(SquareActivity.sUser.mId),id,content);
+                    }else {
+                        Log.e("111","接受者"+Integer.toString(receiverId));
+                        Log.e("111","发起者"+Integer.toString(SquareActivity.sUser.mId));
+                        addCommentPost(Integer.toString(SquareActivity.sUser.mId),Integer.toString(receiverId),id,content);
+                    }
                 }
                 commentList.add(comment);
                 if (listener != null) {
                     listener.onCommitComment();
                 }
                 dialog.dismiss();
-                Toast.makeText(activity, "评论成功", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(activity, "评论成功", Toast.LENGTH_SHORT).show();
             }
 
             /**
@@ -242,36 +250,63 @@ public class CommentFun {
         void onDismiss();
     }
 
-    public static  void addComment(final List<PublicComment> comments, final View btnComment, final addCommentListener listener){
-        final List<Comment> commentList = (List) btnComment.getTag(KEY_COMMENT_SOURCE_COMMENT_LIST);
-
-        for(int i=0;i<comments.size();i++){
-
-//            Comment comment = new Comment(comments.get(i).getCommentator(), comments.get(i).getCommentContent(), comments.get(i).getReceiveId());
-        }
-
-    }
-
-    public static class addCommentListener {
-        //　评论成功时调用
-        public void onCommitComment() {
-
-        }
-    }
+//    public static  void addComment(final List<PublicComment> comments, final View btnComment, final addCommentListener listener){
+//        final List<Comment> commentList = (List) btnComment.getTag(KEY_COMMENT_SOURCE_COMMENT_LIST);
+//
+//        for(int i=0;i<comments.size();i++){
+//
+////            Comment comment = new Comment(comments.get(i).getCommentator(), comments.get(i).getCommentContent(), comments.get(i).getReceiveId());
+//        }
+//
+//    }
+//
+//    public static class addCommentListener {
+//        //　评论成功时调用
+//        public void onCommitComment() {
+//
+//        }
+//    }
 
     public static void addCommentPost(final String cId,final String rId,final String pId,final String cContent) {
+        Log.e("111",rId);
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
         OkHttpUtils.Param pidParam = new OkHttpUtils.Param("pId", pId);
         OkHttpUtils.Param cidParam = new OkHttpUtils.Param("cId", cId);
         OkHttpUtils.Param contentParam = new OkHttpUtils.Param("cContent", cContent);
-//        OkHttpUtils.Param ridParam = new OkHttpUtils.Param("rId", "0");
+        OkHttpUtils.Param ridParam = new OkHttpUtils.Param("rId", rId);
+        if(pidParam==null){
+            Log.e("111","pid");
+        }else if(cidParam==null){
+            Log.e("111","cid");
+        }else if(contentParam==null){
+            Log.e("111","con");
+        }else if(ridParam==null){
+            Log.e("111","rid");
+        }else {
+            Log.e("111","都不空");
+        }
 
         list.add(pidParam);
         list.add(cidParam);
         list.add(contentParam);
-//        list.add(ridParam);
+        list.add(ridParam);
+        if(list==null){
+            Log.e("111","list");
+        }
+//        for (OkHttpUtils.Param param : list) {
+////            builder.add(param.key, param.value);
+//            if (param.value==null){
+//                Log.e("111","空");
+//            }
+//        }
 
+        for(int i=0;i<4;i++){
+            OkHttpUtils.Param param=list.get(i);
+            if (param.value==null){
+                Log.e("111",Integer.toString(i)+"空");
+            }
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -298,6 +333,57 @@ public class CommentFun {
 
                         }else {
                             Log.e("zxd","失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
+
+    public static void addCommentPost(final String cId,final String pId,final String cContent) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param pidParam = new OkHttpUtils.Param("pId", pId);
+        OkHttpUtils.Param cidParam = new OkHttpUtils.Param("cId", cId);
+        OkHttpUtils.Param contentParam = new OkHttpUtils.Param("cContent", cContent);
+
+        list.add(pidParam);
+        list.add(cidParam);
+        list.add(contentParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.addComment, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            publicCommentResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicCommentResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            publicCommentResultDto = PublicCommentResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(publicCommentResultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+//                            initListData(publicListResultDto.getData());
+//                            mAdapter.notifyDataSetChanged();
+                            Log.e("zxd","评论成功");
+
+                        }else {
+                            Log.e("zxd","评论失败");
                         }
                     }
 
