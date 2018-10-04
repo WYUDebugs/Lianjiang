@@ -32,11 +32,11 @@ android {
         }
     }
     configurations {
-        all*.exclude group: 'com.google.code.gson', module: 'gson'
-        all*.exclude group: 'com.squareup.okhttp3', module: 'okhttp'
-        all*.exclude group: 'com.squareup.okio', module: 'okio'
-        all*.exclude group: 'io.reactivex', module: 'rxjava'
-        all*.exclude group: 'io.reactivex', module: 'rxandroid'
+//        all*.exclude group: 'com.google.code.gson', module: 'gson'
+//        all*.exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+//        all*.exclude group: 'com.squareup.okio', module: 'okio'
+//        all*.exclude group: 'io.reactivex', module: 'rxjava'
+//        all*.exclude group: 'io.reactivex', module: 'rxandroid'
     }
 
 
@@ -57,6 +57,8 @@ dependencies {
     compile project(':zwlviewpager')
     compile project(':AnimRefreshRecyclerView')
     compile project(':likeView')
+    compile project(':refresh-header')
+    compile project(':refresh-layout')
     //OkHttp请求框架
     //图片加载框架
     compile 'com.android.support:appcompat-v7:26.+'
@@ -71,12 +73,14 @@ dependencies {
     compile 'com.github.WGwangguan:SeparatedEditText:v1.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'cn.bmob.android:bmob-sdk:3.5.6'
+//    compile 'cn.bmob.android:bmob-sdk:3.6.0'
     compile 'cn.bmob.android:bmob-sms:1.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
     implementation 'com.android.support:design:26.1.0'
     compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.flyco.roundview:FlycoRoundView_Lib:1.1.4@aar'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }
 repositories {
     mavenCentral()

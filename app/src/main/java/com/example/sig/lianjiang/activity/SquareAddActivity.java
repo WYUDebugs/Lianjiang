@@ -110,7 +110,15 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
                 }else{
                     PhotoPreviewIntent intent = new PhotoPreviewIntent(SquareAddActivity.this);
                     intent.setCurrentItem(position);
-                    intent.setPhotoPaths(imagePaths);
+                    ArrayList<String> imagePaths_temp = new ArrayList<>();
+                    for(int i=0;i<imagePaths.size();i++){
+                        if(imagePaths.get(i).equals("000000")){
+
+                        }else {
+                            imagePaths_temp.add(imagePaths.get(i));
+                        }
+                    }
+                    intent.setPhotoPaths(imagePaths_temp);
                     startActivityForResult(intent, REQUEST_PREVIEW_CODE);
                 }
             }
@@ -247,7 +255,7 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
 
             final String path=listUrls.get(position);
             if (path.equals("000000")){
-                holder.image.setImageResource(R.mipmap.add_image);
+                holder.image.setImageResource(R.drawable.addpic);
             }else {
                 Glide.with(SquareAddActivity.this)
                         .load(path)

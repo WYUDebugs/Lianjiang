@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -13,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -96,7 +99,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        theme();
         groupId = getIntent().getStringExtra("groupId");
         group = EMClient.getInstance().groupManager().getGroup(groupId);
 
@@ -179,7 +182,15 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         sharedFilesLayout.setOnClickListener(this);
     }
 
-
+    private void theme() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
 
     boolean isCurrentOwner(EMGroup group) {
         String owner = group.getOwner();
@@ -955,9 +966,10 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             final String username = getItem(position);
             convertView.setVisibility(View.VISIBLE);
             button.setVisibility(View.VISIBLE);
+
+//            getNameAndHeadPost(username,holder.textView,holder.imageView,getContext());
             EaseUserUtils.setUserNick(username, holder.textView);
             EaseUserUtils.setUserAvatar(getContext(), username, holder.imageView);
-
             LinearLayout id_background = (LinearLayout) convertView.findViewById(R.id.l_bg_id);
             id_background.setBackgroundColor(convertView.getResources().getColor(
                     position == 0 ? R.color.holo_red_light :
@@ -1056,9 +1068,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             } else {
                 // members
                 final String username = getItem(position);
+//                getNameAndHeadPost(username,holder.textView,holder.imageView,getContext());
                 EaseUserUtils.setUserNick(username, holder.textView);
                 EaseUserUtils.setUserAvatar(getContext(), username, holder.imageView);
-
                 LinearLayout id_background = (LinearLayout) convertView.findViewById(R.id.l_bg_id);
                 if (isInMuteList(username)) {
                     id_background.setBackgroundColor(convertView.getResources().getColor(R.color.gray_normal));
@@ -1166,6 +1178,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             String head=APPConfig.img_url +resultDto.getData().getHeadimage();
                             EaseUserUtils.setUserNick(id,name);
                             EaseUserUtils.setUserAvatar(id,head);
+//                            EaseUserUtils.setUserNick(id, textView);
+//                            EaseUserUtils.setUserAvatar(context, id, imageView);
                             Log.d("zxd","子类");
                             if(id.equals(EMClient.getInstance().getCurrentUser())){
                                 Log.d("zxd","子类刷新");
@@ -1198,6 +1212,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
                         adminList.clear();
                         adminList.addAll(group.getAdminList());
+                        for(int i=0;i<adminList.size();i++){
+                            getNameAndHeadPost(adminList.get(i));
+                        }
                         memberList.clear();
                         EMCursorResult<String> result = null;
                         EMCursorResult<String> muteResult = null;
@@ -1216,9 +1233,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
                         muteList.clear();
                         muteList.addAll(EMClient.getInstance().groupManager().fetchGroupMuteList(groupId, 0, 200).keySet());
-//                        for(int i=0;i<result.getData().size();i++){
-//                            getNameAndHeadPost(result.getData().get(i));
-//                        }
+                        for(int i=0;i<result.getData().size();i++){
+                            getNameAndHeadPost(result.getData().get(i));
+                        }
                         blackList.clear();
                         blackList.addAll(EMClient.getInstance().groupManager().fetchGroupBlackList(groupId, 0, 200));
 

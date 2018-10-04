@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,20 +29,30 @@ import android.widget.Toast;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryNineGridAdapter;
 import com.example.sig.lianjiang.adapter.NineGridAdapter;
+import com.example.sig.lianjiang.bean.Moment;
+import com.example.sig.lianjiang.bean.MomentListResult;
+import com.example.sig.lianjiang.bean.PublicListResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.model.MemoryNineGridModel;
 import com.example.sig.lianjiang.model.NineGridTestModel;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
+import com.example.sig.lianjiang.utils.RecycleViewUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
+import com.example.sig.lianjiang.view.CircleImageView;
 import com.example.sig.lianjiang.view.ObservableListView;
+import com.hyphenate.chat.EMClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.sch.rfview.AnimRFRecyclerView;
+import com.sch.rfview.decoration.DividerItemDecoration;
+import com.sch.rfview.manager.AnimRFLinearLayoutManager;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemoryBookActivity extends AppCompatActivity implements ObservableListView.OnMeiTuanRefreshListener,View.OnClickListener,ObservableListView.ScrollViewListener{
-    private TextView title;
+public class MemoryBookActivity extends AppCompatActivity implements View.OnClickListener{
     private ImageView back;
     private ImageView bgTop;
     private ImageView imgAddFriend;
@@ -51,43 +63,53 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
     private int imageHeight=800;
     private RelativeLayout llTop;
     private FloatingActionButton fabAddMoment;
-    private ObservableListView mListView;
     private MemoryNineGridAdapter mAdapter;
     private List<MemoryNineGridModel> mList = new ArrayList<>();
-    private String[] mUrls = new String[]{"http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg",
-            "http://img3.fengniao.com/forum/attachpics/537/165/21472986.jpg",
-            "http://d.hiphotos.baidu.com/image/h%3D200/sign=ea218b2c5566d01661199928a729d498/a08b87d6277f9e2fd4f215e91830e924b999f308.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=3445377427,2645691367&fm=21&gp=0.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=2644422079,4250545639&fm=21&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=1444023808,3753293381&fm=21&gp=0.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=882039601,2636712663&fm=21&gp=0.jpg",
-            "http://img4.imgtn.bdimg.com/it/u=4119861953,350096499&fm=21&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=2437456944,1135705439&fm=21&gp=0.jpg",
-            "http://img2.imgtn.bdimg.com/it/u=3251359643,4211266111&fm=21&gp=0.jpg",
-            "http://img4.duitang.com/uploads/item/201506/11/20150611000809_yFe5Z.jpeg",
-            "http://img5.imgtn.bdimg.com/it/u=1717647885,4193212272&fm=21&gp=0.jpg",
-            "http://img5.imgtn.bdimg.com/it/u=2024625579,507531332&fm=21&gp=0.jpg"};
-    private final static int REFRESH_COMPLETE = 0;
-    private static final int UPDATE_TEXT_DONE=1;
-    private static final int UPDATE_TEXT_STAR=2;
-    private InterHandler mInterHandler = new InterHandler(this);
+    private AnimRFRecyclerView mRecyclerView;
+
+    private View headerView;
+    private View footerView;
+    private Handler mHandler = new Handler();
+    int mDistance = 0;
+    private RecycleViewUtils recycleViewUtils;
+    private ImageView head;
+    private MomentListResult momentListResult;
+    private String momtent;
+    private TextView title;
+    private TextView name;
+
+
+    RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        //dy:每一次竖直滑动增量 向下为正 向上为负
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            mDistance=recycleViewUtils.getScrollY();
+            Log.d("zxd",Integer.toString(mDistance));
+            if (mDistance <= 0) {
+                llTop.setBackgroundColor(getResources().getColor(R.color.transparent));//AGB由相关工具获得，或者美工提供
+                topTitle.setText("");
+            } else if (mDistance > 0 && mDistance <= 500 -llTop.getHeight()
+                    ) {
+                // 只是layout背景透明(仿知乎滑动效果)
+            llTop.setBackgroundColor(getResources().getColor(R.color.transparent));
+            topTitle.setText("");
+            } else {
+            llTop.setBackgroundColor(getResources().getColor(R.color.white));
+            topTitle.setText("福的群纪念册");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window window = getWindow();
-            // Translucent status bar
-            window.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
+        theme();
         setContentView(R.layout.activity_menory_book);
+        momtent=getIntent().getStringExtra("memoryBookId");
         tv_pull_to_refresh=(TextView) findViewById(R.id.tv_pull_to_refresh);
         topTitle=(TextView) findViewById(R.id.top_title);
-        title=(TextView)findViewById(R.id.top_center);
-        bgTop=(ImageView)findViewById(R.id.img_memory_cover_update);
+//        bgTop=(ImageView)findViewById(R.id.img_memory_cover_update);
         back=(ImageView)findViewById(R.id.top_left);
         back.setOnClickListener(this);
         imgAddFriend = (ImageView) findViewById(R.id.img_add_friend);
@@ -99,105 +121,128 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
         llTop.setOnClickListener(this);
         fabAddMoment = (FloatingActionButton) findViewById(R.id.fab_add_moment);
         fabAddMoment.setOnClickListener(this);
-        //获得头部背景图的高度
-//        int w1 = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-//        int h1 = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-//        bgTop.measure(w1, h1);
-//        imageHeight =bgTop.getMeasuredHeight();
-        //获得头部背景图的高度
-        ViewGroup.LayoutParams para = bgTop.getLayoutParams();
-        imageHeight = para.height;
-
-        Log.d("wnf", "imageHeigt=========" + imageHeight);
         initImageLoader();
-        initListData();
         initView();
 
-        mListView.setOnMeiTuanRefreshListener(this);
     }
 
+    private void theme(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
+    }
     private void initImageLoader() {
         ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
         ImageLoader.getInstance().init(configuration);
     }
 
-    private void initListData() {
-        MemoryNineGridModel model1 = new MemoryNineGridModel();
-        model1.urlList.add(mUrls[0]);
-        mList.add(model1);
-
-        MemoryNineGridModel model2 = new MemoryNineGridModel();
-        model2.urlList.add(mUrls[4]);
-        mList.add(model2);
-//
-//        NineGridTestModel model3 = new NineGridTestModel();
-//        model3.urlList.add(mUrls[2]);
-//        mList.add(model3);
-
-        MemoryNineGridModel model4 = new MemoryNineGridModel();
-        for (int i = 0; i < mUrls.length; i++) {
-            model4.urlList.add(mUrls[i]);
+    private void initListData(List<Moment> data) {
+        mList.clear();
+        for(int i=0;i<data.size();i++){
+            Moment moment=data.get(i);
+            String content=moment.getContent();
+            List<String> urlList = new ArrayList<>();
+            for (int j = 0; j < moment.getImageList().size(); j++) {
+                String publishImage=moment.getImageList().get(j).getPath();
+                if(publishImage!=null){
+                    urlList.add(APPConfig.test_image_url+publishImage);
+                }
+            }
+            String momentId=Integer.toString(moment.getId());
+            String head=moment.getUser().getHeadimage();
+            String name=moment.getUser().getName();
+            String time=moment.getLocation_time();
+            String userId=Integer.toString(moment.getSender());
+            MemoryNineGridModel memoryNineGridModel=new MemoryNineGridModel(content,urlList,false,momentId,head,name,time,userId);
+            mList.add(memoryNineGridModel);
         }
-        model4.isShowAll = false;
-        mList.add(model4);
-
-        MemoryNineGridModel model5 = new MemoryNineGridModel();
-        for (int i = 0; i < mUrls.length; i++) {
-            model5.urlList.add(mUrls[i]);
-        }
-        model5.isShowAll = false;//显示全部图片
-        mList.add(model5);
-
-        MemoryNineGridModel model6 = new MemoryNineGridModel();
-        for (int i = 0; i < 9; i++) {
-            model6.urlList.add(mUrls[i]);
-        }
-        mList.add(model6);
-
-        MemoryNineGridModel model7 = new MemoryNineGridModel();
-        for (int i = 3; i < 7; i++) {
-            model7.urlList.add(mUrls[i]);
-        }
-        mList.add(model7);
-
-        MemoryNineGridModel model8 = new MemoryNineGridModel();
-        for (int i = 3; i < 6; i++) {
-            model8.urlList.add(mUrls[i]);
-        }
-        mList.add(model8);
     }
 
     public void initView() {
-        mListView = (ObservableListView) findViewById(R.id.lv_bbs);
-        mAdapter = new MemoryNineGridAdapter(this);
-        mAdapter.setList(mList);
-        mListView.setAdapter(mAdapter);
-        mListView.setScrollViewListener(this);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mRecyclerView = (AnimRFRecyclerView) findViewById(R.id.lv_bbs);
+        // 头部
+        headerView = LayoutInflater.from(MemoryBookActivity.this).inflate(R.layout.layout_moment_header, null);
+        head=(ImageView) headerView.findViewById(R.id.iv_head);
+        // 脚部
+        footerView = LayoutInflater.from(MemoryBookActivity.this).inflate(R.layout.footer_view, null);
+        // 使用重写后的线性布局管理器
+        AnimRFLinearLayoutManager manager = new AnimRFLinearLayoutManager(MemoryBookActivity.this);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(MemoryBookActivity.this, manager.getOrientation(), true));
+//            // 添加头部和脚部，如果不添加就使用默认的头部和脚部
+        mRecyclerView.addHeaderView(headerView);
+//            // 设置头部的最大拉伸倍率，默认1.5f，必须写在setHeaderImage()之前
+        mRecyclerView.setScaleRatio(1.7f);
+//            // 设置下拉时拉伸的图片，不设置就使用默认的
+        mRecyclerView.setHeaderImage((ImageView) headerView.findViewById(R.id.img_memory_cover_update));
+        mRecyclerView.addFootView(footerView);
+        // 设置刷新动画的颜色
+        mRecyclerView.setColor(Color.argb((int) 255, 56,207,176), Color.argb((int) 255, 57, 58, 62));
+        // 设置头部恢复动画的执行时间，默认500毫秒
+        mRecyclerView.setHeaderImageDurationMillis(300);
+        // 设置拉伸到最高时头部的透明度，默认0.5f
+        mRecyclerView.setHeaderImageMinAlpha(1.0f);
+        mAdapter = new MemoryNineGridAdapter(this,mList);
+        mRecyclerView.setAdapter(mAdapter);
+        // 设置刷新和加载更多数据的监听，分别在onRefresh()和onLoadMore()方法中执行刷新和加载更多操作
+        mRecyclerView.setLoadDataListener(new AnimRFRecyclerView.LoadDataListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("wnf", "position=========================="+position);
-                if (position == 1) {
+            public void onRefresh() {
+                new Thread(new MemoryBookActivity.MyRunnable(true)).start();
+            }
 
-                } else {
-                    Intent intent = new Intent(MemoryBookActivity.this, MomentInfoActivity.class);
-                    startActivity(intent);
-                    //Toast.makeText(MemoryBookListActivity.this, "点击" + mList.get(position-1), Toast.LENGTH_SHORT).show();
-                }
+            @Override
+            public void onLoadMore() {
+                new Thread(new MemoryBookActivity.MyRunnable(false)).start();
             }
         });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("wnf", "position=========================="+position);
-                if (position == 1) {
 
-                } else {
-                    Toast.makeText(MemoryBookActivity.this, "长按" + position, Toast.LENGTH_SHORT).show();
+        // 刷新
+        mRecyclerView.setRefresh(true);
+        recycleViewUtils = new RecycleViewUtils().with(mRecyclerView);
+        mRecyclerView.addOnScrollListener(mOnScrollListener);
+    }
+
+    class MyRunnable implements Runnable {
+
+        boolean isRefresh;
+
+        public MyRunnable(boolean isRefresh) {
+            this.isRefresh = isRefresh;
+        }
+
+        @Override
+        public void run() {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isRefresh) {
+//                        getpublishListPost(EMClient.getInstance().getCurrentUser());
+                        getMomentListPost(momtent);
+                        refreshComplate();
+                        // 刷新完成后调用，必须在UI线程中
+                        mRecyclerView.refreshComplate();
+                    } else {
+//                        addData();
+                        loadMoreComplate();
+                        // 加载更多完成后调用，必须在UI线程中
+                        mRecyclerView.loadMoreComplate();
+                    }
                 }
-                return true;
-            }
-        });
+            }, 2000);
+        }
+    }
+    public void refreshComplate() {
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    public void loadMoreComplate() {
+        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -216,7 +261,9 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
             case R.id.fab_add_moment:
                 //Toast.makeText(MemoryBookActivity.this, "添加片段", Toast.LENGTH_SHORT).show();
                 Intent intentAddM = new Intent(MemoryBookActivity.this, MomentAddActivity.class);
+                intentAddM.putExtra("memoryBookId",momtent);
                 startActivity(intentAddM);
+                finish();
                 break;
 
         }
@@ -327,69 +374,67 @@ public class MemoryBookActivity extends AppCompatActivity implements ObservableL
         });
     }
 
-    @Override
-    public void onRefresh() {
-        new Thread(new Runnable() {
 
+
+//    @Override
+//    public void onScroll(int h){
+//        if (h <= 0) {
+//            llTop.setBackgroundColor(getResources().getColor(R.color.transparent));//AGB由相关工具获得，或者美工提供
+//            topTitle.setText("");
+//        } else if (h > 0 && h <= imageHeight-llTop.getHeight()) {
+//            // 只是layout背景透明(仿知乎滑动效果)
+//            //textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
+//            llTop.setBackgroundColor(getResources().getColor(R.color.transparent));
+//            topTitle.setText("");
+//        } else {
+//            llTop.setBackgroundColor(getResources().getColor(R.color.white));
+//            topTitle.setText("福的群纪念册");
+//        }
+//    }
+
+    public void getMomentListPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("bId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.momentList, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            momentListResult = OkHttpUtils.getObjectFromJson(response.toString(), MomentListResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            momentListResult = MomentListResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(momentListResult.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+                            initListData(momentListResult.getData());
+                            mAdapter.notifyDataSetChanged();
+                        }else {
+                            Log.e("zxd","动态为空");
+                        }
+                    }
 
-                    Thread.sleep(2000);
-                    mInterHandler.sendEmptyMessage(UPDATE_TEXT_DONE);
-                    Thread.sleep(1000);
-                    mInterHandler.sendEmptyMessage(REFRESH_COMPLETE);
-                    mInterHandler.sendEmptyMessage(UPDATE_TEXT_STAR);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
             }
+
         }).start();
     }
 
-    @Override
-    public void onScroll(int h){
-        if (h <= 0) {
-            llTop.setBackgroundColor(getResources().getColor(R.color.transparent));//AGB由相关工具获得，或者美工提供
-            topTitle.setText("");
-        } else if (h > 0 && h <= imageHeight-llTop.getHeight()) {
-            // 只是layout背景透明(仿知乎滑动效果)
-            //textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
-            llTop.setBackgroundColor(getResources().getColor(R.color.transparent));
-            topTitle.setText("");
-        } else {
-            llTop.setBackgroundColor(getResources().getColor(R.color.white));
-            topTitle.setText("福的群纪念册");
-        }
-    }
 
-    private  class InterHandler extends Handler {
-        private WeakReference<MemoryBookActivity> mActivity;
-        public InterHandler(MemoryBookActivity activity){
-            mActivity = new WeakReference<MemoryBookActivity>(activity);
-        }
-        @Override
-        public void handleMessage(android.os.Message msg) {
-            MemoryBookActivity activity = mActivity.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    case REFRESH_COMPLETE:
-                        activity.mListView.setOnRefreshComplete();
-                        activity.mAdapter.notifyDataSetChanged();
-                        activity.mListView.setSelection(0);
-                        break;
-                    case UPDATE_TEXT_DONE:
-                        tv_pull_to_refresh.setText("刷新完成");
-                        mListView.fin();
-                        break;
-                    case UPDATE_TEXT_STAR:
-                        tv_pull_to_refresh.setText("下拉刷新");
-                        break;
-                }
-            }else{
-                super.handleMessage(msg);
-            }
-        }
-    }
 }

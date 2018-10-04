@@ -23,6 +23,7 @@ import com.hyphenate.chat.EMClient;
 import com.example.sig.lianjiang.StarryHelper;
 import com.example.sig.lianjiang.R;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -174,6 +175,16 @@ public class AddContactActivity extends BaseActivity{
                             searchedUserLayout.setVisibility(View.VISIBLE);
                             indicator.setVisibility(View.VISIBLE);
                             avatar.setVisibility(View.VISIBLE);
+                            Picasso.with(AddContactActivity.this).load(APPConfig.img_url + resultDto.getData().getHeadimage())
+                                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(avatar);
+                            avatar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(AddContactActivity.this, UserProfileActivity.class);
+                                    intent.putExtra("username",Integer.toString(id));
+                                    startActivity(intent);
+                                }
+                            });
                             nameText.setText(resultDto.getData().getName());
 
                         }else {

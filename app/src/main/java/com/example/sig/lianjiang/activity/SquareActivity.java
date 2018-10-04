@@ -246,7 +246,7 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
             mRecyclerView.setScaleRatio(1.7f);
 //            // 设置下拉时拉伸的图片，不设置就使用默认的
             mRecyclerView.setHeaderImage((ImageView) headerView.findViewById(R.id.iv_hander));
-            mRecyclerView.addFootView(footerView);
+//            mRecyclerView.addFootView(footerView);
         // 设置刷新动画的颜色
         mRecyclerView.setColor(Color.argb((int) 255, 56,207,176), Color.argb((int) 255, 57, 58, 62));
         // 设置头部恢复动画的执行时间，默认500毫秒
@@ -520,140 +520,9 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
 
         }).start();
     }
-    public void getCommentPost(final String cId,final String pId,final String cContent) {
-        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
-        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param pidParam = new OkHttpUtils.Param("pId", pId);
-        OkHttpUtils.Param cidParam = new OkHttpUtils.Param("cId", cId);
-        OkHttpUtils.Param contentParam = new OkHttpUtils.Param("cContent", cContent);
-        list.add(pidParam);
-        list.add(cidParam);
-        list.add(contentParam);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //post方式连接  url，post方式请求必须传参
-                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
-                OkHttpUtils.post(APPConfig.getCommentList, new OkHttpUtils.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        Log.d("testRun", "response------" + response.toString());
-                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
-                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
-                            publicCommentListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicCommentListResultDto.class);
-                        } catch (Exception e) {
-                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
-                            publicCommentListResultDto = PublicCommentListResultDto.error("Exception:"+e.getClass());
-                            e.printStackTrace();
-                            Log.e("wnf", "Exception------" + e.getMessage());
-                        }
-                        if(publicCommentListResultDto.getMsg().equals("success")){
-                            //sUser.setmName(resultDto.getData().getName());
 
-                        }else {
-                            Log.e("zxd","动态为空");
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
-                    }
-                }, list);
-            }
-
-        }).start();
-    }
-    public void addCommentPost(final String cId,final String pId,final String cContent) {
-        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
-        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param pidParam = new OkHttpUtils.Param("pId", pId);
-        OkHttpUtils.Param cidParam = new OkHttpUtils.Param("cId", cId);
-        OkHttpUtils.Param contentParam = new OkHttpUtils.Param("cContent", cContent);
-        list.add(pidParam);
-        list.add(cidParam);
-        list.add(contentParam);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //post方式连接  url，post方式请求必须传参
-                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
-                OkHttpUtils.post(APPConfig.addComment, new OkHttpUtils.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        Log.d("testRun", "response------" + response.toString());
-                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
-                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
-                            publicListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicListResultDto.class);
-                        } catch (Exception e) {
-                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
-                            publicListResultDto = PublicListResultDto.error("Exception:"+e.getClass());
-                            e.printStackTrace();
-                            Log.e("wnf", "Exception------" + e.getMessage());
-                        }
-                        if(publicListResultDto.getMsg().equals("success")){
-                            //sUser.setmName(resultDto.getData().getName());
-//                            initListData(publicListResultDto.getData());
-//                            mAdapter.notifyDataSetChanged();
-
-                        }else {
-                            Log.e("zxd","动态为空");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
-                    }
-                }, list);
-            }
-
-        }).start();
-    }
-    public void deleteCommentPost(final String id) {
-        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
-        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param idParam = new OkHttpUtils.Param("userId", id);
-        list.add(idParam);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //post方式连接  url，post方式请求必须传参
-                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
-                OkHttpUtils.post(APPConfig.publishList, new OkHttpUtils.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        Log.d("testRun", "response------" + response.toString());
-                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
-                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
-                            publicListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicListResultDto.class);
-                        } catch (Exception e) {
-                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
-                            publicListResultDto = PublicListResultDto.error("Exception:"+e.getClass());
-                            e.printStackTrace();
-                            Log.e("wnf", "Exception------" + e.getMessage());
-                        }
-                        if(publicListResultDto.getMsg().equals("success")){
-                            //sUser.setmName(resultDto.getData().getName());
-                            initListData(publicListResultDto.getData());
-                            mAdapter.notifyDataSetChanged();
-                        }else {
-                            Log.e("zxd","动态为空");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
-                    }
-                }, list);
-            }
-
-        }).start();
-    }
     public void getGoodPost(final String id,final View view) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();

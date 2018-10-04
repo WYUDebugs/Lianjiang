@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    tools:ignore="MissingPrefix">
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:textSize="13dp"
+        android:text="1999-20-10"/>
+    <com.example.sig.lianjiang.view.TimeLineMarker
+        android:id="@+id/item_time_line_mark"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        app:beginLine="@android:color/black"
+        app:endLine="@android:color/black"
+        app:lineSize="0.5dp"
+        app:marker="@mipmap/icon_head"
+        app:markerSize="24dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.flyco.roundview.RoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="@dimen/padding_common_d"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_common"
+            app:rv_strokeColor="#cccccc"
+            app:rv_strokeWidth="@dimen/division_line"
+            app:rv_cornerRadius="@dimen/padding_common_d">
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="翻着我们的照片，想念若隐若现，去年的冬天，我们笑得很甜......\n—— 哎哟，不错哦!" />
+
+            <com.example.sig.lianjiang.view.NineGridTestLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/layout_nine_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:sapcing="4dp" />
+        </com.flyco.roundview.RoundLinearLayout>
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除"
+            android:textColor="@android:color/holo_blue_dark" />
+    </LinearLayout>
+
+
+</LinearLayout>

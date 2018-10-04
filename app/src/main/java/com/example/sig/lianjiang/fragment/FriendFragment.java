@@ -39,6 +39,8 @@ import com.hyphenate.util.EMLog;
 import com.hyphenate.util.NetUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -83,10 +85,30 @@ public class FriendFragment extends EaseContactListFragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for(int i=0;i<contactList.size();i++){
-                    getNameAndHeadPost(contactList.get(i).getUsername());
+                if(contactList!=null&&contactList.size()>0){
+                    for(int i=0;i<contactList.size();i++){
+                        getNameAndHeadPost(contactList.get(i).getUsername());
+                    }
+                    getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
+                    // sorting
+                    Collections.sort(contactList, new Comparator<EaseUser>() {
+
+                        @Override
+                        public int compare(EaseUser lhs, EaseUser rhs) {
+                            if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
+                                return lhs.getNick().compareTo(rhs.getNick());
+                            }else{
+                                if("#".equals(lhs.getInitialLetter())){
+                                    return 1;
+                                }else if("#".equals(rhs.getInitialLetter())){
+                                    return -1;
+                                }
+                                return lhs.getInitialLetter().compareTo(rhs.getInitialLetter());
+                            }
+
+                        }
+                    });
                 }
-                getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
             }
         }).start();
 

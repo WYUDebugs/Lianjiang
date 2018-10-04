@@ -18,11 +18,21 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.bean.MemoryBook;
+import com.example.sig.lianjiang.bean.MemoryBookListResult;
+import com.example.sig.lianjiang.bean.MemoryBookResult;
+import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.fragment.MemoryBookListFragment;
 import com.example.sig.lianjiang.fragment.MemoryBookListStarFragment;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
+import com.hyphenate.chat.EMClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MemoryBookListActivity extends AppCompatActivity implements View.OnClickListener {
@@ -35,9 +45,10 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
     //Fragment Object
     private Fragment fg1;
     private Fragment fg2;
-    private FrameLayout lyContent;
+    private LinearLayout lyContent;
     private FragmentManager fManager;
     private boolean showWhichFrag = false;
+    private MemoryBookResult memoryBookResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +78,7 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
     }
 
     private void initView() {
-        lyContent = (FrameLayout) findViewById(R.id.ly_content);
+        lyContent = (LinearLayout) findViewById(R.id.ly_content);
         back=(ImageView)findViewById(R.id.top_left);
         back.setOnClickListener(this);
         fabAddMBook = (FloatingActionButton) findViewById(R.id.fab_add_memory);
@@ -130,12 +141,23 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
                 TextView tvSure = (TextView) diaView.findViewById(R.id.tv_sure);
                 TextView tvCancel = (TextView) diaView.findViewById(R.id.tv_cancel);
                 final EditText etInput = (EditText) diaView.findViewById(R.id.et_input);
+//                final String title=etInput.getText().toString();
+//                Log.d("zxdm",title);
+//                Log.d("zxdm",title.trim());
                 tvSure.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog1.cancel();
-                        Intent intent = new Intent(MemoryBookListActivity.this, MemoryBookActivity.class);
-                        startActivity(intent);
+                        final String title=etInput.getText().toString().trim();
+                        if(title.length()>14){
+                            Toast.makeText(MemoryBookListActivity.this,"纪念册名称过长",Toast.LENGTH_SHORT).show();
+                        }else if(title.equals("")){
+                            Toast.makeText(MemoryBookListActivity.this,"纪念册名称不能为空",Toast.LENGTH_SHORT).show();
+                        }else{
+                            addMemoryBookPost(EMClient.getInstance().getCurrentUser(),title,dialog1);
+                        }
+//                        dialog1.cancel();
+//                        Intent intent = new Intent(MemoryBookListActivity.this, MemoryBookActivity.class);
+//                        startActivity(intent);
                     }
                 });
                 tvCancel.setOnClickListener(new View.OnClickListener() {
@@ -154,5 +176,58 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
 
         super.onBackPressed();
     }
+
+    public void addMemoryBookPost(final String owner,final String title,final Dialog dialog) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("owner", owner);
+        OkHttpUtils.Param titleParam = new OkHttpUtils.Param("title", title);
+        list.add(idParam);
+        list.add(titleParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.addMemoryBook, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            memoryBookResult = OkHttpUtils.getObjectFromJson(response.toString(), MemoryBookResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            memoryBookResult = MemoryBookResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(memoryBookResult.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+//                            initListData(memoryBookListResult.getData());
+//                            mAdapter.notifyDataSetChanged();
+                            Log.e("zxd","添加纪念册成功");
+                            Toast.makeText(MemoryBookListActivity.this,"添加纪念册成功",Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MemoryBookListActivity.this, MemoryBookActivity.class);
+                            startActivity(intent);
+                            dialog.cancel();
+                        }else {
+                            Log.e("zxd","添加纪念册失败");
+                            Toast.makeText(MemoryBookListActivity.this,"添加纪念册失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
 
 }

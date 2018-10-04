@@ -16,6 +16,8 @@
  import android.widget.Toast;
 
  import com.example.sig.lianjiang.R;
+ import com.example.sig.lianjiang.bean.User;
+ import com.example.sig.lianjiang.bean.UserListResultDto;
  import com.example.sig.lianjiang.bean.UserResultDto;
  import com.example.sig.lianjiang.common.APPConfig;
  import com.example.sig.lianjiang.event.HideButtonEvent;
@@ -35,7 +37,6 @@
  import com.example.sig.lianjiang.view.MainNavigateTabBar;
 
  import cn.bmob.sms.BmobSMS;
- import cn.bmob.v3.Bmob;
  import de.greenrobot.event.EventBus;
  import android.annotation.SuppressLint;
  import android.annotation.TargetApi;
@@ -93,7 +94,7 @@
      private static final String TAG_PAGE_FRIEND = "联系人";
      private static final String TAG_PAGE_PUBLISH = "发布";
      private static final String TAG_PAGE_DYNAMIC = "发现";
-     private static final String TAG_PAGE_STAR = "星球";
+     private static final String TAG_PAGE_STAR = "我的";
      private MessageFragment messageFragment=new MessageFragment();
      private FriendFragment friendFragment=new FriendFragment();
      private DynamicFragment dynamicFragment=new DynamicFragment();
@@ -113,7 +114,7 @@
      private PopupMenuUtil popupMenuUtil=new PopupMenuUtil();
      private List<EaseUser> contactList= new ArrayList<EaseUser>();
      private Map<String, EaseUser> contactsMap;
-     private UserResultDto resultDto;
+     private UserListResultDto resultDto;
 
 
      public static MainNavigateTabBar mNavigateTabBar;
@@ -175,7 +176,7 @@
          mNavigateTabBar.addTab(FriendFragment.class, new MainNavigateTabBar.TabParam(R.mipmap.friend, R.mipmap.friend_select, TAG_PAGE_FRIEND));
          mNavigateTabBar.addTab(null, new MainNavigateTabBar.TabParam(0, 0, TAG_PAGE_PUBLISH));
          mNavigateTabBar.addTab(DynamicFragment.class, new MainNavigateTabBar.TabParam(R.mipmap.dynamic, R.mipmap.dynamic_select, TAG_PAGE_DYNAMIC));
-         mNavigateTabBar.addTab(StarFragment.class, new MainNavigateTabBar.TabParam(R.mipmap.star, R.mipmap.star_select, TAG_PAGE_STAR));
+         mNavigateTabBar.addTab(StarFragment.class, new MainNavigateTabBar.TabParam(R.mipmap.mine, R.mipmap.mine_select, TAG_PAGE_STAR));
          mNavigateTabBar.setUpdateMessageNum(this);
          addThing= (ImageView) findViewById(R.id.tab_post_icon);
          addThing.setOnClickListener(this);
@@ -196,7 +197,7 @@
 
          // 获取华为 HMS 推送 token
          HMSPushHelper.getInstance().getHMSToken(this);
-         setHeadandname();
+//         getNameAndHeadPost();
      }
 
      EMClientListener clientListener = new EMClientListener() {
@@ -340,11 +341,7 @@
          };
          broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
      }
-     private void setHeadandname(){
-         getContactList();
-         getFriend(contactList);
 
-     }
      private void getContactList() {
          contactList.clear();
          if(contactsMap == null){
@@ -372,10 +369,10 @@
 
      }
 
-     public void getNameAndHeadPost(final String id) {
+     public void getNameAndHeadPost() {
          final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
          //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-         OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", id);
+         OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", "1");
          list.add(idParam);
 
          new Thread(new Runnable() {
@@ -383,25 +380,29 @@
              public void run() {
                  //post方式连接  url，post方式请求必须传参
                  //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
-                 OkHttpUtils.post(APPConfig.findUserById, new OkHttpUtils.ResultCallback() {
+                 OkHttpUtils.post(APPConfig.findAllUser, new OkHttpUtils.ResultCallback() {
                      @Override
                      public void onSuccess(Object response) {
                          Log.d("testRun", "response------" + response.toString());
                          try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
                              // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
-                             resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                             resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserListResultDto.class);
                          } catch (Exception e) {
                              //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
-                             resultDto = UserResultDto.error("Exception:"+e.getClass());
+                             resultDto = UserListResultDto.error("Exception:"+e.getClass());
                              e.printStackTrace();
                              Toast.makeText(MainActivity.this,"服务器出错了",Toast.LENGTH_SHORT).show();
                              Log.e("wnf", "Exception------" + e.getMessage());
                          }
                          if(resultDto.getData()!=null){
-                             String name=resultDto.getData().getName();
-                             String head=APPConfig.img_url +resultDto.getData().getHeadimage();
-                             EaseUserUtils.setUserNick(id,name);
-                             EaseUserUtils.setUserAvatar(id,head);
+                             for(int i=0;i<resultDto.getData().size();i++){
+                                 User user=resultDto.getData().get(i);
+                                 String id=Integer.toString(user.getId());
+                                 String name=user.getName();
+                                 String head=APPConfig.img_url +user.getHeadimage();
+                                 EaseUserUtils.setUserNick(id,name);
+                                 EaseUserUtils.setUserAvatar(id,head);
+                             }
 
                          }else {
 
@@ -420,19 +421,7 @@
 
      }
 
-     public void getFriend(final List<EaseUser> contactList){
 
-         new Thread(new Runnable() {
-             @Override
-             public void run() {
-                 for(int i=0;i<contactList.size();i++){
-                     getNameAndHeadPost(contactList.get(i).getUsername());
-                 }
-                 getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
-                 mNavigateTabBar.refreshHead();
-             }
-         }).start();
-     }
      public class MyContactListener implements EMContactListener {
          @Override
          public void onContactAdded(String username) {}
@@ -680,6 +669,7 @@
                                             @NonNull int[] grantResults) {
          PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
      }
+
 
      //**********************************************************************************
      @Override

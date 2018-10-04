@@ -1,35 +1,19 @@
 package com.example.sig.lianjiang.activity;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.example.sig.lianjiang.bean.ResultDto;
-import com.example.sig.lianjiang.bean.UserResultDto;
-import com.example.sig.lianjiang.common.APPConfig;
-import com.example.sig.lianjiang.utils.ImageUtils;
-import com.example.sig.lianjiang.utils.OkHttpUtils;
-import com.example.sig.lianjiang.R;
-import com.example.sig.lianjiang.view.ObservableScrollView;
-import com.squareup.picasso.Picasso;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -37,103 +21,151 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class UserProfileActivity extends BaseActivity implements OnClickListener, ObservableScrollView.ScrollViewListener {
+import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.adapter.TimeLineAdapter;
+import com.example.sig.lianjiang.bean.PublicListResultDto;
+import com.example.sig.lianjiang.bean.PublishDto;
+import com.example.sig.lianjiang.bean.ResultDto;
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
+import com.example.sig.lianjiang.model.TimeLineModel;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
+import com.example.sig.lianjiang.utils.RecycleViewUtils;
+import com.example.sig.lianjiang.utils.StatusBar1Util;
+import com.hyphenate.chat.EMClient;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
+import com.scwang.smartrefresh.layout.util.DensityUtil;
+import com.squareup.picasso.Picasso;
 
-    public Uri cropImageUri;
-    public final int GET_IMAGE_BY_CAMERA_U = 5001;
-    public final int CROP_IMAGE_U = 5003;
-    public final String USER_IMAGE_NAME = "image.png";
-    public final String USER_CROP_IMAGE_NAME = "temporary.png";
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
+
+    private  String userId;
     private UserResultDto resultDto;
-
-    private UserResultDto userResultDto;
-
-    private ObservableScrollView mScrollView;
-    private LinearLayout topbar;
-    private TextView topbarText;
-    private int imageHeight=200;
-    private ImageView back;
-    private TextView userName;
-    private TextView userSignature;
-    private TextView userSex;
-    private TextView userDay;
-    private ImageView head_background;
-    private ImageView head;
-    private String userId;
-    private String birthday;//生日
-    private TextView date;
-    private String address;//地址
-    private TextView dizi;
-    private ImageView sex;
-    private LinearLayout llInfo;
-
+    private int mOffset = 0;
+    private int mScrollY = 0;
+    private RecyclerView mRecycler;
+    private CircleImageView head;
+    private TextView name;
+    private RecycleViewUtils recycleViewUtils;
+    private int mDistance = 0;
+    private Toolbar toolbar;
+    private View buttonBar;
+    private View parallax;
+    private PublicListResultDto publicListResultDto;
+    private TimeLineAdapter mAdapter;
+    private List<TimeLineModel> mList = new ArrayList<>();
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        private int color = Color.argb((int) 255, 51,170,255);
+        private int h = DensityUtil.dp2px(170);
+        private int lastScrollY = 0;
+        //dy:每一次竖直滑动增量 向下为正 向上为负
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            mDistance=recycleViewUtils.getScrollY();
+            Log.d("zxd",Integer.toString(mDistance));
+//            if(lastScrollY<h){
+//                mDistance = Math.min(h, mDistance);
+//                mScrollY = mDistance > h ? h : mDistance;
+//                buttonBar.setAlpha(1f * mScrollY / h);
+//                toolbar.setBackgroundColor(((255 * mScrollY / h) << 24) | color);
+//                parallax.setTranslationY(mOffset - mScrollY);
+//            }
+//            lastScrollY = mDistance;
+            buttonBar.setAlpha(1f * mDistance / h);
+//            toolbar.setBackgroundColor(((255 * mDistance / h) << 24) | color);
+            if(mDistance<h){
+                toolbar.setBackgroundColor(Color.argb((int) (255 * mDistance / h), 51,170,255));
+            }else{
+                toolbar.setBackgroundColor(Color.argb((int) 255, 51,170,255));
+            }
+            parallax.setTranslationY(mOffset - mDistance);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         theme();
         setContentView(R.layout.activity_user_profile);
-        initView();
-        //图片加载框架，如果图片加载出错或者没加载出来，显示默认图片
-      /* Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + "3a5f0819-d925-47e8-a6a2-2c71a403f07d.png")
-                .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);*/
+        Intent intent = getIntent();
+        userId=intent.getStringExtra("username");
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        //状态栏透明和间距处理
+        StatusBar1Util.immersive(this);
+        StatusBar1Util.setPaddingSmart(this, toolbar);
+        buttonBar = findViewById(R.id.buttonBarLayout);
+        parallax = findViewById(R.id.parallax);
+        head=(CircleImageView)findViewById(R.id.toolbar_avatar);
+        name=(TextView)findViewById(R.id.name);
+        getHead();
+        final RefreshLayout refreshLayout = (RefreshLayout)findViewById(R.id.refreshLayout);
+
+
+        refreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
+//            @Override
+//            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+//                refreshLayout.finishRefresh(3000);
+//            }
+            @Override
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+                refreshLayout.getLayout().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getpublishListPost(userId);
+                        mAdapter.notifyDataSetChanged();
+                        refreshLayout.finishRefresh();
+                    }
+                }, 2000);
+            }
+
+
+            @Override
+            public void onHeaderMoving(RefreshHeader header, boolean isDragging, float percent, int offset, int headerHeight, int maxDragHeight) {
+                mOffset = offset / 2;
+                parallax.setTranslationY(mOffset - mScrollY);
+                toolbar.setAlpha(1 - Math.min(percent, 1));
+            }
+        });
+
+        buttonBar.setAlpha(0);
+        toolbar.setBackgroundColor(0);
+        initRecycler();
+        initImageLoader();
+        refreshLayout.autoRefresh();
     }
 
-    public void initView() {
-        Intent intent = getIntent();
-        userId= intent.getStringExtra("username");
-//        Toast.makeText(this,userId,Toast.LENGTH_SHORT).show();
-        back = (ImageView) findViewById(R.id.top_left);
-        back.setOnClickListener(this);
-        topbarText = (TextView) findViewById(R.id.top_center);
-        topbar = (LinearLayout) findViewById(R.id.mytopbar);
-        mScrollView = findViewById(R.id.sv_main_content);
-        mScrollView.setScrollViewListener(this);
-        userName = findViewById(R.id.user_name);
-        userSignature=findViewById(R.id.user_signature);
-        head = findViewById(R.id.head);
-        head.setOnClickListener(this);
-        sex=findViewById(R.id.sex);
-        dizi=findViewById(R.id.address);
-        date=findViewById(R.id.date);
-        llInfo=(LinearLayout)findViewById(R.id.llInfo);
-        llInfo.setOnClickListener(this);
-        getHead();
-    }
+
 
 
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.head:
-                ImageUtils.showImagePickDialog(this, "修改头像");
-                break;
-            case R.id.top_left:
-                finish();
-                break;
-            case R.id.llInfo:
-                Intent intent=new Intent(UserProfileActivity.this,EditUserProfileActivity.class);
-                startActivity(intent);
-                break;
+
 
 
         }
     }
 
-    @Override
-    public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
-        if (y <= 0) {
-            topbar.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));//AGB由相关工具获得，或者美工提供
-            topbarText.setText("");
-        } else if (y > 0 && y <= imageHeight - topbar.getHeight()) {
-            // 只是layout背景透明(仿知乎滑动效果)
-            topbar.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
-            topbarText.setText("");
-        } else {
-            topbar.setBackgroundColor(Color.argb((int) 255, 57, 58, 62));
-            topbarText.setText("个人信息");
-        }
+    private void initImageLoader() {
+        ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
+        ImageLoader.getInstance().init(configuration);
     }
 
     private void theme() {
@@ -146,178 +178,52 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void initRecycler() {
+        mRecycler=(RecyclerView)findViewById(R.id.time_line_recycler) ;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        switch (requestCode) {
-            case ImageUtils.REQUEST_CODE_FROM_ALBUM:
-                if (resultCode == RESULT_CANCELED) {
-                    return;
+        mAdapter = new TimeLineAdapter(mList,this);
+        View headerView = LayoutInflater.from(this).inflate(R.layout.layout_memory_book_list_header,null);//假的头部
+        mAdapter.setHeaderView(headerView);
+
+        mRecycler.setLayoutManager(layoutManager);
+        mRecycler.setAdapter(mAdapter);
+        recycleViewUtils = new RecycleViewUtils().with(mRecycler);
+        mRecycler.addOnScrollListener(mOnScrollListener);
+    }
+
+    private void initListData(final List<PublishDto> data) {
+        mList.clear();
+        for(int i=0;i<data.size();i++){
+            PublishDto temp=data.get(i);
+            List<String> urlList = new ArrayList<>();
+            if(temp.getImageList()!=null){
+                for (int j = 0; j < temp.getImageList().size()&&j<1; j++) {
+                    String publishImage=temp.getImageList().get(j).getPath();
+                    urlList.add(APPConfig.img_url+publishImage);
                 }
-                //这里得到图片后做相应操作
-                Uri imageUri = data.getData();
-                //Toast.makeText(this, imageUri.toString(), Toast.LENGTH_SHORT).show();
-                // 开始对图片进行裁剪处理
-                cropImage(imageUri, 1, 1, CROP_IMAGE_U);
-//                updataHead(imageUri.toString());
-                break;
-            case ImageUtils.REQUEST_CODE_FROM_CAMERA:
-                if (resultCode == RESULT_CANCELED) {
-                    ImageUtils.deleteImageUri(this, ImageUtils.imageUriFromCamera);
-                } else {
-                    Uri imageUriCamera = ImageUtils.imageUriFromCamera;
-                    //Toast.makeText(this, imageUriCamera.toString(), Toast.LENGTH_SHORT).show();
-                    //Log.e("wnf", "imageUriCamera.getPath()------" + imageUriCamera.getPath());
-                    //Log.e("wnf", "getImageAbsolutePath------" + ImageUtils.getImageAbsolutePath(this,imageUriCamera));
-                    //updataHead(ImageUtils.getImageAbsolutePath(this,imageUriCamera));
-                    // 开始对图片进行裁剪处理
-                    cropImage(imageUriCamera, 1, 1, CROP_IMAGE_U);
-//                    updataHead(imageUriCamera.toString());
-                }
-                break;
-            case CROP_IMAGE_U:
-                final String s = getExternalCacheDir() + "/" + USER_CROP_IMAGE_NAME;
-                //Log.e("wnf", "path------" + s);
-                // 裁剪头像图片后执行更新头像操作
-                updataHead(s);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * 裁剪图片，固定宽高320
-     * @param imageUri
-     * @param aspectX
-     * @param aspectY
-     * @param return_flag
-     */
-    public void cropImage(Uri imageUri, int aspectX, int aspectY,
-                          int return_flag) {
-        File file = new File(this.getExternalCacheDir(), USER_CROP_IMAGE_NAME);
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //高版本一定要加上这两句话，做一下临时的Uri
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            FileProvider.getUriForFile(UserProfileActivity.this, "com.example.sig.lianjiang.fileProvider", file);
-        }
-        cropImageUri = Uri.fromFile(file);
-
-        intent.setDataAndType(imageUri, "image/*");
-        intent.putExtra("crop", "true");
-        intent.putExtra("aspectX", aspectX);
-        intent.putExtra("aspectY", aspectY);
-        intent.putExtra("outputX", 320);
-        intent.putExtra("outputY", 320);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, cropImageUri);
-
-        startActivityForResult(intent, return_flag);
-    }
-
-    /**
-     * 裁剪图片，自行裁剪宽高
-     * @param imageUri
-     * @param aspectX
-     * @param aspectY
-     * @param return_flag
-     */
-    public void cropImageBig(Uri imageUri, int aspectX, int aspectY,
-                          int return_flag) {
-        File file = new File(this.getExternalCacheDir(), USER_CROP_IMAGE_NAME);
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //高版本一定要加上这两句话，做一下临时的Uri
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            FileProvider.getUriForFile(UserProfileActivity.this, "com.example.sig.lianjiang.fileProvider", file);
-        }
-        cropImageUri = Uri.fromFile(file);
-
-        intent.setDataAndType(imageUri, "image/*");
-        intent.putExtra("crop", "false");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, cropImageUri);
-
-        startActivityForResult(intent, return_flag);
-    }
-
-    /**
-     * 将图片设置固定宽高
-     * @param path
-     * @param w
-     * @param h
-     * @return
-     */
-    public Bitmap GetBitmap(String path, int w, int h) {
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        BitmapFactory.decodeFile(path, opts);
-        int width = opts.outWidth;
-        int height = opts.outHeight;
-        float scaleWidth = 0.f, scaleHeight = 0.f;
-        if (width > w || height > h) {
-            scaleWidth = ((float) width) / w;
-            scaleHeight = ((float) height) / h;
-        }
-        opts.inJustDecodeBounds = false;
-        float scale = Math.max(scaleWidth, scaleHeight);
-        opts.inSampleSize = (int) scale;
-        WeakReference<Bitmap> weak = new WeakReference<Bitmap>(
-                BitmapFactory.decodeFile(path, opts));
-        return Bitmap.createScaledBitmap(weak.get(), w, h, true);
-    }
-
-    public void updataHead(final String path) {
-        //图片列表，后台图片文件对应的key值必须为 file，否则文件参数传递失败
-        final List<File> fileList = new ArrayList<>();
-        fileList.add(new File(path));
-        //Toast.makeText(this,path,Toast.LENGTH_SHORT).show();
-        //传递的非文件参数列表
-        final Map<String, Object> map = new HashMap<>();
-//        map.put("id", String.valueOf(3));//当前用户的id
-        //Toast.makeText(this,userId,Toast.LENGTH_SHORT).show();
-        map.put("id", userId);//当前用户的id
-        //使用线程进行网络操作
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpUtils.postFile(APPConfig.updateHeadImage, map, fileList, new OkHttpUtils.ResultCallback() {
-                    @Override
-                    public void onSuccess(Object response) {
-                        Log.d("testRun", "response------" + response.toString());
-                        try {
-                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
-                            userResultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
-                        } catch (Exception e) {
-                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
-                            userResultDto = UserResultDto.error("Exception:" + e.getClass());
-                            e.printStackTrace();
-                            Log.e("wnf", "Exception------" + e.getMessage());
-                        }
-                        if (userResultDto.getMsg().equals("success")) {
-                            if (userResultDto.getData() != null) {
-                                //图片加载框架，如果图片加载出错或者没加载出来，显示默认图片
-                                Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + userResultDto.getData().getHeadimage())
-                                        .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
-                            }
-                            Toast.makeText(UserProfileActivity.this, "头像更新成功", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(UserProfileActivity.this, "头像更新失败，请重试！", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        e.printStackTrace();
-                        Log.d("testRun", "请求失败------Exception:" + e.getMessage());
-                        Toast.makeText(UserProfileActivity.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
-                    }
-                });
             }
+            String content=temp.getContent();
+            String publishId=Integer.toString(temp.getId());
+            String address=temp.getAddress();
+            String time=temp.getTime();
+            String userId=Integer.toString(temp.getPublisher());
+            boolean flag;
+            if(userId.equals(EMClient.getInstance().getCurrentUser())){
+                flag=true;
+            }else {
+                flag=false;
+            }
+            TimeLineModel model = new TimeLineModel(content,urlList,publishId,time,flag);
+            mList.add(model);
 
-        }).start();
+        }
     }
+
+
+
+
 
     public void getHead() {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
@@ -347,25 +253,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                         if(resultDto.getData()!=null){
                             Picasso.with(UserProfileActivity.this).load(APPConfig.img_url + resultDto.getData().getHeadimage())
                                     .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
-                            userName.setText(resultDto.getData().getName());
-                            int sexId=resultDto.getData().getGender();
-                            if (sexId == 1) {
-                                sex.setImageResource(R.mipmap.icon_female);
-                            }
-                            birthday=resultDto.getData().getBirthday();
-                            if (birthday != null) {
-                                date.setText(birthday);
-                            }
-                            address=resultDto.getData().getAddress();
-                            if (address!=null) {
-                                dizi.setText(address);
-                            }
-                            if (resultDto.getData().getSignature()!=null){
+                            name.setText(resultDto.getData().getName());
 
-                                userSignature.setText(resultDto.getData().getSignature());
-                            }else {
-                                userSignature.setVisibility(View.INVISIBLE);
-                            }
                         }else {
 
                         }
@@ -382,15 +271,59 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         }).start();
     }
 
+    public void getpublishListPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("publisher", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.showSomeonePost, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            publicListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicListResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            publicListResultDto = PublicListResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(publicListResultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+                            initListData(publicListResultDto.getData());
+                            mAdapter.notifyDataSetChanged();
+                        }else {
+                            Log.e("zxd","动态为空");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
     @Override
     protected void onRestart() {
         super.onRestart();
-        getHead();
+//        getHead();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getHead();
+//        getHead();
     }
 }

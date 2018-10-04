@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,37 +26,67 @@ import com.example.sig.lianjiang.activity.MemoryBookActivity;
 import com.example.sig.lianjiang.activity.MemoryCoverUpdateActivity;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryBookListAdapter;
+import com.example.sig.lianjiang.bean.MemoryBook;
+import com.example.sig.lianjiang.bean.MemoryBookListResult;
+import com.example.sig.lianjiang.bean.PublicListResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
+import com.example.sig.lianjiang.model.MemoryListModel;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.view.ObservableListView;
+import com.hyphenate.chat.EMClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-public class MemoryBookListFragment extends Fragment implements ObservableListView.OnMeiTuanRefreshListener,View.OnClickListener,ObservableListView.ScrollViewListener{
+public class MemoryBookListFragment extends Fragment implements View.OnClickListener{
 
     private TextView tv_pull_to_refresh;
     private ObservableListView mListView;
     private MemoryBookListAdapter mAdapter;
-    private List<String> mList = new ArrayList<>();
-    private final static int REFRESH_COMPLETE = 0;
-    private static final int UPDATE_TEXT_DONE=1;
-    private static final int UPDATE_TEXT_STAR=2;
-    private InterHandler mInterHandler = new InterHandler(this);
+//    private List<String> mList = new ArrayList<>();
     private View view;
+    private RefreshLayout mRefreshLayout;
+    private RecyclerView recyclerView;
+    private static boolean isFirstEnter = true;
+    private MemoryBookListResult memoryBookListResult;
+    private List<MemoryListModel> mList = new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.fragment_memory_book_list, container, false);
 
-        tv_pull_to_refresh=(TextView) view.findViewById(R.id.tv_pull_to_refresh);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
 //        initImageLoader();
 //        initListData();
         initView();
 
-        mListView.setOnMeiTuanRefreshListener(this);
+//        mListView.setOnMeiTuanRefreshListener(this);
+        mRefreshLayout = (RefreshLayout)view.findViewById(R.id.refreshLayout);
+        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+                refreshLayout.getLayout().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+//                        initListData();
+                        getMemoryBookListPost(EMClient.getInstance().getCurrentUser());
+                        mAdapter.notifyDataSetChanged();
+                        refreshLayout.finishRefresh();
+                    }
+                }, 2000);
+            }
+        });
+//        if (isFirstEnter) {
+//            isFirstEnter = false;
+        mRefreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+//        }
         return view;
     }
 
@@ -62,67 +95,74 @@ public class MemoryBookListFragment extends Fragment implements ObservableListVi
         ImageLoader.getInstance().init(configuration);
     }
 
-    private void initListData() {
+    private void initListData(List<MemoryBook> data) {
+        mList.clear();
+//        for (int i = 0; i < 5; i++) {
+//            mList.add("福的朋友群纪念册" + i);
+//        }
+        for(int i=0;i<data.size();i++){
+            MemoryBook memoryBook=data.get(i);
+            int memoryBookId=memoryBook.getId();
+            String title=memoryBook.getTitle();
+            String cover=memoryBook.getCover();
+            int friendCount=memoryBook.getFriendCount();
+            int momentCount=memoryBook.getMomentCount();
+            MemoryListModel memoryListModel=new MemoryListModel(Integer.toString(memoryBookId),cover,title,friendCount,momentCount);
+            mList.add(memoryListModel);
+        }
 
     }
 
     public void initView() {
 
-        mListView = (ObservableListView) view.findViewById(R.id.lv_bbs);
-        mList.add("header");
-        for (int i = 0; i < 5; i++) {
-            mList.add("福的朋友群纪念册" + i);
-        }
-        mAdapter = new MemoryBookListAdapter(getActivity(),mList);
-        mListView.setAdapter(mAdapter);
-        mListView.setScrollViewListener(this);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("wnf", "position=========================="+position);
-                if (position == 0) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        for (int i = 0; i < 5; i++) {
+//            mList.add("福的朋友群纪念册" + i);
+//        }
+        mAdapter = new MemoryBookListAdapter(mList,getActivity());
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_memory_book_list_header,null);//假的头部
+        mAdapter.setHeaderView(headerView);
+        recyclerView.setAdapter(mAdapter);
 
-                } else {
-                    Intent intent = new Intent(getActivity(), MemoryBookActivity.class);
-                    startActivity(intent);
-                    //Toast.makeText(MemoryBookListActivity.this, "点击" + mList.get(position-1), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("wnf", "position=========================="+position);
-                if (position == 1) {
 
-                } else {
-                    //Toast.makeText(getActivity(), "长按" + mList.get(position-1), Toast.LENGTH_SHORT).show();
-                    longClickItem(position-1);
-                }
-                return true;
-            }
-        });
+//        mListView = (ObservableListView) view.findViewById(R.id.lv_bbs);
+//        mList.add("header");
+//        for (int i = 0; i < 5; i++) {
+//            mList.add("福的朋友群纪念册" + i);
+//        }
+//        mAdapter = new MemoryBookListAdapter(getActivity(),mList);
+//        mListView.setAdapter(mAdapter);
+//        mListView.setScrollViewListener(this);
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.d("wnf", "position=========================="+position);
+//                if (position == 0) {
+//
+//                } else {
+//                    Intent intent = new Intent(getActivity(), MemoryBookActivity.class);
+//                    startActivity(intent);
+//                    //Toast.makeText(MemoryBookListActivity.this, "点击" + mList.get(position-1), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                Log.d("wnf", "position=========================="+position);
+//                if (position == 1) {
+//
+//                } else {
+//                    //Toast.makeText(getActivity(), "长按" + mList.get(position-1), Toast.LENGTH_SHORT).show();
+//                    longClickItem(position-1);
+//                }
+//                return true;
+//            }
+//        });
     }
 
-    @Override
-    public void onRefresh() {
-        new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                    mInterHandler.sendEmptyMessage(UPDATE_TEXT_DONE);
-                    Thread.sleep(1000);
-                    mInterHandler.sendEmptyMessage(REFRESH_COMPLETE);
-                    mInterHandler.sendEmptyMessage(UPDATE_TEXT_STAR);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
 
     @Override
     public void onClick(View v) {
@@ -239,48 +279,52 @@ public class MemoryBookListFragment extends Fragment implements ObservableListVi
         });
     }
 
-    @Override
-    public void onScroll(int h){
-//        if (h <= 0) {
-//            textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));//AGB由相关工具获得，或者美工提供
-//        } else if (h > 0 && h <= imageHeight-textView.getHeight()) {
-//            // 只是layout背景透明(仿知乎滑动效果)
-//            textView.setBackgroundColor(Color.argb((int) 0, 57, 58, 62));
-//            title.setText("");
-//        } else {
-//            textView.setBackgroundColor(Color.argb((int) 255, 57, 58, 62));
-//            title.setText("广场");
-//        }
+
+    public void getMemoryBookListPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("uId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findMemoryListByUserId, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            memoryBookListResult = OkHttpUtils.getObjectFromJson(response.toString(), MemoryBookListResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            memoryBookListResult = MemoryBookListResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(memoryBookListResult.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+                            initListData(memoryBookListResult.getData());
+                            mAdapter.notifyDataSetChanged();
+                            Log.e("zxd","获取纪念册成功");
+                        }else {
+                            Log.e("zxd","获取纪念册失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
     }
 
-    private  class InterHandler extends Handler {
-        private WeakReference<MemoryBookListFragment> mActivity;
-        public InterHandler(MemoryBookListFragment activity){
-            mActivity = new WeakReference<MemoryBookListFragment>(activity);
-        }
-        @Override
-        public void handleMessage(android.os.Message msg) {
-            MemoryBookListFragment activity = mActivity.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    case REFRESH_COMPLETE:
-                        activity.mListView.setOnRefreshComplete();
-                        activity.mAdapter.notifyDataSetChanged();
-                        activity.mListView.setSelection(0);
-                        break;
-                    case UPDATE_TEXT_DONE:
-                        tv_pull_to_refresh.setText("刷新完成");
-                        mListView.fin();
-                        break;
-                    case UPDATE_TEXT_STAR:
-                        tv_pull_to_refresh.setText("下拉刷新");
-                        break;
-                }
-            }else{
-                super.handleMessage(msg);
-            }
-        }
-    }
 
 
 

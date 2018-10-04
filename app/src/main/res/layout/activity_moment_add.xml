@@ -58,18 +58,32 @@
             android:layout_height="wrap_content"
             android:text="添加图片" />
     </LinearLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_marginTop="7dp"-->
+        <!--android:layout_marginLeft="17dp"-->
+        <!--android:layout_marginRight="17dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content">-->
+        <!--<ImageView-->
+            <!--android:src="@drawable/addpic"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_width="120dp"-->
+            <!--android:layout_height="80dp"-->
+            <!--android:scaleType="fitXY" />-->
+    <!--</LinearLayout>-->
     <LinearLayout
         android:layout_marginTop="7dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <ImageView
-            android:src="@drawable/addpic"
-            android:layout_gravity="center_vertical"
-            android:layout_width="120dp"
-            android:layout_height="80dp"
-            android:scaleType="fitXY" />
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="2dp"
+            android:numColumns="3"
+            android:verticalSpacing="2dp" />
     </LinearLayout>
     <Button
         android:id="@+id/bt_send_moment"

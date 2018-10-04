@@ -1,9 +1,12 @@
 package com.example.sig.lianjiang.activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
@@ -40,6 +43,7 @@ public class GroupPickContactsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        theme();
         setContentView(R.layout.activity_group_pick_contacts);
 
         String groupId = getIntent().getStringExtra("groupId");
@@ -94,6 +98,16 @@ public class GroupPickContactsActivity extends BaseActivity {
         });
     }
 
+
+    private void theme() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
     /**
      * save selected members
      *

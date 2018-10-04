@@ -6,9 +6,9 @@ package com.example.sig.lianjiang.bean;
 
 public class MemoryFriend {
     private int id;
-    private int friend_id; //好友id（User的id约束）
-    private int memory_book_id; //纪念册id（MemoryBook的id约束）
-    private String add_time; //添加时间
+    private int friendId; //好友id（User的id约束）
+    private int memoryBookId; //纪念册id（MemoryBook的id约束）
+    private String addTime; //添加时间
 
     public int getId() {
         return id;
@@ -19,27 +19,27 @@ public class MemoryFriend {
     }
 
     public int getFriendId() {
-        return friend_id;
+        return friendId;
     }
 
     public void setFriendId(int friend_id) {
-        this.friend_id = friend_id;
+        this.friendId = friend_id;
     }
 
     public int getMemoryBookId() {
-        return memory_book_id;
+        return memoryBookId;
     }
 
     public void setMemoryBookId(int memory_book_id) {
-        this.memory_book_id = memory_book_id;
+        this.memoryBookId = memory_book_id;
     }
 
     public String getAddTime() {
-        return add_time;
+        return addTime;
     }
 
     public void setAddTime(String add_time) {
-        this.add_time = add_time;
+        this.addTime = add_time;
     }
 }
 

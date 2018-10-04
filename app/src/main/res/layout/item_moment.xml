@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="10dp">
 
     <LinearLayout
         android:layout_weight="1"
+        android:id="@+id/lv_moment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/iv_head"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@mipmap/icon_head" />
@@ -22,12 +24,14 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SIG"
                 android:textColor="@android:color/holo_blue_dark" />
 
             <TextView
+                android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -53,13 +57,16 @@
                         android:layout_width="13dp"
                         android:layout_height="21dp" />
                     <TextView
+                        android:id="@+id/tv_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="2018/01/12/12:20" />
                 </LinearLayout>
 
 
                 <TextView
+                    android:id="@+id/tv_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"

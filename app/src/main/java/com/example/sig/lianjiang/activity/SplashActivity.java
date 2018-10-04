@@ -23,7 +23,7 @@ import com.example.sig.lianjiang.R;
 import com.hyphenate.util.EasyUtils;
 
 import cn.bmob.sms.BmobSMS;
-import cn.bmob.v3.Bmob;
+//import cn.bmob.sms.BmobSMS;
 
 
 /**
@@ -40,7 +40,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
         super.onCreate(arg0);
         BmobSMS.initialize(this,"53d8a48a1543952d26d7ded007d1a77e");
-        Bmob.initialize(this, "53d8a48a1543952d26d7ded007d1a77e");
+//        Bmob.initialize(this, "53d8a48a1543952d26d7ded007d1a77e");
         SDKInitializer.initialize(getApplicationContext());
         StarryHelper.getInstance().initHandler(this.getMainLooper());
 
