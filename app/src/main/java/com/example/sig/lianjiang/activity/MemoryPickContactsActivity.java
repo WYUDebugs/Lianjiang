@@ -25,6 +25,7 @@ import com.example.sig.lianjiang.bean.MemoryFriend;
 import com.example.sig.lianjiang.bean.MemoryFriendListResult;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.example.sig.lianjiang.Constant;
@@ -71,10 +72,10 @@ public class MemoryPickContactsActivity extends BaseActivity{
             Log.e("zxd","获取到的成员"+data.toString());
             for(int i=0;i<data.size();i++){
                 MemoryFriend memoryFriend=data.get(i);
-                Log.e("zxd","获取到的成员id"+Integer.toString(memoryFriend.getFriendId()));
-                Log.e("zxd","获取到的成员id"+Integer.toString(memoryFriend.getId()));
-                Log.e("zxd","获取到的成员id"+Integer.toString(memoryFriend.getMemoryBookId()));
-                Log.e("zxd","获取到的成员id"+memoryFriend.getAddTime());
+//                Log.e("zxd","获取到的成员id"+Integer.toString(memoryFriend.getFriendId()));
+//                Log.e("zxd","获取到的成员id"+Integer.toString(memoryFriend.getId()));
+//                Log.e("zxd","获取到的成员id"+Integer.toString(memoryFriend.getMemoryBookId()));
+//                Log.e("zxd","获取到的成员id"+memoryFriend.getAddTime());
                 existMembers.add(Integer.toString(memoryFriend.getFriendId()));
             }
         }
@@ -128,6 +129,7 @@ public class MemoryPickContactsActivity extends BaseActivity{
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
     }
     /**
      * save selected members

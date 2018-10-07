@@ -29,6 +29,9 @@ import android.widget.Toast;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryNineGridAdapter;
 import com.example.sig.lianjiang.adapter.NineGridAdapter;
+import com.example.sig.lianjiang.bean.MemoryBook;
+import com.example.sig.lianjiang.bean.MemoryBookListResult;
+import com.example.sig.lianjiang.bean.MemoryBookResult;
 import com.example.sig.lianjiang.bean.Moment;
 import com.example.sig.lianjiang.bean.MomentListResult;
 import com.example.sig.lianjiang.bean.PublicListResultDto;
@@ -46,6 +49,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.sch.rfview.AnimRFRecyclerView;
 import com.sch.rfview.decoration.DividerItemDecoration;
 import com.sch.rfview.manager.AnimRFLinearLayoutManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -72,11 +76,17 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
     private Handler mHandler = new Handler();
     int mDistance = 0;
     private RecycleViewUtils recycleViewUtils;
-    private ImageView head;
     private MomentListResult momentListResult;
+    private MemoryBookResult memoryBookResult;
     private String momtent;
+    private ImageView head;
+    private ImageView cover;
+    private TextView time;
+    private TextView friendNum;
+    private TextView momentNum;
     private TextView title;
     private TextView name;
+    private MemoryBookListResult memoryBookListResult;
 
 
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -168,6 +178,13 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
         // 头部
         headerView = LayoutInflater.from(MemoryBookActivity.this).inflate(R.layout.layout_moment_header, null);
         head=(ImageView) headerView.findViewById(R.id.iv_head);
+        cover=(ImageView) headerView.findViewById(R.id.img_memory_cover_update);
+        time=(TextView) headerView.findViewById(R.id.tv_memory_addtime);
+        friendNum=(TextView) headerView.findViewById(R.id.tv_memory_persion_num);
+        momentNum=(TextView) headerView.findViewById(R.id.tv_memory_moment_num);
+        title=(TextView) headerView.findViewById(R.id.tv_title);
+        name=(TextView) headerView.findViewById(R.id.tv_name);
+        getMomentBookPost(momtent,cover,title,head,name,time,friendNum,momentNum);
         // 脚部
         footerView = LayoutInflater.from(MemoryBookActivity.this).inflate(R.layout.footer_view, null);
         // 使用重写后的线性布局管理器
@@ -252,7 +269,10 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
             case R.id.img_add_friend:
-                Toast.makeText(MemoryBookActivity.this, "添加编辑好友", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MemoryBookActivity.this, MemoryPickContactsActivity.class);
+                intent.putExtra("memoryBookId",momtent);
+                startActivity(intent);
+//                Toast.makeText(MemoryBookActivity.this, "添加编辑好友", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.img_add_setting:
                 //Toast.makeText(MemoryBookActivity.this, "设置", Toast.LENGTH_SHORT).show();
@@ -263,7 +283,7 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
                 Intent intentAddM = new Intent(MemoryBookActivity.this, MomentAddActivity.class);
                 intentAddM.putExtra("memoryBookId",momtent);
                 startActivity(intentAddM);
-                finish();
+//                finish();
                 break;
 
         }
@@ -296,6 +316,9 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
         llMemorySettingPeople.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MemoryBookActivity.this, MemoryDeleteContactsActivity.class);
+                intent.putExtra("memoryBookId",momtent);
+                startActivity(intent);
                 dialog.cancel();
             }
         });
@@ -311,6 +334,7 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View v) {
                 dialog.cancel();
                 Intent intent = new Intent(MemoryBookActivity.this, MemoryCoverUpdateActivity.class);
+                intent.putExtra("memoryBookId",momtent);
                 startActivity(intent);
             }
         });
@@ -363,6 +387,7 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
         tvSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                changeMemoryBookTitle(momtent,etInput.getText().toString().trim());
                 dialog1.cancel();
             }
         });
@@ -436,5 +461,165 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
         }).start();
     }
 
+    public void getMomentBookPost(final String id,final ImageView cover,final TextView title,final ImageView head,final TextView name,final TextView time,final TextView friendNum,final TextView momentNum) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("bId", id);
+        list.add(idParam);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findBookDetailed, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            memoryBookResult = OkHttpUtils.getObjectFromJson(response.toString(), MemoryBookResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            memoryBookResult = MemoryBookResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(memoryBookResult.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+                            MemoryBook memoryBook=memoryBookResult.getData();
+                            Picasso.with(MemoryBookActivity.this).load(APPConfig.test_image_url + memoryBook.getCover())
+                                    .placeholder(R.mipmap.memory1).error(R.mipmap.memory1).into(cover);
+                            Picasso.with(MemoryBookActivity.this).load(APPConfig.img_url + memoryBook.getUser().getHeadimage())
+                                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
+                            title.setText(memoryBook.getTitle());
+                            name.setText(memoryBook.getUser().getName());
+                            time.setText(memoryBook.getCreatTime());
+                            friendNum.setText(Integer.toString(memoryBook.getFriendCount()));
+                            momentNum.setText(Integer.toString(memoryBook.getMomentCount()));
+
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
+    public void changeMemoryBookTitle(final String id,final String title) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", id);
+        OkHttpUtils.Param titleParam = new OkHttpUtils.Param("title", title);
+        list.add(idParam);
+        list.add(titleParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.changeMemoryBookTitle, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            memoryBookListResult = OkHttpUtils.getObjectFromJson(response.toString(), MemoryBookListResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            memoryBookListResult = MemoryBookListResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(memoryBookListResult.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+//                            initListData(memoryBookListResult.getData());
+//                            mAdapter.notifyDataSetChanged();
+                            Toast.makeText(MemoryBookActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+                            changeTitle(title);
+                        }else {
+                            Toast.makeText(MemoryBookActivity.this,"修改失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
+    public void deleteMemoryBook(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.deleteMemoryBook, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            memoryBookListResult = OkHttpUtils.getObjectFromJson(response.toString(), MemoryBookListResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            memoryBookListResult = MemoryBookListResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(memoryBookListResult.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+//                            initListData(memoryBookListResult.getData());
+//                            mAdapter.notifyDataSetChanged();
+                            Toast.makeText(MemoryBookActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                            finish();
+                        }else {
+                            Toast.makeText(MemoryBookActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+    private void changeTitle(String title1){
+        title.setText(title1);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getMomentBookPost(momtent,cover,title,head,name,time,friendNum,momentNum);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        getHead();
+        getMomentBookPost(momtent,cover,title,head,name,time,friendNum,momentNum);
+    }
 }

@@ -2,6 +2,7 @@ package com.example.sig.lianjiang.utils;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,6 +14,13 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.sig.lianjiang.R;
+
 /**
  * Created by sig on 2018/8/26.
  */
@@ -52,6 +60,44 @@ public class ImageUtils {
                     }
                 })
                 .show();
+    }
+
+    public static void showImagePickDialog(final Activity activity) {
+        View convertView= View.inflate(activity, R.layout.dialogui_footer_update_pic, null);
+        final Dialog dialog=new Dialog(activity,R.style.dialogfooter);
+        convertView.setMinimumWidth(R.dimen.width);
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        dialog.setContentView(convertView);
+        dialog.show();
+        ImageView imgCancel;
+        TextView tvInfo;
+        TextView tvCamera;
+        TextView tvPhoto;
+
+        imgCancel = (ImageView) convertView.findViewById(R.id.img_cancel);
+        tvInfo = (TextView) convertView.findViewById(R.id.tv_info);
+        tvCamera = (TextView) convertView.findViewById(R.id.tv_camera);
+        tvPhoto = (TextView) convertView.findViewById(R.id.tv_photo);
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        tvCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImageFromCamera(activity);
+                dialog.cancel();
+            }
+        });
+        tvPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickImageFromAlbum(activity);
+                dialog.cancel();
+            }
+        });
     }
 
     /**

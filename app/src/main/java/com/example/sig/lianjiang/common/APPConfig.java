@@ -31,7 +31,6 @@ public class APPConfig {
 //    public static String findMemoryBookById=test_url+"memoryBook/findMemoryBookById";
     public static String sendPublic=server_url+"publish/sendPublic";
     public static String publishList=server_url+"publish/publishList";
-    public static String findMemoryBookById=test_url+"memoryBook/findMemoryBookById";
     public static String showSomeonePost=server_url+"publish/showSomeonePost";
 
     public static String IS_LOGIN = "is_login";
@@ -64,7 +63,7 @@ public class APPConfig {
 
 
     public static String findMemoryListByUserId=test_url+"memoryBook/findMemoryListByUserId";
-    public static String addMemoryBook=test_url+"memoryBook/addMemoryBook";
+    public static String addBook=test_url+"memoryBook/addBook";
     public static String findMemoryFriend=test_url+"memoryFriend/findMemoryFriend";
     public static String addMemoryFriend=test_url+"memoryFriend/addMemoryFriend";
     public static String sendMoment=test_url+"moment/sendMoment";
@@ -74,6 +73,9 @@ public class APPConfig {
     public static String deleteMemoryBook=test_url+"memoryBook/deleteMemoryBook";
     public static String publishNum=test_url+"publish/publishNum";
     public static String bookNum=test_url+"memoryBook/bookNum";
+    public static String findBookDetailed=test_url+"memoryBook/findBookDetailed";
+    public static String changeMemoryBookCover=test_url+"memoryBook/changeMemoryBookCover";
+    public static String ShowOneMoment=test_url+"moment/ShowOneMoment";
 
 
 }

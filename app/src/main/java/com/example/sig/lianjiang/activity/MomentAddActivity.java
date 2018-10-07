@@ -86,7 +86,12 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
     public void upLoad(){
         String content=etMomentContent.getText().toString().trim();
         String timeTemp=tvLocationTime.getText().toString();
-        sendMomentPost(imagePaths,content,timeTemp);
+        if(timeTemp.equals("故事时间节点")){
+            Toast.makeText(MomentAddActivity.this,"请选择故事时间",Toast.LENGTH_SHORT).show();
+
+        }else{
+            sendMomentPost(imagePaths,content,timeTemp);
+        }
         Log.d("zxd111","传参");
         for(int i=0;i<imagePaths.size();i++){
             Log.d("zxd111",imagePaths.get(i).toString());
@@ -179,6 +184,7 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
                 alterDatePicker();
                 break;
             case R.id.bt_send_moment:
+
                 upLoad();
                 break;
 
@@ -323,6 +329,7 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
         map.put("sender", EMClient.getInstance().getCurrentUser());//当前用户的id
         map.put("content",content);
         map.put("locationTime",time);
+        map.put("bookId",momtent);
 
         //使用线程进行网络操作
         new Thread(new Runnable() {

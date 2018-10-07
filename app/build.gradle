@@ -62,6 +62,7 @@ dependencies {
     //OkHttp请求框架
     //图片加载框架
     compile 'com.android.support:appcompat-v7:26.+'
+//    compile 'com.android.support:appcompat-v7:24.+'
     compile 'com.android.support:recyclerview-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:26.+'

@@ -15,15 +15,24 @@
         android:layout_height="@dimen/height_top_bar"
         android:gravity="center_vertical">
 
+        <!--<ImageView-->
+            <!--android:id="@+id/top_back"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:src="@drawable/memoryback"-->
+            <!--android:onClick="back"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true" />-->
         <ImageView
             android:id="@+id/top_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/memoryback"
+            android:layout_width="28dp"
+            android:layout_height="30dp"
             android:onClick="back"
+            android:layout_gravity="center_vertical"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/memoryback" />
 
         <TextView
             android:id="@+id/add_list_friends"

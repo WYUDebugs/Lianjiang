@@ -1,21 +1,24 @@
 package com.example.sig.lianjiang.adapter;
 
-import android.app.Dialog;
+import android.app.Activity;
+
 import android.content.Context;
-import android.content.Intent;
-import android.view.Gravity;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
-import com.example.sig.lianjiang.activity.MemoryBookActivity;
 import com.example.sig.lianjiang.R;
+
 import com.example.sig.lianjiang.bean.CoverPictureBean;
+
+import com.example.sig.lianjiang.utils.ImageUtils;
+
+
 
 import java.util.List;
 
@@ -92,39 +95,7 @@ public class MemoryCoverListAdapter extends BaseAdapter {
     }
 
     public void clickAddCoverImage() {
-        View convertView= View.inflate(mContext, R.layout.dialogui_footer_update_pic, null);
-        final Dialog dialog=new Dialog(mContext,R.style.dialogfooter);
-        convertView.setMinimumWidth(R.dimen.width);
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
-        dialog.setContentView(convertView);
-        dialog.show();
-        ImageView imgCancel;
-        TextView tvInfo;
-        TextView tvCamera;
-        TextView tvPhoto;
-
-        imgCancel = (ImageView) convertView.findViewById(R.id.img_cancel);
-        tvInfo = (TextView) convertView.findViewById(R.id.tv_info);
-        tvCamera = (TextView) convertView.findViewById(R.id.tv_camera);
-        tvPhoto = (TextView) convertView.findViewById(R.id.tv_photo);
-        imgCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        tvCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        tvPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
+        ImageUtils.showImagePickDialog((Activity)mContext);
     }
 
     public void selectUpateCover(String url) {
@@ -142,4 +113,6 @@ public class MemoryCoverListAdapter extends BaseAdapter {
 
         }
     }
+
+
 }

@@ -43,7 +43,7 @@ public class MemoryBookStarAdapter extends TagsAdapter {
         TextView title=view.findViewById(R.id.tv_title);
         ImageView cover=view.findViewById(R.id.iv_cover);
         title.setText(mList.get(position).title);
-        Picasso.with(context).load(APPConfig.img_url + mList.get(position).cover)
+        Picasso.with(context).load(APPConfig.test_image_url + mList.get(position).cover)
                 .placeholder(R.mipmap.memory1).error(R.mipmap.memory1).into(cover);
         memoryBook.setOnClickListener(new View.OnClickListener() {
             @Override

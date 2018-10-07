@@ -26,7 +26,7 @@ public class StarryApplication extends Application{
         super.onCreate();
         applicationContext = this;
         instance = this;
-
+//        SDKInitializer.initialize(applicationContext);
         //init demo helper
         StarryHelper.getInstance().init(applicationContext);
 

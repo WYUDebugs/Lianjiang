@@ -23,6 +23,7 @@ import com.example.sig.lianjiang.activity.MemoryBookListActivity;
 import com.example.sig.lianjiang.activity.MemoryCoverUpdateActivity;
 import com.example.sig.lianjiang.activity.MemoryDeleteContactsActivity;
 import com.example.sig.lianjiang.activity.MemoryPickContactsActivity;
+import com.example.sig.lianjiang.bean.MemoryBook;
 import com.example.sig.lianjiang.bean.MemoryBookListResult;
 import com.example.sig.lianjiang.bean.MemoryBookResult;
 import com.example.sig.lianjiang.bean.MemoryFriendListResult;
@@ -49,6 +50,10 @@ public class MemoryBookListAdapter extends RecyclerView.Adapter<MemoryBookListAd
     public static final int TYPE_NORMAL = 1;
     public static final int KEY_MEMOYID = -2018926;
     public static final int KEY_TITLE = -2018927;
+//    public static final int KEY_COVER = -2018106;
+//    public static final int KEY_FRIEND = -2018107;
+//    public static final int KEY_MONENT = -2018108;
+
     private MemoryBookListResult memoryBookListResult;
 
     public MemoryBookListAdapter(List<MemoryListModel> list, Context context) {
@@ -193,7 +198,7 @@ public class MemoryBookListAdapter extends RecyclerView.Adapter<MemoryBookListAd
             public void run() {
                 //post方式连接  url，post方式请求必须传参
                 //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
-                OkHttpUtils.post(APPConfig.addMemoryBook, new OkHttpUtils.ResultCallback() {
+                OkHttpUtils.post(APPConfig.addBook, new OkHttpUtils.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         Log.d("testRun", "response------" + response.toString());
@@ -206,13 +211,16 @@ public class MemoryBookListAdapter extends RecyclerView.Adapter<MemoryBookListAd
                             e.printStackTrace();
                             Log.e("wnf", "Exception------" + e.getMessage());
                         }
-                        if(memoryBookResult.getMsg().equals("success")){
+                        if(memoryBookResult.getMsg().equals("add_success")){
                             //sUser.setmName(resultDto.getData().getName());
 //                            initListData(memoryBookListResult.getData());
 //                            mAdapter.notifyDataSetChanged();
                             Log.e("zxd","添加纪念册成功");
+                            MemoryBook memoryBook=memoryBookResult.getData();
+                            String memoryBookId=Integer.toString(memoryBook.getId());
                             Toast.makeText(context,"添加纪念册成功",Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(context, MemoryBookActivity.class);
+                            intent.putExtra("memoryBookId",memoryBookId);
                             context.startActivity(intent);
                             dialog.cancel();
                         }else {
@@ -281,6 +289,7 @@ public class MemoryBookListAdapter extends RecyclerView.Adapter<MemoryBookListAd
             public void onClick(View v) {
                 dialog.cancel();
                 Intent intent = new Intent(context, MemoryCoverUpdateActivity.class);
+                intent.putExtra("memoryBookId",memoryBookId);
                 context.startActivity(intent);
             }
         });

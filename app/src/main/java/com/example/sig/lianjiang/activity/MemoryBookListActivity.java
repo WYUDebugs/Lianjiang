@@ -103,8 +103,8 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
                 finish();
                 break;
             case R.id.ll_search_memory:
-                Intent intentSearch = new Intent(MemoryBookListActivity.this, MemoryBookSearchListActivity.class);
-                startActivity(intentSearch);
+//                Intent intentSearch = new Intent(MemoryBookListActivity.this, MemoryBookSearchListActivity.class);
+//                startActivity(intentSearch);
                 break;
             case R.id.img_to_star:
                 FragmentTransaction fTransaction = fManager.beginTransaction();
@@ -191,7 +191,7 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
             public void run() {
                 //post方式连接  url，post方式请求必须传参
                 //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
-                OkHttpUtils.post(APPConfig.addMemoryBook, new OkHttpUtils.ResultCallback() {
+                OkHttpUtils.post(APPConfig.addBook, new OkHttpUtils.ResultCallback() {
                     @Override
                     public void onSuccess(Object response) {
                         Log.d("testRun", "response------" + response.toString());
@@ -204,13 +204,16 @@ public class MemoryBookListActivity extends AppCompatActivity implements View.On
                             e.printStackTrace();
                             Log.e("wnf", "Exception------" + e.getMessage());
                         }
-                        if(memoryBookResult.getMsg().equals("success")){
+                        if(memoryBookResult.getMsg().equals("add_success")){
                             //sUser.setmName(resultDto.getData().getName());
 //                            initListData(memoryBookListResult.getData());
 //                            mAdapter.notifyDataSetChanged();
                             Log.e("zxd","添加纪念册成功");
+                            MemoryBook memoryBook=memoryBookResult.getData();
+                            String memoryBookId=Integer.toString(memoryBook.getId());
                             Toast.makeText(MemoryBookListActivity.this,"添加纪念册成功",Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(MemoryBookListActivity.this, MemoryBookActivity.class);
+                            intent.putExtra("memoryBookId",memoryBookId);
                             startActivity(intent);
                             dialog.cancel();
                         }else {

@@ -326,6 +326,11 @@ public class MemoryBookListFragment extends Fragment implements View.OnClickList
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getMemoryBookListPost(EMClient.getInstance().getCurrentUser());
+    }
 
 
 }

@@ -23,6 +23,7 @@ import com.example.sig.lianjiang.bean.MemoryFriend;
 import com.example.sig.lianjiang.bean.MemoryFriendListResult;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
+import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
@@ -51,7 +52,7 @@ public class MemoryDeleteContactsActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         theme();
-        setContentView(R.layout.activity_group_pick_contacts);
+        setContentView(R.layout.activity_memory_delete_contacts);
 
         memoryBookId = getIntent().getStringExtra("memoryBookId");
         Log.e("zxd","活动"+memoryBookId);
@@ -70,7 +71,7 @@ public class MemoryDeleteContactsActivity extends BaseActivity{
                 if(data!=null){
                     for(int i=0;i<data.size();i++){
                         MemoryFriend memoryFriend=data.get(i);
-                        if(user.getUsername().equals(memoryFriend.getFriendId())){
+                        if(user.getUsername().equals(Integer.toString(memoryFriend.getFriendId()))){
                             alluserList.add(user);
                         }
                     }
@@ -117,6 +118,7 @@ public class MemoryDeleteContactsActivity extends BaseActivity{
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
     }
     /**
      * save selected members
@@ -128,9 +130,9 @@ public class MemoryDeleteContactsActivity extends BaseActivity{
         flag=false;
         for (int i=0;i<var.size();i++){
             Log.e("zxd111","选择的人"+var.get(i));
-            deleteMemoryBookFriencPost(var.get(i));
+            deleteMemoryBookFriencPost(var.get(i),memoryBookId);
         }
-        if(flag==true){
+        if(flag==false){
             Toast.makeText(MemoryDeleteContactsActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(MemoryDeleteContactsActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
@@ -265,12 +267,13 @@ public class MemoryDeleteContactsActivity extends BaseActivity{
         }).start();
     }
 
-    public void deleteMemoryBookFriencPost(final String id) {
+    public void deleteMemoryBookFriencPost(final String friendId,final String memoryBookId) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", id);
-        list.add(idParam);
-
+        OkHttpUtils.Param fIdParam = new OkHttpUtils.Param("fId", friendId);
+        OkHttpUtils.Param bIdParam = new OkHttpUtils.Param("bId", memoryBookId);
+        list.add(fIdParam);
+        list.add(bIdParam);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -289,7 +292,7 @@ public class MemoryDeleteContactsActivity extends BaseActivity{
                             e.printStackTrace();
                             Log.e("wnf", "Exception------" + e.getMessage());
                         }
-                        if(memoryFriendListResult.getMsg().equals("deleteMemoryFriend_success")){
+                        if(memoryFriendListResult.getMsg().equals("delete_success")){
                             //sUser.setmName(resultDto.getData().getName());
 //                            initListData(memoryBookListResult.getData());
 //                            mAdapter.notifyDataSetChanged();

@@ -28,14 +28,23 @@ import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryNineGridAdapter;
 import com.example.sig.lianjiang.adapter.Message;
 import com.example.sig.lianjiang.adapter.MessageAdapter;
+import com.example.sig.lianjiang.bean.MemoryBookListResult;
+import com.example.sig.lianjiang.bean.MomentComment;
+import com.example.sig.lianjiang.bean.MomentImage;
+import com.example.sig.lianjiang.bean.MomentResult;
+import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.fragment.MessageFragment;
+import com.example.sig.lianjiang.model.MomentInfoModel;
 import com.example.sig.lianjiang.model.NineGridTestModel;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
 import com.example.sig.lianjiang.view.CircleImageView;
 import com.example.sig.lianjiang.view.MyListView;
+import com.example.sig.lianjiang.view.NineGridTestLayout;
 import com.example.sig.lianjiang.view.ObservableListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -50,8 +59,11 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
     private Button btSendComment;
 
     private ViewFlipper viewFlipper;
-    private List<String> mListData = new ArrayList<>();
-
+    private List<MomentInfoModel> mListData = new ArrayList<>();
+    private MomentResult momentResult;
+    private TextView tv_conent;
+    private NineGridTestLayout nineGridTestLayout;
+    private String momentId;
     //private View convertView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +78,19 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
         }
         StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
         setContentView(R.layout.activity_moment_info);
-        initData();
+        momentId=getIntent().getStringExtra("momentId");
+
+//        initData();
         initView();
         MyThread mt = new MyThread() ;	// 实例化Runnable子类对象
         new Thread(mt).start() ;
+        getMomentPost(momentId);
     }
 
-    public void initData() {
-        for (int i = 0; i < 1; i++) {
-            mListData.add("你真是个小机灵鬼" + i);
-        }
+    public void initListData(List<MomentComment> data) {
+//        for (int i = 0; i < 1; i++) {
+//            mListData.add("你真是个小机灵鬼" + i);
+//        }
     }
 
     public void initView() {
@@ -90,6 +105,8 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
         back.setOnClickListener(this);
         imgInfoSetting.setOnClickListener(this);
         viewFlipper = (ViewFlipper) findViewById(R.id.filpper);
+        tv_conent=(TextView)findViewById(R.id.tv_conent);
+        nineGridTestLayout=(NineGridTestLayout)findViewById(R.id.layout_nine_grid);
         updateView();
 
     }
@@ -110,13 +127,19 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
             ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
             TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
 
-            tvComment1.setText(mListData.get(i));
+            tvComment1.setText(mListData.get(i).conent);
+            Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
+                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
             i++;
             if (i < listSize) {
-                tvComment2.setText(mListData.get(i));
+                tvComment2.setText(mListData.get(i).conent);
+                Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
+                        .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
                 i++;
                 if (i < listSize) {
-                    tvComment3.setText(mListData.get(i));
+                    tvComment3.setText(mListData.get(i).conent);
+                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
+                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon3);
                 } else {
                     llThree.setVisibility(View.GONE);
                 }
@@ -131,6 +154,9 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void updateConvertView(int listSize) {
+        if(listSize==0){
+            return;
+        }
         //增加一条数据，计算以前数据的数目是否是3的倍数，如果是3的倍数则新增一个view，若不是移除最后一个view，更新最后一个view
         if (listSize % 3 == 0) {
             View convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_moment_comment, null);
@@ -144,7 +170,9 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
             ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
             TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
 
-            tvComment1.setText(mListData.get(listSize));
+            tvComment1.setText(mListData.get(listSize).conent);
+            Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize).head)
+                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
             llTwo.setVisibility(View.GONE);
             llThree.setVisibility(View.GONE);
             viewFlipper.addView(convertView);
@@ -163,12 +191,20 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
             ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
             TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
             if (lastNum > 0) {
-                tvComment1.setText(mListData.get(listSize - lastNum));
+                tvComment1.setText(mListData.get(listSize - lastNum).conent);
+                Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize - lastNum).head)
+                        .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
                 if (lastNum > 1) {
-                    tvComment2.setText(mListData.get(listSize - lastNum + 1));
-                    tvComment3.setText(mListData.get(listSize));
+                    tvComment2.setText(mListData.get(listSize - lastNum + 1).conent);
+                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize - lastNum + 1).head)
+                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
+                    tvComment3.setText(mListData.get(listSize).conent);
+                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize).head)
+                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon3);
                 } else {
-                    tvComment2.setText(mListData.get(listSize));
+                    tvComment2.setText(mListData.get(listSize).conent);
+                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize).head)
+                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
                     llThree.setVisibility(View.GONE);
                 }
             }
@@ -195,7 +231,7 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
                     Toast.makeText(MomentInfoActivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                 } else {
                     int listSize = mListData.size();
-                    mListData.add(str);
+//                    mListData.add(str);
                     updateConvertView(listSize);
                     etMomentComment.setText("");
                 }
@@ -288,7 +324,7 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
             int j = 0;
             while (true) {
                 int listSize = mListData.size();
-                mListData.add("你真是个小机灵鬼。线程" + j);
+//                mListData.add("你真是个小机灵鬼。线程" + j);
                 j++;
                 updateConvertView(listSize);
                 try {
@@ -313,4 +349,55 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
         }
 
     };
+
+    public void getMomentPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("mId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.ShowOneMoment, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            momentResult = OkHttpUtils.getObjectFromJson(response.toString(), MomentResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            momentResult = MomentResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(momentResult.getMsg().equals("success")){
+                            tv_conent.setText(momentResult.getData().getContent());
+                            Log.d("zxd111",momentResult.getData().getContent());
+                            nineGridTestLayout.setIsShowAll(false);
+                            List<String> urlList=new ArrayList<String>();
+                            for(int i=0;i<momentResult.getData().getImageList().size();i++){
+                                MomentImage momentImage=momentResult.getData().getImageList().get(i);
+                                urlList.add(APPConfig.test_image_url+momentImage.getPath());
+                                Log.d("zxd111",APPConfig.test_image_url+momentImage.getPath());
+                            }
+                            nineGridTestLayout.setUrlList(urlList);
+                        }else {
+                            Log.e("zxd","获取片段失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
 }

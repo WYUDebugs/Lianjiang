@@ -140,4 +140,10 @@ public class MemoryBookListStarFragment extends Fragment implements TagCloudView
         }).start();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getMemoryBookListPost(EMClient.getInstance().getCurrentUser());
+    }
+
 }
