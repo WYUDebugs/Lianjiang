@@ -86,6 +86,7 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
     private TextView momentNum;
     private TextView title;
     private TextView name;
+    private ImageView editName;
     private MemoryBookListResult memoryBookListResult;
 
 
@@ -160,7 +161,7 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
             for (int j = 0; j < moment.getImageList().size(); j++) {
                 String publishImage=moment.getImageList().get(j).getPath();
                 if(publishImage!=null){
-                    urlList.add(APPConfig.test_image_url+publishImage);
+                    urlList.add(APPConfig.img_url+publishImage);
                 }
             }
             String momentId=Integer.toString(moment.getId());
@@ -184,6 +185,13 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
         momentNum=(TextView) headerView.findViewById(R.id.tv_memory_moment_num);
         title=(TextView) headerView.findViewById(R.id.tv_title);
         name=(TextView) headerView.findViewById(R.id.tv_name);
+        editName=(ImageView)headerView.findViewById(R.id.img_memory_name_update) ;
+        editName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateMemoryName();
+            }
+        });
         getMomentBookPost(momtent,cover,title,head,name,time,friendNum,momentNum);
         // 脚部
         footerView = LayoutInflater.from(MemoryBookActivity.this).inflate(R.layout.footer_view, null);
@@ -197,7 +205,7 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
         mRecyclerView.setScaleRatio(1.7f);
 //            // 设置下拉时拉伸的图片，不设置就使用默认的
         mRecyclerView.setHeaderImage((ImageView) headerView.findViewById(R.id.img_memory_cover_update));
-        mRecyclerView.addFootView(footerView);
+//        mRecyclerView.addFootView(footerView);
         // 设置刷新动画的颜色
         mRecyclerView.setColor(Color.argb((int) 255, 56,207,176), Color.argb((int) 255, 57, 58, 62));
         // 设置头部恢复动画的执行时间，默认500毫秒
@@ -362,6 +370,7 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 //Toast.makeText(MemoryBookActivity.this, "退出", Toast.LENGTH_SHORT).show();
+                deleteMemoryBook(momtent);
                 dialog1.cancel();
             }
         });
@@ -489,7 +498,7 @@ public class MemoryBookActivity extends AppCompatActivity implements View.OnClic
                         if(memoryBookResult.getMsg().equals("success")){
                             //sUser.setmName(resultDto.getData().getName());
                             MemoryBook memoryBook=memoryBookResult.getData();
-                            Picasso.with(MemoryBookActivity.this).load(APPConfig.test_image_url + memoryBook.getCover())
+                            Picasso.with(MemoryBookActivity.this).load(APPConfig.img_url + memoryBook.getCover())
                                     .placeholder(R.mipmap.memory1).error(R.mipmap.memory1).into(cover);
                             Picasso.with(MemoryBookActivity.this).load(APPConfig.img_url + memoryBook.getUser().getHeadimage())
                                     .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);

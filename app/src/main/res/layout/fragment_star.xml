@@ -130,7 +130,7 @@
                         android:layout_below="@id/motto">
                         <LinearLayout
                             android:orientation="vertical"
-                            android:id="@+id/llPic1"
+                            android:id="@+id/llInfo"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
@@ -145,7 +145,7 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
-                                android:src="@mipmap/gold1"/>
+                                android:src="@drawable/my_base_data_icon"/>
                             <TextView
                                 android:textSize="12dp"
                                 android:layout_gravity="center"
@@ -153,11 +153,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="我的收藏" />
+                                android:text="基本信息" />
                         </LinearLayout>
                         <LinearLayout
                             android:orientation="vertical"
-                            android:id="@+id/llPic2"
+                            android:id="@+id/ll_book"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
@@ -172,7 +172,7 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
-                                android:src="@mipmap/gold2"/>
+                                android:src="@drawable/memory_icon"/>
                             <TextView
                                 android:textSize="12dp"
                                 android:layout_gravity="center"
@@ -180,11 +180,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="我的评论" />
+                                android:text="我的相册" />
                         </LinearLayout>
                         <LinearLayout
                             android:orientation="vertical"
-                            android:id="@+id/llPic3"
+                            android:id="@+id/ll_square"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
@@ -199,7 +199,7 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
-                                android:src="@mipmap/gold3"/>
+                                android:src="@mipmap/square"/>
                             <TextView
                                 android:textSize="12dp"
                                 android:layout_gravity="center"
@@ -207,11 +207,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="动态萌新" />
+                                android:text="我的动态" />
                         </LinearLayout>
                         <LinearLayout
                             android:orientation="vertical"
-                            android:id="@+id/llPic4"
+                            android:id="@+id/ll_user"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
@@ -226,7 +226,7 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
-                                android:src="@mipmap/gold4"/>
+                                android:src="@mipmap/myhome"/>
                             <TextView
                                 android:textSize="12dp"
                                 android:layout_gravity="center"
@@ -234,7 +234,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="沉默是金" />
+                                android:text="我的主页" />
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
@@ -251,21 +251,20 @@
                 <LinearLayout
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:id="@+id/llInfo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
                     <ImageView
                         android:layout_width="33dp"
                         android:layout_height="33dp"
-                        android:src="@drawable/my_base_data_icon"
+                        android:src="@mipmap/icon_comment"
                         android:scaleType="fitXY" />
                     <TextView
                         android:textSize="12dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="修改信息" />
+                        android:text="我的评论" />
                 </LinearLayout>
                 <LinearLayout
                     android:gravity="center"
@@ -277,7 +276,7 @@
                     <ImageView
                         android:layout_width="33dp"
                         android:layout_height="33dp"
-                        android:src="@drawable/memory_icon"
+                        android:src="@mipmap/icon_like"
                         android:scaleType="fitXY" />
                     <TextView
                         android:textSize="12dp"
@@ -285,7 +284,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="我的相册" />
+                        android:text="我的点赞" />
                 </LinearLayout>
                 <LinearLayout
                     android:gravity="center"
@@ -304,7 +303,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="我的星球" />
+                        android:text="我的收藏" />
                 </LinearLayout>
                 <LinearLayout
                     android:gravity="center"
@@ -316,14 +315,14 @@
                     <ImageView
                         android:layout_width="33dp"
                         android:layout_height="33dp"
-                        android:src="@mipmap/square"
+                        android:src="@mipmap/vip"
                         android:scaleType="fitXY" />
                     <TextView
                         android:textSize="12dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="我的帖子" />
+                        android:text="会员中心" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -496,6 +495,23 @@
                     android:layout_height="12dp">
                     <include layout="@layout/line_gray" />
                 </LinearLayout>
+                <!--<LinearLayout-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:id="@+id/ll_logout"-->
+                    <!--android:background="@android:color/holo_red_light"-->
+                    <!--android:paddingLeft="8dp"-->
+                    <!--android:paddingRight="5dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="50dp">-->
+                    <!--<TextView-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textColor="@color/white"-->
+                        <!--android:text="退出登录"-->
+                         <!--/>-->
+                <!--</LinearLayout>-->
             </LinearLayout>
 
         </LinearLayout>

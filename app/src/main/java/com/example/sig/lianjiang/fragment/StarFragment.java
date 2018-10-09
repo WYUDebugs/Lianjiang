@@ -1,5 +1,6 @@
 package com.example.sig.lianjiang.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,8 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.StarryHelper;
 import com.example.sig.lianjiang.activity.ChangePswActivity;
 import com.example.sig.lianjiang.activity.EditUserProfileActivity;
+import com.example.sig.lianjiang.activity.LoginActivitysteup1;
+import com.example.sig.lianjiang.activity.MainActivity;
+import com.example.sig.lianjiang.activity.MemoryBookListActivity;
+import com.example.sig.lianjiang.activity.SquareActivity;
 import com.example.sig.lianjiang.activity.UserProfileActivity;
 import com.example.sig.lianjiang.adapter.CursorTagsAdapter;
 import com.example.sig.lianjiang.bean.UserResultDto;
@@ -35,6 +41,7 @@ import com.example.sig.lianjiang.utils.ImageUtils;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.view.ObservableScrollView;
 import com.example.sig.lianjiang.view.SecurityCodeView;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.moxun.tagcloudlib.view.TagCloudView;
 import com.squareup.picasso.Picasso;
@@ -79,7 +86,11 @@ public class StarFragment extends Fragment implements View.OnClickListener, Obse
     private TextView dizi;
     private ImageView sex;
     private LinearLayout llInfo;
+    private LinearLayout llBook;
+    private LinearLayout llSquare;
+    private LinearLayout llUser;
     private String name;
+    private LinearLayout logout;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,6 +115,14 @@ public class StarFragment extends Fragment implements View.OnClickListener, Obse
         date=view.findViewById(R.id.date);
         llInfo=(LinearLayout)view.findViewById(R.id.llInfo);
         llInfo.setOnClickListener(this);
+        llBook=(LinearLayout)view.findViewById(R.id.ll_book);
+        llBook.setOnClickListener(this);
+        llSquare=(LinearLayout)view.findViewById(R.id.ll_square);
+        llSquare.setOnClickListener(this);
+        llUser=(LinearLayout)view.findViewById(R.id.ll_user);
+        llUser.setOnClickListener(this);
+//        logout=(LinearLayout)view.findViewById(R.id.ll_logout);
+//        logout.setOnClickListener(this);
         getHead();
     }
 
@@ -111,12 +130,29 @@ public class StarFragment extends Fragment implements View.OnClickListener, Obse
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.head:
-                ImageUtils.showImagePickDialog(getActivity(), "修改头像");
+//                ImageUtils.showImagePickDialog(getActivity(), "修改头像");
                 break;
             case R.id.llInfo:
                 Intent intent=new Intent(getContext(),EditUserProfileActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.ll_book:
+                Intent intent1=new Intent(getContext(),MemoryBookListActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.ll_square:
+//                Intent intent2=new Intent(getContext(),SquareActivity.class);
+//                startActivity(intent2);
+                Toast.makeText(getContext(),"开发中",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.ll_user:
+                Intent intent3=new Intent(getContext(),UserProfileActivity.class);
+                intent3.putExtra("username",EMClient.getInstance().getCurrentUser());
+                startActivity(intent3);
+                break;
+//            case R.id.ll_logout:
+//                logout();
+//                break;
 
 
         }
@@ -321,7 +357,46 @@ public class StarFragment extends Fragment implements View.OnClickListener, Obse
 
         }).start();
     }
+    private void logout() {
+        final ProgressDialog pd = new ProgressDialog(getActivity());
+        String st = getResources().getString(R.string.Are_logged_out);
+        pd.setMessage(st);
+        pd.setCanceledOnTouchOutside(false);
+        pd.show();
+        StarryHelper.getInstance().logout(true,new EMCallBack() {
 
+            @Override
+            public void onSuccess() {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        pd.dismiss();
+                        // show login screen
+                        ((MainActivity) getActivity()).finish();
+                        startActivity(new Intent(getActivity(), LoginActivitysteup1.class));
+
+                    }
+                });
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), "退出登录失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
     public void getHead() {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();

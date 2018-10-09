@@ -115,7 +115,7 @@ public class MemoryBookListAdapter extends RecyclerView.Adapter<MemoryBookListAd
         if(position>0){
 //            holder.tvMemoryTitle.setText(list.get(position));
             MemoryListModel memoryListModel=list.get(position-1);
-            Picasso.with(context).load(APPConfig.test_image_url + memoryListModel.cover)
+            Picasso.with(context).load(APPConfig.img_url + memoryListModel.cover)
                     .placeholder(R.mipmap.memory1).error(R.mipmap.memory1).into(holder.imgCover);
             holder.tvMemoryTitle.setText(memoryListModel.title);
             holder.tvMemoryPersionNum.setText(Integer.toString(memoryListModel.friendCount));

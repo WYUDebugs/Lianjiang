@@ -95,7 +95,7 @@ public class MenuLeftFragment extends MenuFragment implements View.OnClickListen
     public void onDestroy() {
         super.onDestroy();
     }
-    void logout() {
+    private void logout() {
         final ProgressDialog pd = new ProgressDialog(getActivity());
         String st = getResources().getString(R.string.Are_logged_out);
         pd.setMessage(st);
@@ -129,7 +129,7 @@ public class MenuLeftFragment extends MenuFragment implements View.OnClickListen
                     public void run() {
                         // TODO Auto-generated method stub
                         pd.dismiss();
-                        Toast.makeText(getActivity(), "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "退出登录失败", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

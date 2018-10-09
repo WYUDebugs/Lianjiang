@@ -1,6 +1,8 @@
 package com.example.sig.lianjiang.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.StarryHelper;
+import com.example.sig.lianjiang.activity.ChatActivity;
 import com.example.sig.lianjiang.activity.UserProfileActivity;
 import com.example.sig.lianjiang.bean.ResultDto;
 import com.example.sig.lianjiang.bean.UserResultDto;
@@ -23,6 +27,7 @@ import com.example.sig.lianjiang.view.NineGridTestLayout;
 import com.example.sig.lianjiang.view.TimeLineMarker;
 import com.flyco.roundview.RoundTextView;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,6 +50,8 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
     private List<TimeLineModel> list;
     private UserResultDto resultDto;
     private ResultDto resultDto1;
+    private String userId;
+    private ProgressDialog progressDialog;
     public TimeLineAdapter(List<TimeLineModel> list,Context context) {
         this.list = list;
         this.context = context;
@@ -58,13 +65,25 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
         if(mHeaderView!=null&&viewType == TYPE_HEADER){
             View inflate = inflater.inflate(R.layout.userprofile_head, parent, false);
             CircleImageView head=inflate.findViewById(R.id.avatar);
-            TextView name=inflate.findViewById(R.id.nickname);
+            final TextView name=inflate.findViewById(R.id.nickname);
             ImageView sex=inflate.findViewById(R.id.sex);
             TextView sig=inflate.findViewById(R.id.signature);
             TextView square=inflate.findViewById(R.id.square);
             TextView memory=inflate.findViewById(R.id.memory);
             RoundTextView sendMsg=inflate.findViewById(R.id.attention);
+            sendMsg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, ChatActivity.class).putExtra("userId", userId));
+                }
+            });
             RoundTextView addFriend=inflate.findViewById(R.id.addFriend);
+            addFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addContact(userId,name);
+                }
+            });
             getUser(head,name,sex,sig);
             getSquareNum(square);
             getMemoryBookNum(memory);
@@ -88,13 +107,14 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
             }
             holder.layout.setIsShowAll(false);
             holder.layout.setUrlList(timeLineModel.urlList);
-            if(beforeToday(timeLineModel.time)){
-                holder.time.setText(stampToDate(timeLineModel.time,"yyyy-MM-dd"));
-                Log.d("shijian",stampToDate(timeLineModel.time,"yyyy-MM-dd HH:mm:ss"));
-            }else{
-                holder.time.setText(stampToDate(timeLineModel.time,"HH:mm"));
-                Log.d("shijian",stampToDate(timeLineModel.time,"yyyy-MM-dd HH:mm:ss"));
-            }
+            holder.time.setText(stampToDate(timeLineModel.time,"yyyy-MM-dd"));
+//            if(beforeToday(timeLineModel.time)){
+//                holder.time.setText(stampToDate(timeLineModel.time,"yyyy-MM-dd"));
+//                Log.d("shijian",stampToDate(timeLineModel.time,"yyyy-MM-dd HH:mm:ss"));
+//            }else{
+//                holder.time.setText(stampToDate(timeLineModel.time,"HH:mm"));
+//                Log.d("shijian",stampToDate(timeLineModel.time,"yyyy-MM-dd HH:mm:ss"));
+//            }
             if(timeLineModel.flag){
                 holder.delete.setVisibility(View.VISIBLE);
             }else {
@@ -135,7 +155,9 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
         return list.size()+1;
     }
 
-
+    public void setUserId(String userId){
+        this.userId=userId;
+    }
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView content;
         TextView delete;
@@ -154,10 +176,51 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
 
     }
 
+    public void addContact(final String id,final TextView name){
+        if(EMClient.getInstance().getCurrentUser().equals(id)){
+            new EaseAlertDialog(context, R.string.not_add_myself).show();
+            return;
+        }
+
+        if(StarryHelper.getInstance().getContactList().containsKey(id)){
+            //let the user know the contact already in your contact list
+            if(EMClient.getInstance().contactManager().getBlackListUsernames().contains(name.getText().toString())){
+                new EaseAlertDialog(context, R.string.user_already_in_contactlist).show();
+                return;
+            }
+            new EaseAlertDialog(context, R.string.This_user_is_already_your_friend).show();
+            return;
+        }
+
+        progressDialog = new ProgressDialog(context);
+        String stri = context.getResources().getString(R.string.Is_sending_a_request);
+        progressDialog.setMessage(stri);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                try {
+                    //demo use a hardcode reason here, you need let user to input if you like
+                    String s = context.getResources().getString(R.string.Add_a_friend);
+                    EMClient.getInstance().contactManager().addContact(id, s);
+                    progressDialog.dismiss();
+                    String s1 = context.getResources().getString(R.string.send_successful);
+                    Toast.makeText(context, s1, Toast.LENGTH_LONG).show();
+                } catch (final Exception e) {
+                    progressDialog.dismiss();
+                    String s2 = context.getResources().getString(R.string.Request_add_buddy_failure);
+                    Toast.makeText(context, s2 + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }).start();
+    }
+
     public void getUser(final CircleImageView head, final TextView name,final ImageView sex,final TextView sig) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", EMClient.getInstance().getCurrentUser());
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", userId);
         list.add(idParam);
 
         new Thread(new Runnable() {
@@ -229,7 +292,9 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
                             Log.e("wnf", "Exception------" + e.getMessage());
                         }
                         if(resultDto1.getData()!=null){
-                            square.setText("动态 "+resultDto1.getData().toString());
+                            String number=resultDto1.getData().toString();
+                            String intNumber = number.substring(0,number.indexOf("."));
+                            square.setText("动态 "+intNumber);
                         }else {
 
                         }
@@ -271,7 +336,9 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
                             Log.e("wnf", "Exception------" + e.getMessage());
                         }
                         if(resultDto1.getData()!=null){
-                            memoryBook.setText("相册 "+resultDto1.getData().toString());
+                            String number=resultDto1.getData().toString();
+                            String intNumber = number.substring(0,number.indexOf("."));
+                            memoryBook.setText("相册 "+intNumber);
                         }else {
 
                         }

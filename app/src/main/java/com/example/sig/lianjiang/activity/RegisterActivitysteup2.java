@@ -79,17 +79,6 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
     public void register(final String id,final String passWord) {
         final String userId = id;
         final String pwd = passWord;
-        if (TextUtils.isEmpty(pwd)) {
-            Toast.makeText(this, getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
-            passwordEditText.requestFocus();
-            return;
-        }else {
-            boolean flag=judgNewPsw(pwd);
-            if (flag == false) {
-                Toast.makeText(this, "请按照要求填写密码", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
         if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pwd)) {
             final ProgressDialog pd = new ProgressDialog(this);
             pd.setMessage(getResources().getString(R.string.Is_the_registered));
@@ -146,6 +135,17 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
             Toast.makeText(getApplicationContext(), "名字过长", Toast.LENGTH_SHORT).show();
         }else if(TextUtils.isEmpty(name)){
             Toast.makeText(getApplicationContext(), "名字不能为空", Toast.LENGTH_SHORT).show();
+        }
+        if (TextUtils.isEmpty(passWord)) {
+            Toast.makeText(this, getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
+            passwordEditText.requestFocus();
+            return;
+        }else {
+            boolean flag=judgNewPsw(passWord);
+            if (flag == false) {
+                Toast.makeText(this, "请按照要求填写密码", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
@@ -286,7 +286,7 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
                         //UserListResultDto resultDto=OkHttpUtils.getObjectFromJson(response.toString(),UserListResultDto.class);
                         Log.d("wnf", "*********************************************************************");
                         Log.d("wnf", "********************resultDto:" + resultDto);
-                        Toast.makeText(RegisterActivitysteup2.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(RegisterActivitysteup2.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

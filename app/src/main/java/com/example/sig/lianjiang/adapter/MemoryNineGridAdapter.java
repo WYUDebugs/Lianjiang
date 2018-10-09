@@ -177,7 +177,8 @@ public class MemoryNineGridAdapter extends RecyclerView.Adapter<MemoryNineGridAd
         holder.head.setTag(KEY_NAMEID,mList.get(position).userId);
         holder.name.setTag(KEY_NAMEID,mList.get(position).userId);
         holder.lv_moment.setTag(KEY_MOMENTID,mList.get(position).momentId);
-        Picasso.with(mContext).load(APPConfig.test_image_url + mList.get(position).head)
+        holder.lv_moment.setTag(KEY_NAMEID,mList.get(position).userId);
+        Picasso.with(mContext).load(APPConfig.img_url + mList.get(position).head)
                 .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(holder.head);
 
     }
@@ -226,6 +227,7 @@ public class MemoryNineGridAdapter extends RecyclerView.Adapter<MemoryNineGridAd
                 public void onClick(View view) {
                     Intent intent=new Intent(mContext, MomentInfoActivity.class);
                     intent.putExtra("momentId",view.getTag(KEY_MOMENTID).toString());
+                    intent.putExtra("userId",view.getTag(KEY_NAMEID).toString());
                     mContext.startActivity(intent);
                 }
             });

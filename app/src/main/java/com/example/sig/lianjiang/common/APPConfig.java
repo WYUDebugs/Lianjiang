@@ -62,20 +62,40 @@ public class APPConfig {
     public static String getGoodList=server_url+"good/showPraiseMans";
 
 
-    public static String findMemoryListByUserId=test_url+"memoryBook/findMemoryListByUserId";
-    public static String addBook=test_url+"memoryBook/addBook";
-    public static String findMemoryFriend=test_url+"memoryFriend/findMemoryFriend";
-    public static String addMemoryFriend=test_url+"memoryFriend/addMemoryFriend";
-    public static String sendMoment=test_url+"moment/sendMoment";
-    public static String momentList=test_url+"moment/momentList";
-    public static String deleteMemoryFriend=test_url+"memoryFriend/deleteMemoryFriend";
-    public static String changeMemoryBookTitle=test_url+"memoryBook/changeMemoryBookTitle";
-    public static String deleteMemoryBook=test_url+"memoryBook/deleteMemoryBook";
-    public static String publishNum=test_url+"publish/publishNum";
-    public static String bookNum=test_url+"memoryBook/bookNum";
-    public static String findBookDetailed=test_url+"memoryBook/findBookDetailed";
-    public static String changeMemoryBookCover=test_url+"memoryBook/changeMemoryBookCover";
-    public static String ShowOneMoment=test_url+"moment/ShowOneMoment";
+//    public static String findMemoryListByUserId=test_url+"memoryBook/findMemoryListByUserId";
+//    public static String addBook=test_url+"memoryBook/addBook";
+//    public static String findMemoryFriend=test_url+"memoryFriend/findMemoryFriend";
+//    public static String addMemoryFriend=test_url+"memoryFriend/addMemoryFriend";
+//    public static String sendMoment=test_url+"moment/sendMoment";
+//    public static String momentList=test_url+"moment/momentList";
+//    public static String deleteMemoryFriend=test_url+"memoryFriend/deleteMemoryFriend";
+//    public static String changeMemoryBookTitle=test_url+"memoryBook/changeMemoryBookTitle";
+//    public static String deleteMemoryBook=test_url+"memoryBook/deleteMemoryBook";
+//    public static String publishNum=test_url+"publish/publishNum";
+//    public static String bookNum=test_url+"memoryBook/bookNum";
+//    public static String findBookDetailed=test_url+"memoryBook/findBookDetailed";
+//    public static String changeMemoryBookCover=test_url+"memoryBook/changeMemoryBookCover";
+//    public static String ShowOneMoment=test_url+"moment/ShowOneMoment";
+//    public static String showMComments=test_url+"mComment/showMComments";
+//    public static String addMomentComment=test_url+"mComment/addComment";
+
+    public static String findMemoryListByUserId=server_url+"memoryBook/findMemoryListByUserId";
+    public static String addBook=server_url+"memoryBook/addBook";
+    public static String findMemoryFriend=server_url+"memoryFriend/findMemoryFriend";
+    public static String addMemoryFriend=server_url+"memoryFriend/addMemoryFriend";
+    public static String sendMoment=server_url+"moment/sendMoment";
+    public static String momentList=server_url+"moment/momentList";
+    public static String deleteMemoryFriend=server_url+"memoryFriend/deleteMemoryFriend";
+    public static String changeMemoryBookTitle=server_url+"memoryBook/changeMemoryBookTitle";
+    public static String deleteMemoryBook=server_url+"memoryBook/deleteMemoryBook";
+    public static String publishNum=server_url+"publish/publishNum";
+    public static String bookNum=server_url+"memoryBook/bookNum";
+    public static String findBookDetailed=server_url+"memoryBook/findBookDetailed";
+    public static String changeMemoryBookCover=server_url+"memoryBook/changeMemoryBookCover";
+    public static String ShowOneMoment=server_url+"moment/ShowOneMoment";
+    public static String showMComments=server_url+"mComment/showMComments";
+    public static String addMomentComment=server_url+"mComment/addComment";
+    public static String deleteMoment=server_url+"moment/deleteMoment";
 
 
 }

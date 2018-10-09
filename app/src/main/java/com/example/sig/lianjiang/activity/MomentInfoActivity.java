@@ -30,8 +30,10 @@ import com.example.sig.lianjiang.adapter.Message;
 import com.example.sig.lianjiang.adapter.MessageAdapter;
 import com.example.sig.lianjiang.bean.MemoryBookListResult;
 import com.example.sig.lianjiang.bean.MomentComment;
+import com.example.sig.lianjiang.bean.MomentCommentListResult;
 import com.example.sig.lianjiang.bean.MomentImage;
 import com.example.sig.lianjiang.bean.MomentResult;
+import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.fragment.MessageFragment;
 import com.example.sig.lianjiang.model.MomentInfoModel;
@@ -42,6 +44,7 @@ import com.example.sig.lianjiang.view.CircleImageView;
 import com.example.sig.lianjiang.view.MyListView;
 import com.example.sig.lianjiang.view.NineGridTestLayout;
 import com.example.sig.lianjiang.view.ObservableListView;
+import com.hyphenate.chat.EMClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
@@ -64,6 +67,13 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
     private TextView tv_conent;
     private NineGridTestLayout nineGridTestLayout;
     private String momentId;
+    private MomentCommentListResult momentCommentListResult;
+    private String userId;
+    private UserResultDto resultDto;
+    private ImageView head;
+    private TextView name;
+    private TextView stime;
+    private TextView ctime;
     //private View convertView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,18 +89,24 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
         StatusBarUtil.StatusBarLightMode(this);  //把标题栏字体变黑色
         setContentView(R.layout.activity_moment_info);
         momentId=getIntent().getStringExtra("momentId");
+        userId=getIntent().getStringExtra("userId");
 
 //        initData();
         initView();
-        MyThread mt = new MyThread() ;	// 实例化Runnable子类对象
-        new Thread(mt).start() ;
+//        MyThread mt = new MyThread() ;	// 实例化Runnable子类对象
+//        new Thread(mt).start() ;
         getMomentPost(momentId);
+//        getMomentCommentPost(momentId);
     }
 
     public void initListData(List<MomentComment> data) {
-//        for (int i = 0; i < 1; i++) {
-//            mListData.add("你真是个小机灵鬼" + i);
-//        }
+        for(int i=0;i<data.size();i++){
+            String head=data.get(i).getUser().getHeadimage();
+            String conent=data.get(i).getCommentContent();
+            MomentInfoModel momentInfoModel=new MomentInfoModel(head,conent);
+            mListData.add(momentInfoModel);
+        }
+//        updateView();
     }
 
     public void initView() {
@@ -107,111 +123,117 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
         viewFlipper = (ViewFlipper) findViewById(R.id.filpper);
         tv_conent=(TextView)findViewById(R.id.tv_conent);
         nineGridTestLayout=(NineGridTestLayout)findViewById(R.id.layout_nine_grid);
-        updateView();
+        head=(ImageView)findViewById(R.id.iv_head);
+        name=(TextView)findViewById(R.id.tv_name);
+        ctime=(TextView)findViewById(R.id.tv_ctime);
+        stime=(TextView)findViewById(R.id.tv_stime);
+//        updateView();
 
     }
 
-    public void updateView() {
-        int listSize = mListData.size();
-        for (int i = 0; i < listSize; i++) {
-            View convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_moment_comment, null);
-            LinearLayout llOne = (LinearLayout) convertView.findViewById(R.id.ll_one);
-            ImageView imgHeadicon1 = (ImageView) convertView.findViewById(R.id.img_headicon1);
-            TextView tvComment1 = (TextView) convertView.findViewById(R.id.tv_comment1);
+//    public void updateView() {
+//        int listSize = mListData.size();
+//        for (int i = 0; i < listSize; i++) {
+//            View convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_moment_comment, null);
+//            LinearLayout llOne = (LinearLayout) convertView.findViewById(R.id.ll_one);
+//            ImageView imgHeadicon1 = (ImageView) convertView.findViewById(R.id.img_headicon1);
+//            TextView tvComment1 = (TextView) convertView.findViewById(R.id.tv_comment1);
+//
+//            LinearLayout llTwo = (LinearLayout) convertView.findViewById(R.id.ll_two);
+//            ImageView imgHeadicon2 = (ImageView) convertView.findViewById(R.id.img_headicon2);
+//            TextView tvComment2 = (TextView) convertView.findViewById(R.id.tv_comment2);
+//
+//            LinearLayout llThree = (LinearLayout) convertView.findViewById(R.id.ll_three);
+//            ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
+//            TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
+//
+//            tvComment1.setText(mListData.get(i).conent);
+//            Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
+//                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
+//            i++;
+//            if (i < listSize) {
+//                tvComment2.setText(mListData.get(i).conent);
+//                Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
+//                        .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
+//                i++;
+//                if (i < listSize) {
+//                    tvComment3.setText(mListData.get(i).conent);
+//                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
+//                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon3);
+//                } else {
+//                    llThree.setVisibility(View.GONE);
+//                }
+//            } else {
+//                llTwo.setVisibility(View.GONE);
+//                llThree.setVisibility(View.GONE);
+//            }
+//
+//            viewFlipper.addView(convertView);
+//        }
+//
+//    }
 
-            LinearLayout llTwo = (LinearLayout) convertView.findViewById(R.id.ll_two);
-            ImageView imgHeadicon2 = (ImageView) convertView.findViewById(R.id.img_headicon2);
-            TextView tvComment2 = (TextView) convertView.findViewById(R.id.tv_comment2);
-
-            LinearLayout llThree = (LinearLayout) convertView.findViewById(R.id.ll_three);
-            ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
-            TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
-
-            tvComment1.setText(mListData.get(i).conent);
-            Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
-                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
-            i++;
-            if (i < listSize) {
-                tvComment2.setText(mListData.get(i).conent);
-                Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
-                        .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
-                i++;
-                if (i < listSize) {
-                    tvComment3.setText(mListData.get(i).conent);
-                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(i).head)
-                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon3);
-                } else {
-                    llThree.setVisibility(View.GONE);
-                }
-            } else {
-                llTwo.setVisibility(View.GONE);
-                llThree.setVisibility(View.GONE);
-            }
-
-            viewFlipper.addView(convertView);
-        }
-
-    }
-
-    public void updateConvertView(int listSize) {
-        if(listSize==0){
-            return;
-        }
-        //增加一条数据，计算以前数据的数目是否是3的倍数，如果是3的倍数则新增一个view，若不是移除最后一个view，更新最后一个view
-        if (listSize % 3 == 0) {
-            View convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_moment_comment, null);
-            LinearLayout llOne = (LinearLayout) convertView.findViewById(R.id.ll_one);
-            ImageView imgHeadicon1 = (ImageView) convertView.findViewById(R.id.img_headicon1);
-            TextView tvComment1 = (TextView) convertView.findViewById(R.id.tv_comment1);
-            LinearLayout llTwo = (LinearLayout) convertView.findViewById(R.id.ll_two);
-            ImageView imgHeadicon2 = (ImageView) convertView.findViewById(R.id.img_headicon2);
-            TextView tvComment2 = (TextView) convertView.findViewById(R.id.tv_comment2);
-            LinearLayout llThree = (LinearLayout) convertView.findViewById(R.id.ll_three);
-            ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
-            TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
-
-            tvComment1.setText(mListData.get(listSize).conent);
-            Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize).head)
-                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
-            llTwo.setVisibility(View.GONE);
-            llThree.setVisibility(View.GONE);
-            viewFlipper.addView(convertView);
-        } else {
-            int lastNum = listSize % 3;
-            View convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_moment_comment, null);
-            LinearLayout llOne = (LinearLayout) convertView.findViewById(R.id.ll_one);
-            ImageView imgHeadicon1 = (ImageView) convertView.findViewById(R.id.img_headicon1);
-            TextView tvComment1 = (TextView) convertView.findViewById(R.id.tv_comment1);
-
-            LinearLayout llTwo = (LinearLayout) convertView.findViewById(R.id.ll_two);
-            ImageView imgHeadicon2 = (ImageView) convertView.findViewById(R.id.img_headicon2);
-            TextView tvComment2 = (TextView) convertView.findViewById(R.id.tv_comment2);
-
-            LinearLayout llThree = (LinearLayout) convertView.findViewById(R.id.ll_three);
-            ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
-            TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
-            if (lastNum > 0) {
-                tvComment1.setText(mListData.get(listSize - lastNum).conent);
-                Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize - lastNum).head)
-                        .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
-                if (lastNum > 1) {
-                    tvComment2.setText(mListData.get(listSize - lastNum + 1).conent);
-                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize - lastNum + 1).head)
-                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
-                    tvComment3.setText(mListData.get(listSize).conent);
-                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize).head)
-                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon3);
-                } else {
-                    tvComment2.setText(mListData.get(listSize).conent);
-                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize).head)
-                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
-                    llThree.setVisibility(View.GONE);
-                }
-            }
-            viewFlipper.addView(convertView);
-            viewFlipper.removeViewAt(listSize / 3);
-        }
-    }
+//    public void updateConvertView(int listSize) {
+//        if(listSize==0){
+//            return;
+//        }
+//        //增加一条数据，计算以前数据的数目是否是3的倍数，如果是3的倍数则新增一个view，若不是移除最后一个view，更新最后一个view
+//        if (listSize % 3 == 0) {
+//            View convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_moment_comment, null);
+//            LinearLayout llOne = (LinearLayout) convertView.findViewById(R.id.ll_one);
+//            ImageView imgHeadicon1 = (ImageView) convertView.findViewById(R.id.img_headicon1);
+//            TextView tvComment1 = (TextView) convertView.findViewById(R.id.tv_comment1);
+//            LinearLayout llTwo = (LinearLayout) convertView.findViewById(R.id.ll_two);
+//            ImageView imgHeadicon2 = (ImageView) convertView.findViewById(R.id.img_headicon2);
+//            TextView tvComment2 = (TextView) convertView.findViewById(R.id.tv_comment2);
+//            LinearLayout llThree = (LinearLayout) convertView.findViewById(R.id.ll_three);
+//            ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
+//            TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
+//            Log.d("zzz",Integer.toString(listSize));
+//            tvComment1.setText(mListData.get(listSize-1).conent);
+//            Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize-1).head)
+//                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
+//            llTwo.setVisibility(View.GONE);
+//            llThree.setVisibility(View.GONE);
+//            viewFlipper.addView(convertView);
+//        } else {
+//            int lastNum = listSize % 3;
+//            View convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_moment_comment, null);
+//            LinearLayout llOne = (LinearLayout) convertView.findViewById(R.id.ll_one);
+//            ImageView imgHeadicon1 = (ImageView) convertView.findViewById(R.id.img_headicon1);
+//            TextView tvComment1 = (TextView) convertView.findViewById(R.id.tv_comment1);
+//
+//            LinearLayout llTwo = (LinearLayout) convertView.findViewById(R.id.ll_two);
+//            ImageView imgHeadicon2 = (ImageView) convertView.findViewById(R.id.img_headicon2);
+//            TextView tvComment2 = (TextView) convertView.findViewById(R.id.tv_comment2);
+//
+//            LinearLayout llThree = (LinearLayout) convertView.findViewById(R.id.ll_three);
+//            ImageView imgHeadicon3 = (ImageView) convertView.findViewById(R.id.img_headicon3);
+//            TextView tvComment3 = (TextView) convertView.findViewById(R.id.tv_comment3);
+//            if (lastNum > 0) {
+//                tvComment1.setText(mListData.get(listSize - lastNum-1).conent);
+//                Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize - lastNum-1).head)
+//                        .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon1);
+//                if (lastNum > 1) {
+//                    tvComment2.setText(mListData.get(listSize - lastNum + 1-1).conent);
+//                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize - lastNum + 1-1).head)
+//                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
+//                    if(lastNum>2){
+//                        tvComment3.setText(mListData.get(listSize-1).conent);
+//                        Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize-1).head)
+//                                .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon3);
+//                    }
+//                } else {
+//                    tvComment2.setText(mListData.get(listSize-1).conent);
+//                    Picasso.with(MomentInfoActivity.this).load(APPConfig.test_image_url + mListData.get(listSize-1).head)
+//                            .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(imgHeadicon2);
+//                    llThree.setVisibility(View.GONE);
+//                }
+//            }
+//            viewFlipper.addView(convertView);
+//            viewFlipper.removeViewAt(listSize / 3);
+//        }
+//    }
 
     @Override
     public void onClick(View v) {
@@ -230,10 +252,14 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
                 if ("".equals(str)) {
                     Toast.makeText(MomentInfoActivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                 } else {
-                    int listSize = mListData.size();
-//                    mListData.add(str);
-                    updateConvertView(listSize);
-                    etMomentComment.setText("");
+                    Toast.makeText(MomentInfoActivity.this, "正在开发中", Toast.LENGTH_SHORT).show();
+//                    addMomentCommentPost
+//                    int listSize = mListData.size();
+//
+////                    mListData.add(str);
+//                    updateConvertView(listSize);
+//                    addMomentCommentPost(userId, EMClient.getInstance().getCurrentUser(),momentId,str);
+//                    etMomentComment.setText("");
                 }
                 break;
             case R.id.img_info_setting:
@@ -300,6 +326,7 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(View v) {
                 //Toast.makeText(MemoryBookActivity.this, "退出", Toast.LENGTH_SHORT).show();
+                deleteMoment(momentId);
                 dialog1.cancel();
             }
         });
@@ -311,44 +338,41 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    class MyThread extends Thread {
+//    class MyThread extends Thread {
+//
+//        public synchronized void updateConvertView(int listSize) {
+//            android.os.Message message = new android.os.Message();
+//            message.what = 0;
+//            message.obj = listSize;
+//            handler.sendMessage(message);
+//        }
+//
+//        public void run() {
+//            while (true) {
+//                int listSize = mListData.size();
+////                updateConvertView(listSize);
+//                try {
+//                    Thread.sleep(10000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
-        public synchronized void updateConvertView(int listSize) {
-            android.os.Message message = new android.os.Message();
-            message.what = 0;
-            message.obj = listSize;
-            handler.sendMessage(message);
-        }
-
-        public void run() {
-            int j = 0;
-            while (true) {
-                int listSize = mListData.size();
-//                mListData.add("你真是个小机灵鬼。线程" + j);
-                j++;
-                updateConvertView(listSize);
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(android.os.Message msg) {
-//            super.handleMessage(msg);
-            switch (msg.what){
-                case 0:
-                    int listSize = (int) msg.obj;
-                    updateConvertView(listSize);
-                    break;
-            }
-        }
-
-    };
+//    private Handler handler = new Handler(){
+//        @Override
+//        public void handleMessage(android.os.Message msg) {
+////            super.handleMessage(msg);
+//            switch (msg.what){
+//                case 0:
+//                    int listSize = (int) msg.obj;
+//                    updateConvertView(listSize);
+//                    break;
+//            }
+//        }
+//
+//    };
 
     public void getMomentPost(final String id) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
@@ -382,12 +406,203 @@ public class MomentInfoActivity extends AppCompatActivity implements View.OnClic
                             List<String> urlList=new ArrayList<String>();
                             for(int i=0;i<momentResult.getData().getImageList().size();i++){
                                 MomentImage momentImage=momentResult.getData().getImageList().get(i);
-                                urlList.add(APPConfig.test_image_url+momentImage.getPath());
-                                Log.d("zxd111",APPConfig.test_image_url+momentImage.getPath());
+                                urlList.add(APPConfig.img_url+momentImage.getPath());
+                                Log.d("zxd111",APPConfig.img_url+momentImage.getPath());
                             }
                             nineGridTestLayout.setUrlList(urlList);
+                            ctime.setText(momentResult.getData().getSend_time());
+                            stime.setText(momentResult.getData().getLocation_time());
+                            Picasso.with(MomentInfoActivity.this).load(APPConfig.img_url + momentResult.getData().getUser().getHeadimage())
+                                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
+                            name.setText(momentResult.getData().getUser().getName());
                         }else {
                             Log.e("zxd","获取片段失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
+    public void getMomentCommentPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("mId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.showMComments, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            momentCommentListResult = OkHttpUtils.getObjectFromJson(response.toString(), MomentCommentListResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            momentCommentListResult = MomentCommentListResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(momentCommentListResult.getMsg().equals("success")){
+                            initListData(momentCommentListResult.getData());
+                        }else {
+                            Log.e("zxd","获取片段失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
+    public void addMomentCommentPost(final String uId,final String cId,final String mId,final String cContent) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param mIdParam = new OkHttpUtils.Param("mId", mId);
+        OkHttpUtils.Param cIdParam = new OkHttpUtils.Param("cId", cId);
+        OkHttpUtils.Param uIdParam = new OkHttpUtils.Param("uId", uId);
+        OkHttpUtils.Param conentParam = new OkHttpUtils.Param("cContent", cContent);
+        list.add(mIdParam);
+        list.add(cIdParam);
+        list.add(uIdParam);
+        list.add(conentParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.addMomentComment, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            momentCommentListResult = OkHttpUtils.getObjectFromJson(response.toString(), MomentCommentListResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            momentCommentListResult = MomentCommentListResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(momentCommentListResult.getMsg().equals("success")){
+                            Toast.makeText(MomentInfoActivity.this,"评论成功",Toast.LENGTH_SHORT).show();
+                            int listSize = mListData.size();
+
+//                            mListData.add(cContent);
+//                            updateConvertView(listSize);
+                            etMomentComment.setText("");
+                        }else {
+                            Log.e("zxd","获取片段失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
+    public void getHead() {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", userId);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findUserById, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(MomentInfoActivity.this,"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(resultDto.getData()!=null){
+                            Picasso.with(MomentInfoActivity.this).load(APPConfig.img_url + resultDto.getData().getHeadimage())
+                                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
+                            name.setText(resultDto.getData().getName());
+
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(MomentInfoActivity.this, "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
+
+    public void deleteMoment(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("mId", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.deleteMoment, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            momentResult = OkHttpUtils.getObjectFromJson(response.toString(), MomentResult.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            momentResult = MomentResult.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(momentResult.getMsg().equals("delete_success")){
+                            //sUser.setmName(resultDto.getData().getName());
+//                            initListData(memoryBookListResult.getData());
+//                            mAdapter.notifyDataSetChanged();
+                            Toast.makeText(MomentInfoActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                            finish();
+                        }else {
+                            Toast.makeText(MomentInfoActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
                         }
                     }
 

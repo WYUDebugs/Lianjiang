@@ -186,7 +186,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         mAdapter = new TimeLineAdapter(mList,this);
         View headerView = LayoutInflater.from(this).inflate(R.layout.layout_memory_book_list_header,null);//假的头部
         mAdapter.setHeaderView(headerView);
-
+        mAdapter.setUserId(userId);
         mRecycler.setLayoutManager(layoutManager);
         mRecycler.setAdapter(mAdapter);
         recycleViewUtils = new RecycleViewUtils().with(mRecycler);

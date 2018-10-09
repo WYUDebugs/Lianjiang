@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.example.sig.lianjiang.R;
+import com.example.sig.lianjiang.activity.MemoryBookListActivity;
 import com.example.sig.lianjiang.activity.SquareAddActivity;
 
 import android.view.Window;
@@ -91,7 +92,8 @@ public class PopupMenuUtil implements View.OnClickListener{
                 toSquareAdd();
                 break;
             case R.id.test2:
-                Toast.makeText(context, "纪念册", Toast.LENGTH_SHORT).show();
+                Intent intentM=new Intent(context, MemoryBookListActivity.class);
+                context.startActivity(intentM);
                 break;
         }
     }

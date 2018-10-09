@@ -59,6 +59,7 @@ public class LoginActivitysteup1 extends AppCompatActivity implements View.OnCli
         etPhone=(EditText)findViewById(R.id.etPhone);
         etPhone.addTextChangedListener(mTextWatcher);
         ivSubmit=(ImageView)findViewById(R.id.ivSubmit);
+        ivSubmit.setClickable(false);
         ivSubmit.setOnClickListener(this);
         if (StarryHelper.getInstance().getCurrentUsernName() != null) {
 //            etPhone.setText(StarryHelper.getInstance().getCurrentUsernName());

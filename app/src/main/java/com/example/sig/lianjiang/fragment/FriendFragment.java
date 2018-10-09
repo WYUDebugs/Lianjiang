@@ -20,6 +20,7 @@ import com.example.sig.lianjiang.activity.ChatActivity;
 import com.example.sig.lianjiang.activity.GroupsActivity;
 import com.example.sig.lianjiang.activity.MainActivity;
 import com.example.sig.lianjiang.activity.NewFriendsMsgActivity;
+import com.example.sig.lianjiang.activity.UserProfileActivity;
 import com.example.sig.lianjiang.bean.UserResultDto;
 import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.utils.OkHttpUtils;
@@ -215,7 +216,7 @@ public class FriendFragment extends EaseContactListFragment {
                 if (user != null) {
                     String username = user.getUsername();
                     // demo中直接进入聊天页面，实际一般是进入用户详情页
-                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
+                    startActivity(new Intent(getActivity(), UserProfileActivity.class).putExtra("username", username));
                 }
             }
         });
@@ -251,7 +252,7 @@ public class FriendFragment extends EaseContactListFragment {
         StarryHelper.getInstance().getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
 
         if (StarryHelper.getInstance().isContactsSyncedWithServer()) {
-            loadingView.setVisibility(View.GONE);
+//            loadingView.setVisibility(View.GONE);
         } else if (StarryHelper.getInstance().isSyncingContactsWithServer()) {
             loadingView.setVisibility(View.VISIBLE);
         }
@@ -318,10 +319,11 @@ public class FriendFragment extends EaseContactListFragment {
                 e.printStackTrace();
             }
             return true;
-        }else if(item.getItemId() == R.id.add_to_blacklist){
-            moveToBlacklist(toBeProcessUsername);
-            return true;
         }
+//        else if(item.getItemId() == R.id.add_to_blacklist){
+//            moveToBlacklist(toBeProcessUsername);
+//            return true;
+//        }
         return super.onContextItemSelected(item);
     }
 
@@ -428,5 +430,6 @@ public class FriendFragment extends EaseContactListFragment {
         }
 
     }
+
 
 }

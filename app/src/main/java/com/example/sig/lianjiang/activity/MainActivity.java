@@ -765,13 +765,13 @@
          }
      }
 
-     @Override
-     public void onBackPressed() {
-         if (leftDrawerLayout.isShownMenu()) {
-             leftDrawerLayout.closeDrawer();
-         }
-         super.onBackPressed();
-     }
+//     @Override
+//     public void onBackPressed() {
+//         if (leftDrawerLayout.isShownMenu()) {
+//             leftDrawerLayout.closeDrawer();
+//         }
+//         super.onBackPressed();
+//     }
 
      @Override
      protected void onDestroy() {
