@@ -30,7 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="36dp"
         android:gravity="center"
-        android:text="开启哆咕啦星之旅"
+        android:text="开始使用"
         android:background="@drawable/shape_button_selector"/>
 
 </RelativeLayout>

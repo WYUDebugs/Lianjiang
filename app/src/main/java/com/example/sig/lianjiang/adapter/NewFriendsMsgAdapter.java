@@ -23,6 +23,7 @@ import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.db.InviteMessgeDao;
 import com.example.sig.lianjiang.domain.InviteMessage;
 import com.example.sig.lianjiang.domain.InviteMessage.InviteMessageStatus;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
             holder.message.setText(msg.getReason());
             holder.name.setText(msg.getFrom());
+            getHead(holder.avator,holder.name,msg.getFrom());
             // holder.time.setText(DateUtils.getTimestampString(new
             // Date(msg.getTime())));
             if (msg.getStatus() == InviteMessageStatus.BEAGREED) {
@@ -401,4 +403,49 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
         Button refuseBtn;
     }
 
+    public void getHead(final ImageView head,final TextView name,final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("id", id);
+        list.add(idParam);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.findUserById, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            resultDto = OkHttpUtils.getObjectFromJson(response.toString(), UserResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            resultDto = UserResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Toast.makeText(getContext(),"服务器出错了",Toast.LENGTH_SHORT).show();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(resultDto.getData()!=null){
+                            Picasso.with(getContext()).load(APPConfig.img_url + resultDto.getData().getHeadimage())
+                                    .placeholder(R.mipmap.icon_head).error(R.mipmap.icon_head).into(head);
+                            name.setText(resultDto.getData().getName());
+
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                        Toast.makeText(getContext(), "网络请求失败，请重试！", Toast.LENGTH_SHORT).show();
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
 }

@@ -3,17 +3,25 @@ package com.example.sig.lianjiang.activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.NewFriendsMsgAdapter;
+import com.example.sig.lianjiang.bean.UserResultDto;
+import com.example.sig.lianjiang.common.APPConfig;
 import com.example.sig.lianjiang.db.InviteMessgeDao;
 import com.example.sig.lianjiang.domain.InviteMessage;
+import com.example.sig.lianjiang.utils.OkHttpUtils;
 import com.example.sig.lianjiang.utils.StatusBarUtil;
+import com.hyphenate.chat.EMClient;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,6 +51,7 @@ public class NewFriendsMsgActivity extends AppCompatActivity {
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
+
     public void back(View view) {
         finish();
     }

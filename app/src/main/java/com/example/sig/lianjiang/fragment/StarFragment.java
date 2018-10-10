@@ -141,9 +141,10 @@ public class StarFragment extends Fragment implements View.OnClickListener, Obse
                 startActivity(intent1);
                 break;
             case R.id.ll_square:
-//                Intent intent2=new Intent(getContext(),SquareActivity.class);
-//                startActivity(intent2);
-                Toast.makeText(getContext(),"开发中",Toast.LENGTH_SHORT).show();
+                Intent intent2=new Intent(getContext(),SquareActivity.class);
+                intent2.putExtra("userId",EMClient.getInstance().getCurrentUser());
+                startActivity(intent2);
+//                Toast.makeText(getContext(),"开发中",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.ll_user:
                 Intent intent3=new Intent(getContext(),UserProfileActivity.class);

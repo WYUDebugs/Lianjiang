@@ -90,6 +90,7 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
     private RecycleViewUtils recycleViewUtils;
     private CircleImageView head;
     private boolean progressShow;
+    private String userId;
     //滑动监听事件
     RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         //dy:每一次竖直滑动增量 向下为正 向上为负
@@ -140,6 +141,7 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         setContentView(R.layout.activity_square);
+        userId=getIntent().getStringExtra("userId");
         tv_pull_to_refresh=(TextView) findViewById(R.id.tv_pull_to_refresh);
         titleText=(TextView)findViewById(R.id.top_center);
         back=(ImageView)findViewById(R.id.top_left);
@@ -319,7 +321,11 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void run() {
                     if (isRefresh) {
-                        getpublishListPost(EMClient.getInstance().getCurrentUser());
+                        if(userId==null){
+                            getpublishListPost(EMClient.getInstance().getCurrentUser());
+                        }else{
+                            getUserpublishListPost(EMClient.getInstance().getCurrentUser());
+                        }
                         refreshComplate();
                         // 刷新完成后调用，必须在UI线程中
                         mRecyclerView.refreshComplate();
@@ -521,7 +527,49 @@ public class SquareActivity extends AppCompatActivity implements View.OnClickLis
         }).start();
     }
 
+    public void getUserpublishListPost(final String id) {
+        final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
+        Integer a=null;
+        //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("publisher", id);
+        list.add(idParam);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //post方式连接  url，post方式请求必须传参
+                //参数方式：OkHttpUtils.post(url,OkHttpUtils.ResultCallback(),list)
+                OkHttpUtils.post(APPConfig.showSomeonePost, new OkHttpUtils.ResultCallback() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        Log.d("testRun", "response------" + response.toString());
+                        try {// 不要在这个try catch里对ResultDto进行调用，因为这里解析json数据可能会因为后台出错等各种问题导致解析结果异常
+                            // 解析后台传过来的json数据时，ResultDto类里Object要改为对应的实体,例如User或者List<User>
+                            publicListResultDto = OkHttpUtils.getObjectFromJson(response.toString(), PublicListResultDto.class);
+                        } catch (Exception e) {
+                            //json数据解析出错，可能是后台传过来的数据有问题，有可能是ResultDto实体相应的参数没对应上，客户端出错
+                            publicListResultDto = PublicListResultDto.error("Exception:"+e.getClass());
+                            e.printStackTrace();
+                            Log.e("wnf", "Exception------" + e.getMessage());
+                        }
+                        if(publicListResultDto.getMsg().equals("success")){
+                            //sUser.setmName(resultDto.getData().getName());
+                            initListData(publicListResultDto.getData());
+                            mAdapter.notifyDataSetChanged();
+                        }else {
+                            Log.e("zxd","动态为空");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("testRun", "请求失败------Exception:"+e.getMessage());
+                    }
+                }, list);
+            }
+
+        }).start();
+    }
 
     public void getGoodPost(final String id,final View view) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();

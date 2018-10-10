@@ -178,17 +178,20 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
 
     public void addContact(final String id,final TextView name){
         if(EMClient.getInstance().getCurrentUser().equals(id)){
-            new EaseAlertDialog(context, R.string.not_add_myself).show();
+//            new EaseAlertDialog(context, R.string.not_add_myself).show();
+            Toast.makeText(context,"不能添加自己",Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(StarryHelper.getInstance().getContactList().containsKey(id)){
             //let the user know the contact already in your contact list
             if(EMClient.getInstance().contactManager().getBlackListUsernames().contains(name.getText().toString())){
-                new EaseAlertDialog(context, R.string.user_already_in_contactlist).show();
+//                new EaseAlertDialog(context, R.string.user_already_in_contactlist).show();
+                Toast.makeText(context,"此用户已是你好友（被拉黑状态）",Toast.LENGTH_SHORT).show();
                 return;
             }
-            new EaseAlertDialog(context, R.string.This_user_is_already_your_friend).show();
+//            new EaseAlertDialog(context, R.string.This_user_is_already_your_friend).show();
+            Toast.makeText(context,"此用户已是你好友",Toast.LENGTH_SHORT).show();
             return;
         }
 

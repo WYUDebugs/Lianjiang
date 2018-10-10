@@ -45,11 +45,11 @@ public class SplashActivity extends BaseActivity {
 
         StarryHelper.getInstance().initHandler(this.getMainLooper());
 
-        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
-        AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
-        animation.setDuration(1500);
-        animation.setStartOffset(0);
-        rootLayout.startAnimation(animation);
+//        RelativeLayout rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
+//        AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
+//        animation.setDuration(1500);
+//        animation.setStartOffset(0);
+//        rootLayout.startAnimation(animation);
 //        StarryHelper.getInstance().isLoggedIn();
 //        getApplicationContext();
 //        StarryHelper.getInstance().init(this);
