@@ -90,10 +90,12 @@ public class PopupMenuUtil implements View.OnClickListener{
                 break;
             case R.id.test1:
                 toSquareAdd();
+                _rlClickAction();
                 break;
             case R.id.test2:
                 Intent intentM=new Intent(context, MemoryBookListActivity.class);
                 context.startActivity(intentM);
+                _rlClickAction();
                 break;
         }
     }
