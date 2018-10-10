@@ -122,7 +122,8 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
             }
             if (position==1){
                 holder.marker.setBeginLine(null);
-            }else if(position==list.size()){
+            }
+            if(position==list.size()){
                 holder.marker.setEndLine(null);
             }
             Resources resources = context.getResources();
@@ -272,7 +273,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
     public void getSquareNum( final TextView square) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param idParam = new OkHttpUtils.Param("uId", EMClient.getInstance().getCurrentUser());
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("uId", userId);
         list.add(idParam);
 
         new Thread(new Runnable() {
@@ -316,7 +317,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
     public void getMemoryBookNum(final TextView memoryBook) {
         final List<OkHttpUtils.Param> list = new ArrayList<OkHttpUtils.Param>();
         //可以传多个参数，这里只写传一个参数，需要传多个参数时list.add();
-        OkHttpUtils.Param idParam = new OkHttpUtils.Param("uId", EMClient.getInstance().getCurrentUser());
+        OkHttpUtils.Param idParam = new OkHttpUtils.Param("uId", userId);
         list.add(idParam);
 
         new Thread(new Runnable() {

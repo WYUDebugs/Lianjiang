@@ -252,7 +252,7 @@ public class FriendFragment extends EaseContactListFragment {
         StarryHelper.getInstance().getUserProfileManager().addSyncContactInfoListener(contactInfoSyncListener);
 
         if (StarryHelper.getInstance().isContactsSyncedWithServer()) {
-//            loadingView.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
         } else if (StarryHelper.getInstance().isSyncingContactsWithServer()) {
             loadingView.setVisibility(View.VISIBLE);
         }

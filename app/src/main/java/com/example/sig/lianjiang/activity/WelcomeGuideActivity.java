@@ -56,7 +56,7 @@ public class WelcomeGuideActivity extends AppCompatActivity {
 
     // 本地图片id
 //    private int[] resIds = {R.mipmap.guide1, R.mipmap.guide2, R.mipmap.guide3,R.mipmap.guide4};
-    private int[] resIds = {R.mipmap.slogo, R.mipmap.slogo, R.mipmap.slogo};
+    private int[] resIds = {R.mipmap.slogo, R.mipmap.slogo, R.mipmap.slogo, R.mipmap.slogo};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

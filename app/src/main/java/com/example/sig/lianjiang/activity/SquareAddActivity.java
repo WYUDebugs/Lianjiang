@@ -329,6 +329,7 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
                             }
                             Intent intent=new Intent(SquareAddActivity.this,SquareActivity.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             runOnUiThread(new Runnable() {
                                 public void run() {
