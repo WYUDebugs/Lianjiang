@@ -19,6 +19,6 @@
         app:borderWidth="0dp"
         app:elevation="7dp"
         app:pressedTranslationZ="10dp"
-        app:srcCompat="@drawable/more" />
+        app:srcCompat="@drawable/more_add1" />
 
 </android.support.design.widget.CoordinatorLayout>
