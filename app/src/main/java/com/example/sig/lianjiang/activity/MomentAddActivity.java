@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.adapter.MemoryCoverListAdapter;
 import com.example.sig.lianjiang.bean.CoverPictureBean;
@@ -259,12 +260,17 @@ public class MomentAddActivity extends AppCompatActivity implements View.OnClick
             if (path.equals("000000")){
                 holder.image.setImageResource(R.drawable.addpic);
             }else {
-                Glide.with(MomentAddActivity.this)
-                        .load(path)
+                RequestOptions options = new RequestOptions()
                         .placeholder(R.mipmap.default_error)
                         .error(R.mipmap.default_error)
-                        .centerCrop()
-                        .crossFade()
+                        .centerCrop();
+                Glide.with(MomentAddActivity.this)
+                        .load(path)
+//                        .placeholder(R.mipmap.default_error)
+                        .apply(options)
+//                        .error(R.mipmap.default_error)
+//                        .centerCrop()
+//                        .crossFade()
                         .into(holder.image);
             }
             return convertView;

@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.sig.lianjiang.R;
 import com.example.sig.lianjiang.bean.PublicResultDto;
 import com.example.sig.lianjiang.bean.PublishDto;
@@ -257,12 +258,17 @@ public class SquareAddActivity extends AppCompatActivity implements View.OnClick
             if (path.equals("000000")){
                 holder.image.setImageResource(R.drawable.addpic);
             }else {
-                Glide.with(SquareAddActivity.this)
-                        .load(path)
+                RequestOptions options = new RequestOptions()
                         .placeholder(R.mipmap.default_error)
                         .error(R.mipmap.default_error)
-                        .centerCrop()
-                        .crossFade()
+                        .centerCrop();
+                Glide.with(SquareAddActivity.this)
+                        .load(path)
+                        .apply(options)
+//                        .placeholder(R.mipmap.default_error)
+//                        .error(R.mipmap.default_error)
+//                        .centerCrop()
+//                        .crossFade()
                         .into(holder.image);
             }
             return convertView;

@@ -186,7 +186,7 @@ public class RegisterActivitysteup2 extends AppCompatActivity implements View.On
                         //UserListResultDto resultDto=OkHttpUtils.getObjectFromJson(response.toString(),UserListResultDto.class);
                         Log.d("wnf", "*********************************************************************");
                         Log.d("wnf", "********************resultDto:" + resultDto);
-                        Toast.makeText(RegisterActivitysteup2.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(RegisterActivitysteup2.this, "resultDto:" + resultDto, Toast.LENGTH_SHORT).show();
                         if (resultDto.getData() != null) {
 
                         } else {
