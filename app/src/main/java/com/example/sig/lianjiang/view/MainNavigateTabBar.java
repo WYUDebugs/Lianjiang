@@ -56,7 +56,7 @@ public class MainNavigateTabBar extends LinearLayout implements View.OnClickList
     /*Tab文字的颜色*/
     private float mTabTextSize;
     /*默认选中的tab index*/
-    private int mDefaultSelectedTab = 1;
+    private int mDefaultSelectedTab = 0;
 
     private int mCurrentSelectedTab;
 

@@ -121,8 +121,8 @@ public class StarFragment extends Fragment implements View.OnClickListener, Obse
         llSquare.setOnClickListener(this);
         llUser=(LinearLayout)view.findViewById(R.id.ll_user);
         llUser.setOnClickListener(this);
-//        logout=(LinearLayout)view.findViewById(R.id.ll_logout);
-//        logout.setOnClickListener(this);
+        logout=(LinearLayout)view.findViewById(R.id.ll_logout);
+        logout.setOnClickListener(this);
         getHead();
     }
 
@@ -151,9 +151,9 @@ public class StarFragment extends Fragment implements View.OnClickListener, Obse
                 intent3.putExtra("username",EMClient.getInstance().getCurrentUser());
                 startActivity(intent3);
                 break;
-//            case R.id.ll_logout:
-//                logout();
-//                break;
+            case R.id.ll_logout:
+                logout();
+                break;
 
 
         }

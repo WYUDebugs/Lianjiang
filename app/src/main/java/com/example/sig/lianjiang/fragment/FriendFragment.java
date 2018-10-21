@@ -80,36 +80,59 @@ public class FriendFragment extends EaseContactListFragment {
     @Override
     public void getContactList(){
         super.getContactList();
+//        contactListLayout.init(contactList);
         getFriend(contactList);
     }
     public void getFriend(final List<EaseUser> contactList){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(contactList!=null&&contactList.size()>0){
-                    for(int i=0;i<contactList.size();i++){
-                        getNameAndHeadPost(contactList.get(i).getUsername());
-                    }
-                    getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
-                    // sorting
-                    Collections.sort(contactList, new Comparator<EaseUser>() {
-
-                        @Override
-                        public int compare(EaseUser lhs, EaseUser rhs) {
-                            if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
-                                return lhs.getNick().compareTo(rhs.getNick());
-                            }else{
-                                if("#".equals(lhs.getInitialLetter())){
-                                    return 1;
-                                }else if("#".equals(rhs.getInitialLetter())){
-                                    return -1;
-                                }
-                                return lhs.getInitialLetter().compareTo(rhs.getInitialLetter());
-                            }
-
-                        }
-                    });
+//                if(contactList!=null&&contactList.size()>0){
+//                    for(int i=0;i<contactList.size();i++){
+//                        getNameAndHeadPost(contactList.get(i).getUsername());
+//                    }
+//                    getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
+//                    // sorting
+//                    Collections.sort(contactList, new Comparator<EaseUser>() {
+//
+//                        @Override
+//                        public int compare(EaseUser lhs, EaseUser rhs) {
+//                            if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
+//                                return lhs.getNick().compareTo(rhs.getNick());
+//                            }else{
+//                                if("#".equals(lhs.getInitialLetter())){
+//                                    return 1;
+//                                }else if("#".equals(rhs.getInitialLetter())){
+//                                    return -1;
+//                                }
+//                                return lhs.getInitialLetter().compareTo(rhs.getInitialLetter());
+//                            }
+//
+//                        }
+//                    });
+//                }
+                for(int i=0;i<contactList.size();i++){
+                    getNameAndHeadPost(contactList.get(i).getUsername());
                 }
+                getNameAndHeadPost(EMClient.getInstance().getCurrentUser());
+                // sorting
+//                Collections.sort(contactList, new Comparator<EaseUser>() {
+//
+//                    @Override
+//                    public int compare(EaseUser lhs, EaseUser rhs) {
+//                        if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
+//                            return lhs.getNick().compareTo(rhs.getNick());
+//                        }else{
+//                            if("#".equals(lhs.getInitialLetter())){
+//                                return 1;
+//                            }else if("#".equals(rhs.getInitialLetter())){
+//                                return -1;
+//                            }
+//                            return lhs.getInitialLetter().compareTo(rhs.getInitialLetter());
+//                        }
+//
+//                    }
+//                });
             }
         }).start();
 
@@ -147,7 +170,25 @@ public class FriendFragment extends EaseContactListFragment {
                             Log.d("zxd","子类");
                             if(id.equals(EMClient.getInstance().getCurrentUser())){
                                 setHead(APPConfig.img_url + resultDto.getData().getHeadimage());
+                                Collections.sort(contactList, new Comparator<EaseUser>() {
+
+                                    @Override
+                                    public int compare(EaseUser lhs, EaseUser rhs) {
+                                        if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
+                                            return lhs.getNick().compareTo(rhs.getNick());
+                                        }else{
+                                            if("#".equals(lhs.getInitialLetter())){
+                                                return 1;
+                                            }else if("#".equals(rhs.getInitialLetter())){
+                                                return -1;
+                                            }
+                                            return lhs.getInitialLetter().compareTo(rhs.getInitialLetter());
+                                        }
+
+                                    }
+                                });
                                 contactListLayout.init(contactList);
+                                contactListLayout.upData();
                                 Log.d("zxd","子类刷新");
                             }
                         }else {
@@ -186,7 +227,7 @@ public class FriendFragment extends EaseContactListFragment {
     }
 
     protected void setHead(String uri){
-        titleBar.setHead(uri);
+//        titleBar.setHead(uri);
     }
     @SuppressWarnings("unchecked")
     @Override
@@ -232,15 +273,15 @@ public class FriendFragment extends EaseContactListFragment {
             }
         });
         //打开侧滑菜单
-        titleBar.setLeftLayoutClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.d("zxd","已执行");
-//                Toast.makeText(getContext(),"1111",Toast.LENGTH_SHORT).show();
-                MainActivity.leftDrawerLayout.openDrawer();
-            }
-        });
+//        titleBar.setLeftLayoutClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("zxd","已执行");
+////                Toast.makeText(getContext(),"1111",Toast.LENGTH_SHORT).show();
+//                MainActivity.leftDrawerLayout.openDrawer();
+//            }
+//        });
 
         contactSyncListener = new ContactSyncListener();
         StarryHelper.getInstance().addSyncContactListener(contactSyncListener);

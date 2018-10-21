@@ -88,16 +88,7 @@ public class MessageFragment  extends EaseConversationListFragment{
                 }
             }
         });
-        //打开侧滑菜单
-        titleBar.getLeftLayout().setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                Log.d("zxd","已执行");
-//                Toast.makeText(getContext(),"1111",Toast.LENGTH_SHORT).show();
-                MainActivity.leftDrawerLayout.openDrawer();
-            }
-        });
         super.setUpView();
     }
 
@@ -183,7 +174,7 @@ public class MessageFragment  extends EaseConversationListFragment{
     }
 
     public void setHead(String uri){
-        titleBar.setHead(uri);
+//        titleBar.setHead(uri);
 
     }
 

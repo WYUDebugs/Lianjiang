@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.sig.lianjiang.leftmenu.LeftDrawerLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/leftDrawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mytopbar_color"
+    android:orientation="vertical"
     >
 
     <RelativeLayout
@@ -52,26 +52,4 @@
                 android:src="@mipmap/comui_tab_post"/>
         </LinearLayout>
     </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:clipChildren="false"
-        >
-
-        <com.example.sig.lianjiang.leftmenu.FlowingView
-            android:id="@+id/flowingView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <FrameLayout
-            android:id="@+id/container_menu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-
-            />
-        <!--android:layout_marginRight="25dp"-->
-        <!--android:paddingRight="10dp"-->
-    </RelativeLayout>
-</com.example.sig.lianjiang.leftmenu.LeftDrawerLayout>
+</LinearLayout>

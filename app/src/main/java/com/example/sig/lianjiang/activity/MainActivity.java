@@ -3,10 +3,8 @@
  import android.os.Build;
  import android.os.Bundle;
  import android.support.v4.app.FragmentManager;
- import android.support.v7.app.AppCompatActivity;
  import android.util.Log;
  import android.view.Gravity;
- import android.view.LayoutInflater;
  import android.view.MotionEvent;
  import android.view.View;
  import android.view.Window;
@@ -18,27 +16,18 @@
  import com.example.sig.lianjiang.R;
  import com.example.sig.lianjiang.bean.User;
  import com.example.sig.lianjiang.bean.UserListResultDto;
- import com.example.sig.lianjiang.bean.UserResultDto;
  import com.example.sig.lianjiang.common.APPConfig;
- import com.example.sig.lianjiang.event.HideButtonEvent;
- import com.example.sig.lianjiang.event.ShowButtonEvent;
  import com.example.sig.lianjiang.fragment.DynamicFragment;
  import com.example.sig.lianjiang.fragment.FriendFragment;
- import com.example.sig.lianjiang.fragment.MenuLeftFragment;
  import com.example.sig.lianjiang.fragment.MessageFragment;
  import com.example.sig.lianjiang.fragment.StarFragment;
- import com.example.sig.lianjiang.leftmenu.FlowingView;
- import com.example.sig.lianjiang.leftmenu.LeftDrawerLayout;
  import com.example.sig.lianjiang.utils.ConfigUtil;
  import com.example.sig.lianjiang.utils.OkHttpUtils;
  import com.example.sig.lianjiang.utils.PopupMenuUtil;
- import com.example.sig.lianjiang.view.CircleImageView;
- import com.example.sig.lianjiang.view.DragDeleteTextView;
  import com.example.sig.lianjiang.view.MainNavigateTabBar;
 
- import cn.bmob.sms.BmobSMS;
  import de.greenrobot.event.EventBus;
- import android.annotation.SuppressLint;
+
  import android.annotation.TargetApi;
  import android.content.BroadcastReceiver;
  import android.content.Context;
@@ -46,18 +35,10 @@
  import android.content.Intent;
  import android.content.IntentFilter;
  import android.net.Uri;
- import android.os.Build;
- import android.os.Bundle;
  import android.os.PowerManager;
  import android.support.annotation.NonNull;
- import android.support.v4.app.Fragment;
- import android.support.v4.app.FragmentTransaction;
  import android.support.v4.content.LocalBroadcastManager;
  import android.view.KeyEvent;
- import android.view.View;
- import android.widget.Button;
- import android.widget.TextView;
- import android.widget.Toast;
 
  import com.hyphenate.EMCallBack;
  import com.hyphenate.EMClientListener;
@@ -69,7 +50,6 @@
  import com.example.sig.lianjiang.Constant;
  import com.example.sig.lianjiang.StarryHelper;
  import com.example.sig.lianjiang.HMSPushHelper;
- import com.example.sig.lianjiang.R;
  import com.example.sig.lianjiang.db.InviteMessgeDao;
  import com.example.sig.lianjiang.db.UserDao;
  import com.example.sig.lianjiang.runtimepermissions.PermissionsManager;
@@ -80,8 +60,6 @@
  import com.hyphenate.util.EMLog;
 
  import java.util.ArrayList;
- import java.util.Collections;
- import java.util.Comparator;
  import java.util.Iterator;
  import java.util.List;
  import java.util.Map;
@@ -100,8 +78,6 @@
      private DynamicFragment dynamicFragment=new DynamicFragment();
      private StarFragment starFragment=new StarFragment();
      private FrameLayout continer,closeMenu;
-     public static LeftDrawerLayout leftDrawerLayout;
-     private FlowingView flowingView;
      // user logged into another device
      public boolean isConflict = false;
      // user account was removed
@@ -180,8 +156,6 @@
          mNavigateTabBar.setUpdateMessageNum(this);
          addThing= (ImageView) findViewById(R.id.tab_post_icon);
          addThing.setOnClickListener(this);
-         EventBus.getDefault().register(this);
-         init();
          showExceptionDialogFromIntent(getIntent());
          inviteMessgeDao = new InviteMessgeDao(this);
          UserDao userDao = new UserDao(this);
@@ -686,60 +660,6 @@
      }
 
 
-     private void init() {
-         initView();
-         initEvent();
-     }
-
-     private void initView() {
-         leftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.leftDrawerLayout);
-         flowingView = (FlowingView) findViewById(R.id.flowingView);
-     }
-
-     private void initEvent() {
-         setFragment();
-     }
-
-     private void setFragment(){
-         FragmentManager fm = getSupportFragmentManager();
-         MenuLeftFragment menuLeftFragment = (MenuLeftFragment) fm.findFragmentById(R.id.container_menu);
-         if (menuLeftFragment == null) {
-             fm.beginTransaction().add(R.id.container_menu, menuLeftFragment = new MenuLeftFragment()).commit();
-         }
-         setCloseMenuTouch();
-         leftDrawerLayout.setFluidView(flowingView);
-         leftDrawerLayout.setMenuFragment(menuLeftFragment);
-     }
-
-     private void setCloseMenuTouch() {
-         continer = (FrameLayout) findViewById(android.R.id.content);
-         closeMenu = new FrameLayout(this);
-         continer.addView(closeMenu);
-         FrameLayout.LayoutParams fmPara = new FrameLayout.LayoutParams(250,FrameLayout.LayoutParams.MATCH_PARENT);
-         fmPara.gravity = Gravity.RIGHT;
-         closeMenu.setLayoutParams(fmPara);
-         closeMenu.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 if (leftDrawerLayout.isShownMenu()) {
-                     leftDrawerLayout.closeDrawer();
-                 }
-             }
-         });
-
-
-         closeMenu.setOnTouchListener(new View.OnTouchListener() {
-             @Override
-             public boolean onTouch(View v, MotionEvent event) {
-                 if (event.getAction() == MotionEvent.ACTION_SCROLL) {
-                     if (leftDrawerLayout.isShownMenu()) {
-                         leftDrawerLayout.closeDrawer();
-                     }
-                 }
-                 return false;
-             }
-         });
-     }
 
      @Override
      public void onClick(View v) {
@@ -754,28 +674,11 @@
          }
      }
 
-     public void onEvent(HideButtonEvent hideButtonEvent) {
-         if(hideButtonEvent.isHide()){
-             closeMenu.setVisibility(View.GONE);
-         }
-     }
-     public void onEvent(ShowButtonEvent showButtonEvent){
-         if(showButtonEvent.isShow()){
-             closeMenu.setVisibility(View.VISIBLE);
-         }
-     }
 
-//     @Override
-//     public void onBackPressed() {
-//         if (leftDrawerLayout.isShownMenu()) {
-//             leftDrawerLayout.closeDrawer();
-//         }
-//         super.onBackPressed();
-//     }
+
 
      @Override
      protected void onDestroy() {
-         EventBus.getDefault().unregister(this);
          super.onDestroy();
          if (exceptionBuilder != null) {
              exceptionBuilder.create().dismiss();
