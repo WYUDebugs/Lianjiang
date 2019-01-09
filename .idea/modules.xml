@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AnimRefreshRecyclerView/AnimRefreshRecyclerView.iml" filepath="$PROJECT_DIR$/AnimRefreshRecyclerView/AnimRefreshRecyclerView.iml" />
       <module fileurl="file://$PROJECT_DIR$/Lianjiang.iml" filepath="$PROJECT_DIR$/Lianjiang.iml" />
-      <module fileurl="file://$PROJECT_DIR$/StarryClient.iml" filepath="$PROJECT_DIR$/StarryClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/bigimage/bigimage.iml" filepath="$PROJECT_DIR$/bigimage/bigimage.iml" />
       <module fileurl="file://$PROJECT_DIR$/../easeui/easeui/easeui.iml" filepath="$PROJECT_DIR$/../easeui/easeui/easeui.iml" />

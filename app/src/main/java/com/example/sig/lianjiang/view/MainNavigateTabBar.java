@@ -13,17 +13,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.sig.lianjiang.adapter.MessageAdapter;
 import com.example.sig.lianjiang.db.InviteMessgeDao;
-import com.example.sig.lianjiang.fragment.DynamicFragment;
 import com.example.sig.lianjiang.fragment.FriendFragment;
 import com.example.sig.lianjiang.fragment.MessageFragment;
 import com.example.sig.lianjiang.utils.ThemeUtils;

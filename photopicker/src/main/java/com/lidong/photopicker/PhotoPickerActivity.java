@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -358,6 +359,13 @@ public class PhotoPickerActivity extends AppCompatActivity{
             e.printStackTrace();
         }
     }
+//    private void initPhotoError(){
+//        // android 7.0系统解决拍照的问题
+//        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//        StrictMode.setVmPolicy(builder.build());
+//        builder.detectFileUriExposure();
+//    }
+
 
     /**
      * 选择图片操作

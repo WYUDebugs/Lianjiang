@@ -1,6 +1,7 @@
 package com.example.sig.lianjiang;
 import android.app.Application;
 import android.content.Context;
+import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -29,6 +30,10 @@ public class StarryApplication extends Application{
 //        SDKInitializer.initialize(applicationContext);
         //init demo helper
         StarryHelper.getInstance().init(applicationContext);
+        // android 7.0系统解决拍照的问题
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
 
         // 初始化华为 HMS 推送服务
 //        HMSPushHelper.getInstance().initHMSAgent(instance);
