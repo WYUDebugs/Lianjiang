@@ -92,7 +92,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         theme();
         setContentView(R.layout.activity_photopicker);
-
+        //adjust();
         initViews();
 
         // 照片属性
@@ -190,6 +190,12 @@ public class PhotoPickerActivity extends AppCompatActivity{
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+    }
+    private  void adjust(){
+        // android 7.0系统解决拍照的问题
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
     }
     private void initViews(){
         mCxt = this;

@@ -31,9 +31,9 @@ public class StarryApplication extends Application{
         //init demo helper
         StarryHelper.getInstance().init(applicationContext);
         // android 7.0系统解决拍照的问题
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-        builder.detectFileUriExposure();
+//        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+//        StrictMode.setVmPolicy(builder.build());
+//        builder.detectFileUriExposure();
 
         // 初始化华为 HMS 推送服务
 //        HMSPushHelper.getInstance().initHMSAgent(instance);

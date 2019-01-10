@@ -9,6 +9,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -234,12 +235,18 @@ public class ImageGridAdapter extends BaseAdapter {
 
             if(mItemSize > 0) {
                 // 显示图片
-                Glide.with(mContext)
-                        .load(imageFile)
+                RequestOptions options = new RequestOptions()
                         .placeholder(R.mipmap.default_error)
                         .error(R.mipmap.default_error)
                         .override(mItemSize, mItemSize)
-                        .centerCrop()
+                        .centerCrop();
+                Glide.with(mContext)
+                        .load(imageFile)
+                        .apply(options)
+                        //.placeholder(R.mipmap.default_error)
+                        //.error(R.mipmap.default_error)
+                        //.override(mItemSize, mItemSize)
+                        //.centerCrop()
                         .into(image);
             }
         }

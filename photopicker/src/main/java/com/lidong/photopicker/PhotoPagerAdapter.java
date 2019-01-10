@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,11 +56,15 @@ public class PhotoPagerAdapter extends PagerAdapter {
     } else {
       uri = Uri.fromFile(new File(path));
     }
+    RequestOptions options = new RequestOptions()
+            .placeholder(R.mipmap.default_error)
+            .error(R.mipmap.default_error);
     Glide.with(mContext)
             .load(uri)
+            .apply(options)
 //            .placeholder(R.mipmap.default_error)
-            .error(R.mipmap.default_error)
-            .crossFade()
+            //.error(R.mipmap.default_error)
+            //.crossFade()
             .into(imageView);
 
     imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {

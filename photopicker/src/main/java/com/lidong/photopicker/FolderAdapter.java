@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,12 +80,17 @@ public class FolderAdapter extends BaseAdapter {
                 holder.size.setText(getTotalImageSize() + "张");
                 if(mFolders.size()>0){
                     Folder f = mFolders.get(0);
-
-                    Glide.with(mContext)
-                            .load(new File(f.cover.path))
+                    RequestOptions options = new RequestOptions()
+                            .placeholder(R.mipmap.default_error)
                             .error(R.mipmap.default_error)
                             .override(mImageSize, mImageSize)
-                            .centerCrop()
+                            .centerCrop();
+                    Glide.with(mContext)
+                            .load(new File(f.cover.path))
+                            .apply(options)
+//                            .error(R.mipmap.default_error)
+//                            .override(mImageSize, mImageSize)
+//                            .centerCrop()
                             .into(holder.cover);
                 }
             }else {
@@ -137,12 +143,18 @@ public class FolderAdapter extends BaseAdapter {
             name.setText(data.name);
             size.setText(data.images.size() + "张");
             // 显示图片
-            Glide.with(mContext)
-                    .load(new File(data.cover.path))
+            RequestOptions options = new RequestOptions()
                     .placeholder(R.mipmap.default_error)
                     .error(R.mipmap.default_error)
                     .override(mImageSize, mImageSize)
-                    .centerCrop()
+                    .centerCrop();
+            Glide.with(mContext)
+                    .load(new File(data.cover.path))
+                    .apply(options)
+//                    .placeholder(R.mipmap.default_error)
+//                    .error(R.mipmap.default_error)
+//                    .override(mImageSize, mImageSize)
+//                    .centerCrop()
                     .into(cover);
         }
     }
